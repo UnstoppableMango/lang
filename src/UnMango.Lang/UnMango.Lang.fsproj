@@ -6,13 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Library.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="FParsec" Version="1.1.1" />
     <PackageReference Include="libLLVM" Version="16.0.6" />
     <PackageReference Include="LLVMSharp" Version="16.0.0" />
+    <PackageReference Update="FSharp.Core" Version="9.0.101" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Ast.fs" />
+    <Compile Include="Parser.fs" />
   </ItemGroup>
 
 </Project>
