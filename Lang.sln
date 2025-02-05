@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+#
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BC8926E1-AE21-4338-99C0-54EA2F21A685}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "UnMango.Lang", "src\UnMango.Lang\UnMango.Lang.fsproj", "{BF0AFD52-6908-4B17-9402-47B6A4C16488}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{DE01FEBD-B1A5-4AFA-AD15-9FC0AB152991}"
+	ProjectSection(SolutionItems) = preProject
+		Makefile = Makefile
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF0AFD52-6908-4B17-9402-47B6A4C16488}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF0AFD52-6908-4B17-9402-47B6A4C16488}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF0AFD52-6908-4B17-9402-47B6A4C16488}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF0AFD52-6908-4B17-9402-47B6A4C16488}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BF0AFD52-6908-4B17-9402-47B6A4C16488} = {BC8926E1-AE21-4338-99C0-54EA2F21A685}
+	EndGlobalSection
+EndGlobal
