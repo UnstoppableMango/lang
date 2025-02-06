@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-#
+# 
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BC8926E1-AE21-4338-99C0-54EA2F21A685}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "UnMango.Lang", "src\UnMango.Lang\UnMango.Lang.fsproj", "{BF0AFD52-6908-4B17-9402-47B6A4C16488}"
@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{DE01FEBD
 	EndProjectSection
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "UnMango.Lang.Tests", "src\UnMango.Lang.Tests\UnMango.Lang.Tests.fsproj", "{FCE53E35-1488-48C9-AEE0-A54A09FAED4E}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "UnMango.Lang.LLVM", "src\UnMango.Lang.LLVM\UnMango.Lang.LLVM.fsproj", "{A417140C-8845-407F-9648-1C6013842DD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,9 +30,14 @@ Global
 		{FCE53E35-1488-48C9-AEE0-A54A09FAED4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCE53E35-1488-48C9-AEE0-A54A09FAED4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCE53E35-1488-48C9-AEE0-A54A09FAED4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A417140C-8845-407F-9648-1C6013842DD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A417140C-8845-407F-9648-1C6013842DD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A417140C-8845-407F-9648-1C6013842DD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A417140C-8845-407F-9648-1C6013842DD1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BF0AFD52-6908-4B17-9402-47B6A4C16488} = {BC8926E1-AE21-4338-99C0-54EA2F21A685}
 		{FCE53E35-1488-48C9-AEE0-A54A09FAED4E} = {BC8926E1-AE21-4338-99C0-54EA2F21A685}
+		{A417140C-8845-407F-9648-1C6013842DD1} = {BC8926E1-AE21-4338-99C0-54EA2F21A685}
 	EndGlobalSection
 EndGlobal

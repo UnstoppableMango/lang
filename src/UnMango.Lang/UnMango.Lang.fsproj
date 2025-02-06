@@ -16,6 +16,7 @@
     <Compile Include="Ast.fs" />
     <Compile Include="Parser.fs" />
     <Compile Include="Printer.fs" />
+    <Compile Include="IR.fs" />
   </ItemGroup>
 
 </Project>
