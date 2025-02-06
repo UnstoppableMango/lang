@@ -1,5 +1,6 @@
 bin/
 obj/
+.make
 
 *.user
 discord.xml
