@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{DE01FEBD
 	ProjectSection(SolutionItems) = preProject
 		Makefile = Makefile
 		Nuget.Config = Nuget.Config
+		.gitignore = .gitignore
 	EndProjectSection
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "UnMango.Lang.Tests", "src\UnMango.Lang.Tests\UnMango.Lang.Tests.fsproj", "{FCE53E35-1488-48C9-AEE0-A54A09FAED4E}"
