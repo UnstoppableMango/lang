@@ -1,6 +1,5 @@
 module Parser
 
-open System
 open FsCheck
 open FsCheck.FSharp
 open FsCheck.Xunit
@@ -19,5 +18,5 @@ let parseSuccess =
     | Error(msg, _) -> failwith msg
 
 [<Property(Arbitrary = [| typeof<String> |])>]
-let ``Should parse a unicode string`` (UnicodeString s) =
+let ``Should parse a quoted unicode string`` (UnicodeString s) =
     test <@ Parser.parse ("\"" + s + "\"") |> parseSuccess = { Nodes = [ (Ast.String s) ] } @>
