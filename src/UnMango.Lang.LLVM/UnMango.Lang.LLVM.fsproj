@@ -9,11 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="IR.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\UnMango.Lang\UnMango.Lang.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="libLLVM" Version="16.0.6" />
+    <PackageReference Include="LLVMSharp" Version="16.0.0" />
   </ItemGroup>
   
 </Project>
