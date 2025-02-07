@@ -32,6 +32,9 @@ bin/devctl: .versions/devctl | bin
 	go install github.com/unmango/devctl/cmd@v$(shell cat $<)
 	mv bin/cmd $@
 
+bin/ginkgo: go.mod
+	go install github.com/onsi/ginkgo/v2/ginkgo
+
 bin/dprint: .versions/dprint | .make/dprint/install.sh bin
 	DPRINT_INSTALL=${CURDIR} .make/dprint/install.sh $(shell $(DEVCTL) v dprint)
 	@touch $@
