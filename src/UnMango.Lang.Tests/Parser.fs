@@ -15,7 +15,7 @@ type String =
 let parseSuccess =
     function
     | Ok(x) -> x
-    | Error(msg, _) -> failwith msg
+    | Error(e) -> failwith e
 
 [<Property(Arbitrary = [| typeof<String> |])>]
 let ``Should parse a quoted unicode string`` (UnicodeString s) =

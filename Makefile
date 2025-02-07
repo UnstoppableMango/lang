@@ -4,14 +4,16 @@ GO_PROJ      := github.com/unstoppablemango/lang
 LOCALBIN := ${CURDIR}/bin
 DEVCTL   := ${LOCALBIN}/devctl
 DPRINT   := ${LOCALBIN}/dprint
+BUF      := ${LOCALBIN}/buf
 
-build: .make/dotnet-build
+build: .make/dotnet-build bin/ir
+gen: .make/buf-gen
 test: .make/dotnet-test
 format: .make/dprint-format
 tidy: go.sum
 dev: .envrc bin/devctl
 
-go.sum: go.mod
+go.sum: go.mod $(shell $(DEVCTL) list --go)
 	go mod tidy
 
 go.mod:
@@ -52,3 +54,6 @@ bin/buf: .versions/buf | bin
 
 .make/dprint-format: README.md .dprint.jsonc .github/renovate.json | bin/dprint
 	$(DPRINT) fmt
+
+.make/buf-gen:
+	$(BUF) generate

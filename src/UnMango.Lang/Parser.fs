@@ -17,4 +17,4 @@ let file: Parser<File, _> = nodeList |>> (fun s -> { Nodes = s })
 let parse (input: string) =
     match run file input with
     | Success(result, _, _) -> Result.Ok(result)
-    | Failure(msg, err, _) -> Result.Error(msg, err)
+    | Failure(msg, _, _) -> Result.Error(msg)
