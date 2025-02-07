@@ -3,35 +3,36 @@ package lang_test
 import (
 	"bytes"
 	"context"
-	"crypto/tls"
-	"net"
-	"net/http"
 	"os/exec"
+	"path/filepath"
 
-	"connectrpc.com/connect"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 	"github.com/onsi/gomega/gexec"
-	"golang.org/x/net/http2"
+
+	"github.com/unmango/go/vcs/git"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 
 	unmangov1alpha1 "github.com/unstoppablemango/lang/pkg/io/unmango/v1alpha1"
-	"github.com/unstoppablemango/lang/pkg/io/unmango/v1alpha1/unmangov1alpha1connect"
 )
 
 var _ = Describe("LangE2eSuite", func() {
 	var (
 		ses     *gexec.Session
-		client  unmangov1alpha1connect.ParserServiceClient
+		client  unmangov1alpha1.ParserServiceClient
 		hostlog *bytes.Buffer
 	)
 
-	BeforeEach(func() {
-		var err error
+	BeforeEach(func(ctx context.Context) {
+		dir, err := git.Root(ctx)
+		Expect(err).NotTo(HaveOccurred())
+		socket := filepath.Join(dir, "lang-host.sock")
 
 		By("Starting the language host")
 		hostlog = &bytes.Buffer{}
-		cmd := exec.Command("bin/lang-host")
+		cmd := exec.Command("bin/lang-host", socket)
 		ses, err = gexec.Start(cmd, hostlog, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 
@@ -39,20 +40,20 @@ var _ = Describe("LangE2eSuite", func() {
 		Eventually(ses.Out).Should(gbytes.Say("Application started"))
 
 		By("Creating a parser client")
-		client = unmangov1alpha1connect.NewParserServiceClient(
-			newInsecureClient(),
-			".make/lang-host.sock",
-			connect.WithGRPC(),
+		conn, err := grpc.NewClient("unix:"+socket,
+			grpc.WithTransportCredentials(insecure.NewCredentials()),
 		)
+		Expect(err).NotTo(HaveOccurred())
+		client = unmangov1alpha1.NewParserServiceClient(conn)
 	})
 
 	It("should work", func(ctx context.Context) {
-		res, err := client.Parse(ctx, connect.NewRequest(&unmangov1alpha1.ParseRequest{
-			Text: `"test"`,
-		}))
+		res, err := client.Parse(ctx, &unmangov1alpha1.ParseRequest{
+			Text: "test",
+		})
 
 		Expect(err).NotTo(HaveOccurred())
-		Expect(res.Msg.File).NotTo(BeNil())
+		Expect(res.File).NotTo(BeNil())
 	})
 
 	AfterEach(func() {
@@ -60,18 +61,3 @@ var _ = Describe("LangE2eSuite", func() {
 		Eventually(ses.Interrupt()).Should(gexec.Exit(0))
 	})
 })
-
-func newInsecureClient() *http.Client {
-	return &http.Client{
-		Transport: &http2.Transport{
-			AllowHTTP: true,
-			DialTLS: func(network, addr string, _ *tls.Config) (net.Conn, error) {
-				// If you're also using this client for non-h2c traffic, you may want
-				// to delegate to tls.Dial if the network isn't TCP or the addr isn't
-				// in an allowlist.
-				return net.Dial(network, addr)
-			},
-			// Don't forget timeouts!
-		},
-	}
-}

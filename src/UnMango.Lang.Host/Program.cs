@@ -6,7 +6,10 @@ if (args.Length == 0) {
 	return 1;
 }
 
-var socketPath = Path.Join(AppContext.BaseDirectory, args[0]);
+var socketPath = args[0];
+if (!Path.IsPathRooted(socketPath)) {
+	socketPath = Path.Join(AppContext.BaseDirectory, socketPath);
+}
 
 var builder = WebApplication.CreateBuilder(args);
 
