@@ -11,7 +11,7 @@ BUF      := ${LOCALBIN}/buf
 build: .make/dotnet-build bin/ir
 gen: .make/buf-gen
 test: .make/dotnet-test .make/ginkgo-test
-format: .make/dprint-format
+format: .make/dprint-format .make/buf-format
 tidy: go.sum
 dev: .envrc bin/devctl
 
@@ -20,6 +20,9 @@ go.sum: go.mod $(shell $(DEVCTL) list --go)
 
 go.mod:
 	go mod init ${GO_PROJ}
+
+.config/dotnet-tools.json:
+	dotnet new tool-manifest
 
 .envrc: hack/example.envrc
 	cp $< $@
@@ -39,6 +42,10 @@ bin/devctl: .versions/devctl | bin
 
 bin/ginkgo: go.mod | bin
 	go install github.com/onsi/ginkgo/v2/ginkgo
+
+bin/fantomas: .config/dotnet-tools.json
+	dotnet tool restore
+	printf '#!/bin/bash\ndotnet fantomas $$@\n' > $@ && chmod +x $@
 
 bin/dprint: .versions/dprint | .make/dprint/install.sh bin
 	DPRINT_INSTALL=${CURDIR} .make/dprint/install.sh $(shell $(DEVCTL) v dprint)
@@ -70,6 +77,11 @@ src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 
 .make/dprint-format: README.md .dprint.jsonc .github/renovate.json | bin/dprint
 	$(DPRINT) fmt
+	@touch $@
 
-.make/buf-gen: | .make
+.make/buf-gen: $(shell $(DEVCTL) list --proto) | .make bin/buf bin/devctl
 	$(BUF) generate
+
+.make/buf-format: $(shell $(DEVCTL) list --proto) | .make bin/buf bin/devctl
+	$(BUF) format --write
+	@touch $@
