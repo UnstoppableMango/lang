@@ -36,12 +36,12 @@ var _ = Describe("LangE2eSuite", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		By("Waiting for the langugage host to start")
-		Eventually(ses.Out).Should(gbytes.Say("Now listening on: http://localhost:5000"))
+		Eventually(ses.Out).Should(gbytes.Say("Application started"))
 
 		By("Creating a parser client")
 		client = unmangov1alpha1connect.NewParserServiceClient(
 			newInsecureClient(),
-			"http://localhost:5000",
+			".make/lang-host.sock",
 			connect.WithGRPC(),
 		)
 	})

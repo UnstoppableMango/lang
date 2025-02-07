@@ -74,7 +74,7 @@ src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 	$(FANTOMAS) $?
 	@touch $@
 
-.make/ginkgo-test: $(shell $(DEVCTL) list --go) | .make bin/devctl bin/ginkgo
+.make/ginkgo-test: $(shell $(DEVCTL) list --go) | .make bin/devctl bin/ginkgo bin/lang-host
 	ginkgo run -r ./
 	@touch $@
 
