@@ -7,4 +7,4 @@ open UnMango.Lang
 
 [<Property>]
 let ``Should print a unicode string`` (UnicodeString s) =
-    test <@ { Ast.File.Nodes = [Ast.String s] } |> Printer.sprint = $"\"{s}\"" @>
+    test <@ { Ast.File.Nodes = [ Ast.String s ] } |> Printer.sprint = $"\"{s}\"" @>

@@ -8,4 +8,4 @@ let m = LLVMModuleRef.CreateWithName("test")
 
 let v = IR.emitString ctx (Ast.String("test"))
 
-Console.WriteLine (v.ToString())
+Console.WriteLine(v.ToString())

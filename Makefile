@@ -7,11 +7,12 @@ LOCALBIN := ${CURDIR}/bin
 DEVCTL   := ${LOCALBIN}/devctl
 DPRINT   := ${LOCALBIN}/dprint
 BUF      := ${LOCALBIN}/buf
+FANTOMAS := ${LOCALBIN}/fantomas
 
 build: .make/dotnet-build bin/ir
 gen: .make/buf-gen
 test: .make/dotnet-test .make/ginkgo-test
-format: .make/dprint-format .make/buf-format
+format: .make/fantomas-format .make/dprint-format .make/buf-format
 tidy: go.sum
 dev: .envrc bin/devctl
 
@@ -64,6 +65,13 @@ src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 
 .make/dotnet-test: $(shell $(DEVCTL) list --dotnet) Lang.sln | .make bin/devctl
 	dotnet test
+	@touch $@
+
+.make/dotnet-format: $(shell $(DEVCTL) list --cs) | .make bin/devctl
+	dotnet format --include $?
+
+.make/fantomas-format: $(shell $(DEVCTL) list --fs) | .make bin/fantomas
+	$(FANTOMAS) $?
 	@touch $@
 
 .make/ginkgo-test: $(shell $(DEVCTL) list --go) | .make bin/devctl bin/ginkgo

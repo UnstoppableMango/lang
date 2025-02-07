@@ -9,11 +9,11 @@ message String {
 }
 
 message Node {
-	oneof value {
-		String string = 1;
-	}
+  oneof value {
+    String string = 1;
+  }
 }
 
 message File {
-	repeated Node nodes = 1;
+  repeated Node nodes = 1;
 }

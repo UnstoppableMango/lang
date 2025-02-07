@@ -14,6 +14,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{DE01FEBD
 		buf.yaml = buf.yaml
 		global.json = global.json
 		Directory.Build.props = Directory.Build.props
+		.dprint.jsonc = .dprint.jsonc
+		.editorconfig = .editorconfig
+		.envrc = .envrc
+		.config\dotnet-tools.json = .config\dotnet-tools.json
 	EndProjectSection
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "UnMango.Lang.Tests", "src\UnMango.Lang.Tests\UnMango.Lang.Tests.fsproj", "{FCE53E35-1488-48C9-AEE0-A54A09FAED4E}"
@@ -21,6 +25,11 @@ EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "UnMango.Lang.LLVM", "src\UnMango.Lang.LLVM\UnMango.Lang.LLVM.fsproj", "{A417140C-8845-407F-9648-1C6013842DD1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnMango.Lang.Host", "src\UnMango.Lang.Host\UnMango.Lang.Host.csproj", "{839ECA2E-9B59-414F-9548-97B064B57233}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{6224534B-5C70-458D-B1CF-9D5F81C1D8AB}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
