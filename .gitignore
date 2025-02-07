@@ -4,3 +4,5 @@ obj/
 
 *.user
 discord.xml
+
+.fake
