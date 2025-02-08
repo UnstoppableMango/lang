@@ -15,7 +15,7 @@ gen: .make/buf-gen
 test: .make/dotnet-test .make/ginkgo-test
 format: .make/fantomas-format .make/dprint-format .make/buf-format
 tidy: go.sum
-dev: .envrc bin/devctl
+dev: .envrc bin/devctl bin/dotnet
 
 go.sum: go.mod $(shell $(DEVCTL) list --go)
 	go mod tidy
@@ -45,8 +45,8 @@ bin/devctl: .versions/devctl | bin
 bin/ginkgo: go.mod | bin
 	go install github.com/onsi/ginkgo/v2/ginkgo
 
-bin/dotnet: .make/dotnet
-	rm $@ && ln -s ${CURDIR}/$</dotnet $@
+bin/dotnet: | .make/dotnet
+	rm -f $@ && ln -s ${CURDIR}/.make/dotnet/dotnet $@
 
 bin/fantomas: .config/dotnet-tools.json
 	dotnet tool restore
@@ -63,7 +63,7 @@ src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 	dotnet publish src/UnMango.Lang.Host -p:DebugSymbols=false \
 	--use-current-runtime --self-contained --configuration ${DOTNET_BUILD_CONFIG} --output $(dir $@)
 
-.make/dotnet-install.sh:
+.make/dotnet-install.sh: | .make
 	curl -fsSL https://dot.net/v1/dotnet-install.sh > $@ && chmod +x $@
 
 .make/dotnet: global.json | .make/dotnet-install.sh
