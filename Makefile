@@ -8,6 +8,7 @@ LOCALBIN := ${CURDIR}/bin
 DEVCTL   := ${LOCALBIN}/devctl
 DPRINT   := ${LOCALBIN}/dprint
 BUF      := ${LOCALBIN}/buf
+DOTNET   := ${LOCALBIN}/dotnet
 FANTOMAS := ${LOCALBIN}/fantomas
 
 build: .make/dotnet-build bin/ir
@@ -45,6 +46,9 @@ bin/devctl: .versions/devctl | bin
 bin/ginkgo: go.mod | bin
 	go install github.com/onsi/ginkgo/v2/ginkgo
 
+bin/dotnet: .make/dotnet
+	ln -s $</dotnet $@
+
 bin/fantomas: .config/dotnet-tools.json
 	dotnet tool restore
 	printf '#!/bin/bash\ndotnet fantomas $$@\n' > $@ && chmod +x $@
@@ -59,6 +63,12 @@ bin/buf: .versions/buf | bin/devctl
 src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 	dotnet publish src/UnMango.Lang.Host -p:DebugSymbols=false \
 	--use-current-runtime --self-contained --configuration ${DOTNET_BUILD_CONFIG} --output $(dir $@)
+
+.make/dotnet-install.sh:
+	curl -fsSL https://dot.net/v1/dotnet-install.sh > $@ && chmod +x $@
+
+.make/dotnet: global.json | .make/dotnet-install.sh
+	.make/dotnet-install.sh --install-dir $@ --jsonfile $< --no-path
 
 .make/dotnet-build: $(shell $(DEVCTL) list --dotnet) Lang.sln | .make bin/devctl
 	dotnet build
