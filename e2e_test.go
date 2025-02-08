@@ -49,11 +49,12 @@ var _ = Describe("LangE2eSuite", func() {
 
 	It("should work", func(ctx context.Context) {
 		res, err := client.Parse(ctx, &unmangov1alpha1.ParseRequest{
-			Text: "test",
+			Text: `"test"`,
 		})
 
-		Expect(err).NotTo(HaveOccurred())
-		Expect(res.File).NotTo(BeNil())
+		Expect(err).NotTo(HaveOccurred(), hostlog.String())
+		Expect(res.File.Nodes).To(HaveLen(1))
+		Expect(res.File.Nodes[0].GetString_().Value).To(Equal("test"))
 	})
 
 	AfterEach(func() {

@@ -23,11 +23,10 @@ public sealed class ParserService : ParserServiceBase
 		return f;
 	}
 
-	private static Node ToNode(Ast.Node node) =>
-		new() {
-			String =
-			{
-				Value = node.Item,
-			},
-		};
+	private static Node ToNode(Ast.Node node) {
+		Node result = new();
+		result.String = new();
+		result.String.Value = node.Item;
+		return result;
+	}
 }

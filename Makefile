@@ -2,6 +2,7 @@ export GOBIN := ${CURDIR}/bin
 GO_PROJ      := github.com/unstoppablemango/lang
 
 DOTNET_RID ?= $(shell dotnet --info | grep RID | sed 's/RID\:\s*//g')
+DOTNET_BUILD_CONFIG := Debug
 
 LOCALBIN := ${CURDIR}/bin
 DEVCTL   := ${LOCALBIN}/devctl
@@ -57,7 +58,7 @@ bin/buf: .versions/buf | bin/devctl
 
 src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 	dotnet publish src/UnMango.Lang.Host -p:DebugSymbols=false \
-	--use-current-runtime --self-contained --configuration Release --output $(dir $@)
+	--use-current-runtime --self-contained --configuration ${DOTNET_BUILD_CONFIG} --output $(dir $@)
 
 .make/dotnet-build: $(shell $(DEVCTL) list --dotnet) Lang.sln | .make bin/devctl
 	dotnet build
