@@ -1,7 +1,6 @@
 export GOBIN := ${CURDIR}/bin
 GO_PROJ      := github.com/unstoppablemango/lang
 
-DOTNET_RID ?= $(shell dotnet --info | grep RID | sed 's/RID\:\s*//g')
 DOTNET_BUILD_CONFIG := Debug
 
 LOCALBIN := ${CURDIR}/bin
@@ -25,7 +24,7 @@ go.mod:
 	go mod init ${GO_PROJ}
 
 .config/dotnet-tools.json:
-	dotnet new tool-manifest
+	$(DOTNET) new tool-manifest
 
 .envrc: hack/example.envrc
 	cp $< $@
@@ -71,15 +70,15 @@ src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 	.make/dotnet-install.sh --install-dir $@ --jsonfile $< --no-path
 
 .make/dotnet-build: $(shell $(DEVCTL) list --dotnet) Lang.sln | .make bin/devctl
-	dotnet build
+	$(DOTNET) build
 	@touch $@
 
 .make/dotnet-test: $(shell $(DEVCTL) list --dotnet) Lang.sln | .make bin/devctl
-	dotnet test
+	$(DOTNET) test
 	@touch $@
 
 .make/dotnet-format: $(shell $(DEVCTL) list --cs) | .make bin/devctl
-	dotnet format --include $?
+	$(DOTNET) format --include $?
 
 .make/fantomas-format: $(shell $(DEVCTL) list --fs) | .make bin/fantomas
 	$(FANTOMAS) $?
