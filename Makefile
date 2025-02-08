@@ -47,7 +47,7 @@ bin/ginkgo: go.mod | bin
 	go install github.com/onsi/ginkgo/v2/ginkgo
 
 bin/dotnet: .make/dotnet
-	ln -s $</dotnet $@
+	rm $@ && ln -s ${CURDIR}/$</dotnet $@
 
 bin/fantomas: .config/dotnet-tools.json
 	dotnet tool restore
