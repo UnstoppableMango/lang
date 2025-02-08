@@ -19,46 +19,48 @@ import (
 )
 
 var _ = Describe("LangE2eSuite", func() {
-	var (
-		ses     *gexec.Session
-		client  unmangov1alpha1.ParserServiceClient
-		hostlog *bytes.Buffer
-	)
-
-	BeforeEach(func(ctx context.Context) {
-		dir, err := git.Root(ctx)
-		Expect(err).NotTo(HaveOccurred())
-		socket := filepath.Join(dir, "lang-host.sock")
-
-		By("Starting the language host")
-		hostlog = &bytes.Buffer{}
-		cmd := exec.Command("bin/lang-host", socket)
-		ses, err = gexec.Start(cmd, hostlog, GinkgoWriter)
-		Expect(err).NotTo(HaveOccurred())
-
-		By("Waiting for the langugage host to start")
-		Eventually(ses.Out).Should(gbytes.Say("Application started"))
-
-		By("Creating a parser client")
-		conn, err := grpc.NewClient("unix:"+socket,
-			grpc.WithTransportCredentials(insecure.NewCredentials()),
+	Describe("Lang host", func() {
+		var (
+			ses     *gexec.Session
+			client  unmangov1alpha1.ParserServiceClient
+			hostlog *bytes.Buffer
 		)
-		Expect(err).NotTo(HaveOccurred())
-		client = unmangov1alpha1.NewParserServiceClient(conn)
-	})
 
-	It("should work", func(ctx context.Context) {
-		res, err := client.Parse(ctx, &unmangov1alpha1.ParseRequest{
-			Text: `"test"`,
+		BeforeEach(func(ctx context.Context) {
+			dir, err := git.Root(ctx)
+			Expect(err).NotTo(HaveOccurred())
+			socket := filepath.Join(dir, "lang-host.sock")
+
+			By("Starting the language host")
+			hostlog = &bytes.Buffer{}
+			cmd := exec.Command("bin/lang-host", socket)
+			ses, err = gexec.Start(cmd, hostlog, GinkgoWriter)
+			Expect(err).NotTo(HaveOccurred())
+
+			By("Waiting for the langugage host to start")
+			Eventually(ses.Out).Should(gbytes.Say("Application started"))
+
+			By("Creating a parser client")
+			conn, err := grpc.NewClient("unix:"+socket,
+				grpc.WithTransportCredentials(insecure.NewCredentials()),
+			)
+			Expect(err).NotTo(HaveOccurred())
+			client = unmangov1alpha1.NewParserServiceClient(conn)
 		})
 
-		Expect(err).NotTo(HaveOccurred(), hostlog.String())
-		Expect(res.File.Nodes).To(HaveLen(1))
-		Expect(res.File.Nodes[0].GetString_().Value).To(Equal("test"))
-	})
+		It("should work", func(ctx context.Context) {
+			res, err := client.Parse(ctx, &unmangov1alpha1.ParseRequest{
+				Text: `"test"`,
+			})
 
-	AfterEach(func() {
-		By("Terminating the host")
-		Eventually(ses.Interrupt()).Should(gexec.Exit(0))
+			Expect(err).NotTo(HaveOccurred(), hostlog.String())
+			Expect(res.File.Nodes).To(HaveLen(1))
+			Expect(res.File.Nodes[0].GetString_().Value).To(Equal("test"))
+		})
+
+		AfterEach(func() {
+			By("Terminating the host")
+			Eventually(ses.Interrupt()).Should(gexec.Exit(0))
+		})
 	})
 })
