@@ -23,6 +23,7 @@ test: .make/dotnet-test .make/ginkgo-test
 format: .make/fantomas-format .make/dprint-format .make/buf-format
 tidy: go.sum
 dev: .envrc bin/devctl bin/dotnet
+ci: .make test
 
 go.sum: go.mod $(shell $(DEVCTL) list --go)
 	go mod tidy
