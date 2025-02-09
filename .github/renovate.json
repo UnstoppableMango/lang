@@ -1,10 +1,12 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
 	"extends": [
-		"config:recommended"
+		"config:recommended",
+		"customManagers:githubActionsVersions",
+		"customManagers:makefileVersions"
 	],
 	"timezone": "America/Chicago",
 	"schedule": [
-		"after 4 am on the first of the month"
+		"before 4am on the first day of the month"
 	]
 }
