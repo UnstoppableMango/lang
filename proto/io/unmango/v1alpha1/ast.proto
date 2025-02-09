@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package io.unmango.v1alpha1;
+
+option csharp_namespace = "UnMango.Lang";
+
+message String {
+  string value = 1;
+}
+
+message Node {
+  oneof value {
+    String string = 1;
+  }
+}
+
+message File {
+  repeated Node nodes = 1;
+}

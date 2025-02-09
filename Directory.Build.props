@@ -1,0 +1,7 @@
+<Project>
+
+	<PropertyGroup>
+		<ProtoRoot>$(MSBuildThisFileDirectory)/proto</ProtoRoot>
+	</PropertyGroup>
+
+</Project>

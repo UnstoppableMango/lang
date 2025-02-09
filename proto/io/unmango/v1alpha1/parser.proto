@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package io.unmango.v1alpha1;
+
+import "io/unmango/v1alpha1/ast.proto";
+
+option csharp_namespace = "UnMango.Lang";
+
+message ParseRequest {
+  string text = 1;
+}
+
+message ParseResponse {
+  File file = 1;
+}
+
+service ParserService {
+  rpc Parse(ParseRequest) returns (ParseResponse);
+}

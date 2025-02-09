@@ -1,0 +1,8 @@
+bin/
+obj/
+.make
+
+*.user
+discord.xml
+*.test
+.fake
