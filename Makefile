@@ -4,12 +4,12 @@ GO_PROJ      := github.com/unstoppablemango/lang
 DOTNET_BUILD_CONFIG := Debug
 
 LOCALBIN := ${CURDIR}/bin
-DEVCTL   := ${LOCALBIN}/devctl
-DPRINT   := ${LOCALBIN}/dprint
-BUF      := ${LOCALBIN}/buf
-DOTNET   := ${LOCALBIN}/dotnet
-FANTOMAS := ${LOCALBIN}/fantomas
-GINKGO   := ${LOCALBIN}/ginkgo
+DEVCTL   ?= ${LOCALBIN}/devctl
+DPRINT   ?= ${LOCALBIN}/dprint
+BUF      ?= ${LOCALBIN}/buf
+DOTNET   ?= ${LOCALBIN}/dotnet
+FANTOMAS ?= ${LOCALBIN}/fantomas
+GINKGO   ?= ${LOCALBIN}/ginkgo
 
 ifeq (${CI},)
 TEST_FLAGS := --label-filter !E2E
