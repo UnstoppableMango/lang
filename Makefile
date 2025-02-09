@@ -9,6 +9,13 @@ DPRINT   := ${LOCALBIN}/dprint
 BUF      := ${LOCALBIN}/buf
 DOTNET   := ${LOCALBIN}/dotnet
 FANTOMAS := ${LOCALBIN}/fantomas
+GINKGO   := ${LOCALBIN}/ginkgo
+
+ifeq (${CI},)
+TEST_FLAGS := --label-filter !E2E
+else
+TEST_FLAGS := --github-output --race --trace --cover
+endif
 
 build: bin/lang-host bin/ir
 gen: .make/buf-gen
@@ -85,7 +92,7 @@ src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 	@touch $@
 
 .make/ginkgo-test: $(shell $(DEVCTL) list --go) | .make bin/devctl bin/ginkgo bin/lang-host
-	ginkgo run -r ./
+	$(GINKGO) run ${TEST_FLAGS} $(sort $(dir $?))
 	@touch $@
 
 .make/dprint/install.sh: | .make
