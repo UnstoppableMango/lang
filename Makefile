@@ -10,7 +10,7 @@ BUF      := ${LOCALBIN}/buf
 DOTNET   := ${LOCALBIN}/dotnet
 FANTOMAS := ${LOCALBIN}/fantomas
 
-build: .make/dotnet-build bin/ir
+build: bin/lang-host bin/ir
 gen: .make/buf-gen
 test: .make/dotnet-test .make/ginkgo-test
 format: .make/fantomas-format .make/dprint-format .make/buf-format
@@ -94,7 +94,7 @@ src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 	chmod +x $@
 
 .make/dprint-format: README.md .dprint.jsonc .github/renovate.json | bin/dprint
-	$(DPRINT) fmt
+	$(DPRINT) fmt $?
 	@touch $@
 
 .make/buf-gen: $(shell $(DEVCTL) list --proto) | .make bin/buf bin/devctl
