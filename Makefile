@@ -14,7 +14,7 @@ GINKGO   ?= ${LOCALBIN}/ginkgo
 ifeq (${CI},)
 TEST_FLAGS := --label-filter !E2E
 else
-TEST_FLAGS := --github-output --race --trace --cover
+TEST_FLAGS := --github-output --trace --cover
 endif
 
 build: bin/lang-host bin/ir
