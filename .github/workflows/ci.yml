@@ -14,7 +14,7 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           global-json-file: global.json
-      - run: make .make && make --touch bin/dotnet
+      - run: make .make bin && make --touch bin/dotnet
 
       - uses: actions/setup-go@v5
         with:
