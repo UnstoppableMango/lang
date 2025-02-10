@@ -6,8 +6,7 @@ open UnMango.Lang.Ast
 let validStringLiteralChar c = c <> '\\' && c <> '"'
 
 let stringLiteral: Parser<Node, _> =
-    (manySatisfy validStringLiteralChar) |> between (pchar '"') (pchar '"')
-    |>> String
+    manySatisfy validStringLiteralChar |> between (pchar '"') (pchar '"') |>> String
 
 let nodeList: Parser<Node list, _> = many stringLiteral
 
