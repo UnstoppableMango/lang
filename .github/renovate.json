@@ -8,5 +8,11 @@
 	"timezone": "America/Chicago",
 	"schedule": [
 		"before 4am on the first day of the month"
+	],
+	"packageRules": [
+		{
+			"matchPackageNames": ["dotnet-sdk"],
+			"versioning": "same-major"
+		}
 	]
 }
