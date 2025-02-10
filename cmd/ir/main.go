@@ -12,7 +12,7 @@ func main() {
 
 	m := c.NewModule("test")
 
-	v := llvm.ConstString("test", true)
+	v := c.ConstString("test", true)
 	fmt.Println(v.String())
 
 	m.Dump()
