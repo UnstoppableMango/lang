@@ -17,3 +17,17 @@ message Node {
 message File {
   repeated Node nodes = 1;
 }
+
+message VisitRequest {
+  oneof node {
+    String str = 1;
+  }
+}
+
+message VisitResponse {
+  int64 visitor_id = 1;
+}
+
+service VisitorService {
+  rpc Visit(VisitRequest) returns (VisitResponse);
+}
