@@ -24,8 +24,8 @@ public sealed class ParserService : ParserServiceBase
 	}
 
 	private static Node ToNode(Ast.Node node) {
-		Node result = new() { String = new() };
-		result.String.Value = node.Item;
+		Node result = new() { Str = new() };
+		result.Str.Value = node.Item;
 		return result;
 	}
 }

@@ -10,24 +10,36 @@ message String {
 
 message Node {
   oneof value {
-    String string = 1;
+    String str = 1;
+    File file = 2;
   }
 }
 
+message Decl {}
+
 message File {
-  repeated Node nodes = 1;
+  repeated Decl decls = 1;
 }
 
 message VisitRequest {
-  oneof node {
-    String str = 1;
-  }
+  Node node = 2;
 }
 
 message VisitResponse {
-  int64 visitor_id = 1;
+  bool continue = 1;
 }
 
 service VisitorService {
   rpc Visit(VisitRequest) returns (VisitResponse);
+}
+
+message WalkRequest {
+  string uri = 1;
+  Node node = 2;
+}
+
+message WalkResponse {}
+
+service AstService {
+  rpc Walk(WalkRequest) returns (WalkResponse);
 }
