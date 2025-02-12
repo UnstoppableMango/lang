@@ -6,3 +6,4 @@ obj/
 discord.xml
 *.test
 .fake
+.vscode/settings.json
