@@ -119,3 +119,105 @@ var VisitorService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "io/unmango/v1alpha1/ast.proto",
 }
+
+const (
+	AstService_Walk_FullMethodName = "/io.unmango.v1alpha1.AstService/Walk"
+)
+
+// AstServiceClient is the client API for AstService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type AstServiceClient interface {
+	Walk(ctx context.Context, in *WalkRequest, opts ...grpc.CallOption) (*WalkResponse, error)
+}
+
+type astServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewAstServiceClient(cc grpc.ClientConnInterface) AstServiceClient {
+	return &astServiceClient{cc}
+}
+
+func (c *astServiceClient) Walk(ctx context.Context, in *WalkRequest, opts ...grpc.CallOption) (*WalkResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(WalkResponse)
+	err := c.cc.Invoke(ctx, AstService_Walk_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// AstServiceServer is the server API for AstService service.
+// All implementations must embed UnimplementedAstServiceServer
+// for forward compatibility.
+type AstServiceServer interface {
+	Walk(context.Context, *WalkRequest) (*WalkResponse, error)
+	mustEmbedUnimplementedAstServiceServer()
+}
+
+// UnimplementedAstServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedAstServiceServer struct{}
+
+func (UnimplementedAstServiceServer) Walk(context.Context, *WalkRequest) (*WalkResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Walk not implemented")
+}
+func (UnimplementedAstServiceServer) mustEmbedUnimplementedAstServiceServer() {}
+func (UnimplementedAstServiceServer) testEmbeddedByValue()                    {}
+
+// UnsafeAstServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AstServiceServer will
+// result in compilation errors.
+type UnsafeAstServiceServer interface {
+	mustEmbedUnimplementedAstServiceServer()
+}
+
+func RegisterAstServiceServer(s grpc.ServiceRegistrar, srv AstServiceServer) {
+	// If the following call pancis, it indicates UnimplementedAstServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&AstService_ServiceDesc, srv)
+}
+
+func _AstService_Walk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(WalkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AstServiceServer).Walk(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AstService_Walk_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AstServiceServer).Walk(ctx, req.(*WalkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// AstService_ServiceDesc is the grpc.ServiceDesc for AstService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var AstService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "io.unmango.v1alpha1.AstService",
+	HandlerType: (*AstServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Walk",
+			Handler:    _AstService_Walk_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "io/unmango/v1alpha1/ast.proto",
+}

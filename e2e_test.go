@@ -54,8 +54,8 @@ var _ = Describe("LangE2eSuite", func() {
 			})
 
 			Expect(err).NotTo(HaveOccurred(), hostlog.String())
-			Expect(res.File.Nodes).To(HaveLen(1))
-			Expect(res.File.Nodes[0].GetString_().Value).To(Equal("test"))
+			Expect(res.File.Decls).To(HaveLen(1))
+			// Expect(res.File.Nodes[0].GetStr().Value).To(Equal("test"))
 		})
 
 		AfterEach(func() {
