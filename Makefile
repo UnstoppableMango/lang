@@ -1,7 +1,7 @@
 export GOBIN := ${CURDIR}/bin
 GO_PROJ      := github.com/unstoppablemango/lang
 
-DOTNET_BUILD_CONFIG := Debug
+DOTNET_CONFIG := Debug
 
 LOCALBIN := ${CURDIR}/bin
 DEVCTL   ?= ${LOCALBIN}/devctl
@@ -20,10 +20,13 @@ endif
 build: bin/lang-host bin/ir
 gen: .make/buf-gen
 test: .make/dotnet-test .make/ginkgo-test
-format: .make/fantomas-format .make/dprint-format .make/buf-format
+format: .make/fantomas-format .make/dotnet-format .make/dprint-format .make/buf-format
 tidy: go.sum
 dev: .envrc bin/devctl bin/dotnet
 ci: .make test
+
+clean: .make/dotnet-clean
+	rm -rf src/**/{bin,obj}
 
 go.sum: go.mod $(shell $(DEVCTL) list --go)
 	go mod tidy
@@ -69,7 +72,7 @@ bin/buf: .versions/buf | bin/devctl
 
 src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 	dotnet publish src/UnMango.Lang.Host -p:DebugSymbols=false \
-	--use-current-runtime --self-contained --configuration ${DOTNET_BUILD_CONFIG} --output $(dir $@)
+	--use-current-runtime --self-contained --configuration ${DOTNET_CONFIG} --output $(dir $@)
 
 .make/dotnet-install.sh: | .make
 	curl -fsSL https://dot.net/v1/dotnet-install.sh > $@ && chmod +x $@
@@ -77,16 +80,21 @@ src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 .make/dotnet: global.json | .make/dotnet-install.sh
 	.make/dotnet-install.sh --install-dir $@ --jsonfile $< --no-path
 
-.make/dotnet-build: $(shell $(DEVCTL) list --dotnet) Lang.sln | .make bin/devctl
+.make/dotnet-build: $(shell $(DEVCTL) list --dotnet) Lang.sln | .make bin/devctl bin/dotnet
 	$(DOTNET) build
 	@touch $@
 
-.make/dotnet-test: $(shell $(DEVCTL) list --dotnet) Lang.sln | .make bin/devctl
+.make/dotnet-test: $(shell $(DEVCTL) list --dotnet) Lang.sln | .make bin/devctl bin/dotnet
 	$(DOTNET) test
 	@touch $@
 
-.make/dotnet-format: $(shell $(DEVCTL) list --cs) | .make bin/devctl
+.make/dotnet-format: $(shell $(DEVCTL) list --cs) | .make bin/devctl bin/dotnet
 	$(DOTNET) format --include $?
+	@touch $@
+
+.make/dotnet-clean: | .make bin/devctl bin/dotnet
+	$(DOTNET) clean
+	@touch $@
 
 .make/fantomas-format: $(shell $(DEVCTL) list --fs) | .make bin/fantomas
 	$(FANTOMAS) $?
