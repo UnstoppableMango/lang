@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
@@ -6,7 +6,8 @@
         <GenerateProgramFile>false</GenerateProgramFile>
     </PropertyGroup>
 
-    <ItemGroup>
+    <ItemGroup><Compile Include="Util.fs" />
+        <Compile Include="Kaleidoscope.fs" />
         <Compile Include="Parser.fs" />
         <Compile Include="Printer.fs" />
         <Compile Include="Program.fs" />
@@ -17,6 +18,7 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="FParsec" Version="1.1.1" />
         <PackageReference Include="FsCheck.Xunit" Version="3.1.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
         <PackageReference Include="Unquote" Version="7.0.1" />

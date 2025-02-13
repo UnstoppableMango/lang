@@ -7,8 +7,8 @@
     <PackageReference Include="FParsec" Version="1.1.1" />
     <PackageReference Update="FSharp.Core" Version="9.0.201" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Kaleidoscope.fs" />
+  <ItemGroup><Compile Include="Kaleidoscope.fs" />
+    
     <Compile Include="Ast.fs" />
     <Compile Include="Parser.fs" />
     <Compile Include="Printer.fs" />

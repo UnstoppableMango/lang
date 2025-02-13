@@ -12,11 +12,6 @@ type String =
         |> ArbMap.arbitrary<UnicodeString>
         |> Arb.filter (fun (UnicodeString s) -> s |> String.forall (fun c -> c <> '\\' && c <> '"'))
 
-let parseSuccess =
-    function
-    | Ok(x) -> x
-    | Error(e) -> failwith e
-
 [<Property(Arbitrary = [| typeof<String> |])>]
 let ``Should parse a quoted unicode string`` (UnicodeString s) =
-    test <@ Parser.parse ("\"" + s + "\"") |> parseSuccess = { Nodes = [ (Ast.String s) ] } @>
+    test <@ Parser.parse ("\"" + s + "\"") |> Util.parseOk = { Nodes = [ (Ast.String s) ] } @>
