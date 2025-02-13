@@ -2,6 +2,8 @@ export GOBIN := ${CURDIR}/bin
 GO_PROJ      := github.com/unstoppablemango/lang
 
 DOTNET_CONFIG := Debug
+DOTNET_TFM    := net9.0
+DOTNET_RID    := linux-x64
 
 LOCALBIN := ${CURDIR}/bin
 DEVCTL   ?= ${LOCALBIN}/devctl
@@ -46,7 +48,7 @@ go.mod:
 bin/ir: $(shell $(DEVCTL) list --go)
 	go build -o $@ -tags=llvm19 ./cmd/ir
 
-bin/lang-host: src/UnMango.Lang.Host/bin/lang-host
+bin/lang-host: src/UnMango.Lang.Host/bin/${DOTNET_CONFIG}/${DOTNET_TFM}/${DOTNET_RID}/lang-host
 	cp $< $@
 
 bin/devctl: .versions/devctl | bin
@@ -70,9 +72,9 @@ bin/dprint: .versions/dprint | .make/dprint/install.sh bin
 bin/buf: .versions/buf | bin/devctl
 	go install github.com/bufbuild/buf/cmd/buf@$(shell $(DEVCTL) $<)
 
-src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
+src/UnMango.Lang.Host/bin/${DOTNET_CONFIG}/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 	dotnet publish src/UnMango.Lang.Host -p:DebugSymbols=false \
-	--use-current-runtime --self-contained --configuration ${DOTNET_CONFIG} --output $(dir $@)
+	--use-current-runtime --self-contained --configuration ${DOTNET_CONFIG}
 
 .make/dotnet-install.sh: | .make
 	curl -fsSL https://dot.net/v1/dotnet-install.sh > $@ && chmod +x $@
