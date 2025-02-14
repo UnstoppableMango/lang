@@ -14,15 +14,23 @@ open System
 [<InlineData("*", '*')>]
 [<InlineData("<", '<')>]
 let ``Should parse a binop`` (i: string, o: char) =
-    test <@ run Kalaidoscope.binOp i |> Util.parseSuccess = o @>
+    test <@ run Kaleidoscope.binOp i |> Util.parseSuccess = o @>
 
 [<Property>]
 let ``Should parse a string between parentheses`` (UnicodeString s) =
     let i = "(" + s + ")"
-    test <@ run (Kalaidoscope.betweenParens (anyString s.Length)) i |> Util.parseSuccess = s @>
+    test <@ run (Kaleidoscope.betweenParens (anyString s.Length)) i |> Util.parseSuccess = s @>
 
 [<Property>]
 let ``Should parse a float`` (NormalFloat f) =
     let i = Convert.ToString f
 
-    test <@ run Kalaidoscope.numberExpr i |> Util.parseSuccess = Kalaidoscope.NumberExprAST f @>
+    test <@ run Kaleidoscope.numberExpr i |> Util.parseSuccess = Kaleidoscope.NumberExprAST f @>
+
+[<Fact(Skip = "Still working this out")>]
+let ``Should parse a variable identifier`` () =
+    test <@ run Kaleidoscope.identifierExpr "test" |> Util.parseSuccess = Kaleidoscope.VariableExprAST "test" @>
+
+[<Fact(Skip = "Still working this out")>]
+let ``Should parse a call expression identifier`` () =
+    test <@ run Kaleidoscope.identifierExpr "test()" |> Util.parseSuccess = Kaleidoscope.CallExprAST("test", []) @>
