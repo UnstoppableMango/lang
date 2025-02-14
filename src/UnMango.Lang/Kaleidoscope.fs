@@ -20,6 +20,10 @@ let binOpPrec =
     | '*' -> 40
     | _ -> -1
 
+let (&&>) a b = fun x -> a x && b x
+
+let (||>) a b = fun x -> a x || b x
+
 let numberExpr: Parser<ExprAST, unit> = pfloat |>> NumberExprAST
 
 let identifier = CharParsers.identifier (IdentifierOptions())
@@ -42,3 +46,5 @@ let callExpr =
 let identifierExpr = callExpr <|> variableExpr
 
 let primary = identifierExpr <|> numberExpr <|> parenExpr
+
+let tmp = identifier >>. followedBy (satisfy ((=) '('))
