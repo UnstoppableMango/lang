@@ -1,4 +1,4 @@
-module rec UnMango.Lang.Kalaidoscope
+module rec UnMango.Lang.Kaleidoscope
 
 open FParsec
 
@@ -22,8 +22,9 @@ let binOpPrec =
 
 let numberExpr: Parser<ExprAST, unit> = pfloat |>> NumberExprAST
 
-let variableExpr: Parser<ExprAST, unit> =
-    identifier (IdentifierOptions()) |>> VariableExprAST
+let identifier = CharParsers.identifier (IdentifierOptions())
+
+let variableExpr: Parser<ExprAST, unit> = identifier |>> VariableExprAST
 
 let betweenParens x = x |> between (pchar '(') (pchar ')')
 
@@ -33,10 +34,11 @@ let parseExpr () = primary // TODO
 
 let parenExpr = parseExpr () |> betweenParens
 
-let callExpr =
-    (fun name args -> CallExprAST(name, args))
-    |> pipe2 (identifier (IdentifierOptions())) (sepBy (parseExpr ()) (pstring ",") |> betweenParens)
+let argList = sepBy (parseExpr ()) (pstring ",") |> betweenParens
 
-let identifierExpr = variableExpr <|> callExpr
+let callExpr =
+    (fun name args -> CallExprAST(name, args)) |> pipe2 identifier argList
+
+let identifierExpr = callExpr <|> variableExpr
 
 let primary = identifierExpr <|> numberExpr <|> parenExpr
