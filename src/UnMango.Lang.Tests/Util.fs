@@ -8,6 +8,6 @@ let parseOk =
     | Result.Error e -> failwith e
 
 let parseSuccess =
-  function
-  | Success(x, _, _) -> x
-  | Failure(e, _, _) -> failwith e
+    function
+    | Success(x, _, _) -> x
+    | Failure(e, _, _) -> failwith e

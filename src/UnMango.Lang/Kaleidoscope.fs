@@ -2,37 +2,15 @@ module UnMango.Lang.Kalaidoscope
 
 open FParsec
 
-[<AbstractClass>]
-type ExprAST() = class end
+type PrototypeAST = { Name: string; Args: string list }
 
-type NumberExprAST(Val: float) =
-    inherit ExprAST()
-    member _.Val = Val
-
-type VariableExprAST(Name: string) =
-    inherit ExprAST()
-    member _.Name = Name
-
-type BinaryExprAST(Op: char, LHS: ExprAST, RHS: ExprAST) =
-    inherit ExprAST()
-    member _.Op = Op
-    member _.LHS = LHS
-    member _.RHS = RHS
-
-type CallExprAST(Callee: string, Args: ExprAST list) =
-    inherit ExprAST()
-    member _.Callee = Callee
-    member _.Args = Args
-
-type PrototypeAST(Name: string, Args: string list) =
-    inherit ExprAST()
-    member _.Name = Name
-    member _.Args = Args
-
-type FunctionAST(Proto: PrototypeAST, Body: ExprAST) =
-    inherit ExprAST()
-    member _.Proto = Proto
-    member _.Body = Body
+type ExprAST =
+    | NumberExprAST of float
+    | VariableExprAST of string
+    | BinaryExprAST of op: char * lhs: ExprAST * rhs: ExprAST
+    | CallExprAST of callee: string * args: ExprAST list
+    | PrototypeAST of name: string * args: string list
+    | FunctionAST of proto: PrototypeAST * body: ExprAST
 
 let binOpPrec =
     function
@@ -42,10 +20,10 @@ let binOpPrec =
     | '*' -> 40
     | _ -> -1
 
-let parseNumberExpr: Parser<ExprAST, unit> = pfloat |>> NumberExprAST |>> fun x -> x :> ExprAST
+let parseNumberExpr: Parser<ExprAST, unit> = pfloat |>> NumberExprAST
 
 let parseVariableExpr: Parser<ExprAST, unit> =
-    identifier (IdentifierOptions()) |>> VariableExprAST |>> (fun x -> x :> ExprAST)
+    identifier (IdentifierOptions()) |>> VariableExprAST
 
 let betweenParens x = x |> between (pchar '(') (pchar ')')
 
