@@ -1,0 +1,251 @@
+package parser
+
+import (
+	"fmt"
+	"strconv"
+
+	"github.com/unstoppablemango/lang/pkg/ast"
+	"github.com/unstoppablemango/lang/pkg/scanner"
+	"github.com/unstoppablemango/lang/pkg/token"
+)
+
+type Parser interface {
+	Parse()
+}
+
+var binOpPrec = map[rune]int{
+	'<': 10,
+	'+': 20,
+	'-': 30,
+	'*': 40,
+}
+
+func tokPrec(s string) int {
+	if len(s) != 1 {
+		return -1
+	}
+
+	r := rune(s[0])
+	if prec, ok := binOpPrec[r]; ok {
+		return prec
+	} else {
+		return -1
+	}
+}
+
+type parser struct {
+	s scanner.Scanner
+
+	pos token.Pos
+	tok token.Token
+	lit string
+}
+
+func NewParser(src []byte) Parser {
+	s := scanner.NewScanner(src)
+	return &parser{s: s}
+}
+
+func (p *parser) next() {
+	p.pos, p.tok, p.lit = p.s.Scan()
+}
+
+func (p *parser) pexpr() ast.Expr {
+	lhs := p.pprimary()
+	if lhs == nil {
+		return nil
+	}
+
+	return p.pbinopRhs(0, lhs)
+}
+
+func (p *parser) pnum() *ast.NumExpr {
+	num, err := strconv.ParseFloat(p.lit, 64)
+	if err != nil {
+		panic(err)
+	}
+
+	return &ast.NumExpr{Value: num}
+}
+
+func (p *parser) pparen() ast.Expr {
+	p.next() // eat '('
+	e := p.pexpr()
+	if e == nil {
+		return nil
+	}
+
+	if p.lit != ")" {
+		panic("expected ')' found '" + p.lit + "'")
+	}
+
+	p.next() // eat ')'
+	return e
+}
+
+func (p *parser) pident() ast.Expr {
+	name := p.lit
+	p.next()
+
+	if p.lit != "(" {
+		return &ast.VarExpr{Name: name}
+	}
+
+	p.next() // eat '('
+	var args []ast.Expr
+	if p.lit != ")" {
+		for {
+			arg := p.pexpr()
+			if arg != nil {
+				args = append(args, arg)
+			} else {
+				return nil
+			}
+
+			if p.lit == ")" {
+				break
+			}
+
+			if p.lit != "," {
+				panic("expected ',' found '" + p.lit + "'")
+			}
+			p.next()
+		}
+	}
+
+	p.next() // eat ')'
+	return &ast.CallExpr{Callee: name, Args: args}
+}
+
+func (p *parser) pprimary() ast.Expr {
+	switch {
+	case p.tok == token.IDENT:
+		return p.pident()
+	case p.tok == token.NUM:
+		return p.pnum()
+	case p.lit == "(":
+		return p.pparen()
+	default:
+		panic("unuspported state: " + p.String())
+	}
+}
+
+func (p *parser) pbinopRhs(exprPrec int, lhs ast.Expr) ast.Expr {
+	for {
+		prec := tokPrec(p.lit)
+		if prec < exprPrec {
+			return lhs
+		}
+
+		op := rune(p.lit[0])
+		p.next()
+
+		rhs := p.pprimary()
+		if rhs == nil {
+			return nil
+		}
+
+		nextPrec := tokPrec(p.lit)
+		if prec < nextPrec {
+			rhs = p.pbinopRhs(prec+1, rhs)
+			if rhs == nil {
+				return nil
+			}
+		}
+
+		lhs = &ast.BinExpr{
+			Op:  op,
+			LHS: lhs,
+			RHS: rhs,
+		}
+	}
+}
+
+func (p *parser) pproto() *ast.Proto {
+	if p.tok != token.IDENT {
+		panic("expected function name in prototype")
+	}
+
+	name := p.lit
+	p.next()
+
+	if p.lit != "(" {
+		panic("expected '(' in prototype")
+	}
+	p.next() // eat '('
+
+	var args []string
+	for ; p.tok == token.IDENT; p.next() {
+		args = append(args, p.lit)
+	}
+
+	if p.lit != ")" {
+		panic("expected ')' in prototype")
+	}
+
+	p.next() // eat ')'
+	return &ast.Proto{Name: name, Args: args}
+}
+
+func (p *parser) pdef() *ast.Func {
+	p.next() // eat 'def'
+	proto := p.pproto()
+	if proto == nil {
+		return nil
+	}
+
+	if e := p.pexpr(); e != nil {
+		return &ast.Func{
+			Proto: proto,
+			Body:  e,
+		}
+	} else {
+		return nil
+	}
+}
+
+func (p *parser) ptopexpr() *ast.Func {
+	e := p.pexpr()
+	if e == nil {
+		return nil
+	}
+
+	proto := &ast.Proto{
+		Name: "__anon_expr",
+		Args: []string{},
+	}
+
+	return &ast.Func{
+		Proto: proto,
+		Body:  e,
+	}
+}
+
+func (p *parser) pextern() *ast.Proto {
+	p.next() // eat 'extern'
+	return p.pproto()
+}
+
+func (p *parser) Parse() {
+	for p.tok != token.EOF {
+		if p.lit == ";" {
+			p.next()
+			continue
+		}
+
+		switch p.tok {
+		case token.DEF:
+			fmt.Println("parsed: ", p.pdef())
+		case token.EXTERN:
+			fmt.Println("parsed: ", p.pextern())
+		default:
+			fmt.Println("parsed: ", p.ptopexpr())
+		}
+	}
+
+	return
+}
+
+func (p *parser) String() string {
+	return fmt.Sprintf("pos: %d, tok: %s, lit: %s", p.pos, p.tok, p.lit)
+}
