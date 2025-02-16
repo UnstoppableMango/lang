@@ -16,6 +16,11 @@ const (
 	LPAREN // (
 	RPAREN // )
 	COMMA  // ,
+	ADD    // +
+	SUB    // -
+	LT     // <
+	MUL    // *
+	SEMI   // ;
 )
 
 var tokens = [...]string{
@@ -24,6 +29,14 @@ var tokens = [...]string{
 	EXTERN: "extern",
 	IDENT:  "IDENT",
 	NUM:    "NUM",
+	LPAREN: "(",
+	RPAREN: ")",
+	COMMA:  ",",
+	ADD:    "+",
+	SUB:    "-",
+	LT:     "<",
+	MUL:    "*",
+	SEMI:   ";",
 }
 
 var keywords = map[string]Token{

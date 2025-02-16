@@ -47,5 +47,10 @@ var _ = Describe("Scanner", func() {
 		Entry(nil, "test()", 6, []token.Token{token.IDENT, token.LPAREN, token.RPAREN}, []string{"test"}),
 		Entry(nil, "def", 1, []token.Token{token.DEF}, []string{"def"}),
 		Entry(nil, "extern", 1, []token.Token{token.EXTERN}, []string{"extern"}),
+		Entry(nil, "+", 1, []token.Token{token.ADD}, nil),
+		Entry(nil, "-", 1, []token.Token{token.SUB}, nil),
+		Entry(nil, "<", 1, []token.Token{token.LT}, nil),
+		Entry(nil, "*", 1, []token.Token{token.MUL}, nil),
+		Entry(nil, ";", 1, []token.Token{token.SEMI}, nil),
 	)
 })
