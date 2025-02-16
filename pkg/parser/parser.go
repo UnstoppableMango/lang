@@ -83,7 +83,6 @@ func (p *parser) pident() ast.Expr {
 	p.next()
 
 	if p.tok != token.LPAREN {
-		fmt.Println("returning VarExpr", name)
 		return &ast.VarExpr{Name: name}
 	}
 
@@ -226,13 +225,14 @@ func (p *parser) pextern() *ast.Proto {
 
 func (p *parser) Parse() ast.Node {
 	f := &ast.File{}
-	for p.tok != token.EOF {
-		p.next()
-		if p.tok == token.SEMI {
-			continue
-		}
+	p.next()
 
+	for {
 		switch p.tok {
+		case token.EOF:
+			return f
+		case token.SEMI:
+			p.next()
 		case token.DEF:
 			f.Decls = append(f.Decls, p.pdef())
 		case token.EXTERN:
@@ -241,10 +241,8 @@ func (p *parser) Parse() ast.Node {
 			f.Decls = append(f.Decls, p.ptopexpr())
 		}
 	}
-
-	return f
 }
 
 func (p *parser) String() string {
-	return fmt.Sprintf("pos: %d, tok: %s, lit: %s", p.pos, p.tok, p.lit)
+	return fmt.Sprintf("pos(%d) tok(%s) lit(%s)", p.pos, p.tok, p.lit)
 }

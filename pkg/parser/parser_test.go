@@ -57,17 +57,22 @@ var _ = Describe("Parser", func() {
 				},
 			}},
 		}),
-		Entry(nil, "def foo(x y) x+y y;", &ast.File{
-			Decls: []ast.Node{&ast.Func{
-				Proto: &ast.Proto{Name: "test"},
-				Body:  &ast.VarExpr{Name: "test2"},
-			}},
-		}),
-		Entry(nil, "extern sin(a);", &ast.File{
-			Decls: []ast.Node{&ast.Func{
-				Proto: &ast.Proto{Name: "test"},
-				Body:  &ast.VarExpr{Name: "test2"},
-			}},
-		}),
+		Entry(nil, "def foo(x y) x+y y;", &ast.File{Decls: []ast.Node{
+			&ast.Func{
+				Proto: &ast.Proto{Name: "foo", Args: []string{"x", "y"}},
+				Body: &ast.BinExpr{
+					Op:  '+',
+					LHS: &ast.VarExpr{Name: "x"},
+					RHS: &ast.VarExpr{Name: "y"},
+				},
+			},
+			&ast.Func{
+				Proto: &ast.Proto{Name: "__anon_expr", Args: []string{}},
+				Body:  &ast.VarExpr{Name: "y"},
+			},
+		}}),
+		Entry(nil, "extern sin(a);", &ast.File{Decls: []ast.Node{
+			&ast.Proto{Name: "sin", Args: []string{"a"}},
+		}}),
 	)
 })
