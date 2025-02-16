@@ -12,48 +12,62 @@ type Scanner interface {
 
 type scanner struct {
 	src    []byte
+	last   rune
 	offset int
 }
 
-func (s *scanner) next() rune {
+func (s *scanner) next() {
 	if s.offset >= len(s.src) {
-		return -1
+		s.last = -1
+		return
 	}
 
 	r := s.src[s.offset]
 	s.offset++
-
-	return rune(r)
+	s.last = rune(r)
 }
 
 func (s *scanner) Scan() (pos token.Pos, tok token.Token, lit string) {
-	last := ' '
-	for unicode.IsSpace(last) {
-		last = s.next()
+	for unicode.IsSpace(s.last) {
+		s.next()
 	}
 
 	pos = token.Pos(s.offset)
 
-	if unicode.IsLetter(last) {
-		lit = lit + string(last)
-		last = s.next()
-
-		for alphanumeric(last) {
-			lit = lit + string(last)
-			last = s.next()
-		}
-
-		tok = token.Lookup(lit)
-
+	switch s.last {
+	case '(':
+		tok = token.LPAREN
+		s.next()
+		return
+	case ')':
+		tok = token.RPAREN
+		s.next()
+		return
+	case ',':
+		tok = token.COMMA
+		s.next()
 		return
 	}
 
-	if unicode.IsDigit(last) || last == '.' {
-		for {
-			lit = lit + string(last)
-			last = s.next()
+	if unicode.IsLetter(s.last) {
+		lit = lit + string(s.last)
+		s.next()
 
-			if !unicode.IsDigit(last) && last != '.' {
+		for alphanumeric(s.last) {
+			lit = lit + string(s.last)
+			s.next()
+		}
+
+		tok = token.Lookup(lit)
+		return
+	}
+
+	if unicode.IsDigit(s.last) || s.last == '.' {
+		for {
+			lit = lit + string(s.last)
+			s.next()
+
+			if !unicode.IsDigit(s.last) && s.last != '.' {
 				break
 			}
 		}
@@ -62,17 +76,17 @@ func (s *scanner) Scan() (pos token.Pos, tok token.Token, lit string) {
 		return
 	}
 
-	if last == '#' {
-		last = s.next()
-		for last != -1 && last != '\n' && last != '\r' {
-			last = s.next()
+	if s.last == '#' {
+		s.next()
+		for s.last != -1 && s.last != '\n' && s.last != '\r' {
+			s.next()
 		}
-		if last != -1 {
+		if s.last != -1 {
 			return s.Scan()
 		}
 	}
 
-	if last == -1 {
+	if s.last == -1 {
 		tok = token.EOF
 		return
 	}
@@ -81,7 +95,7 @@ func (s *scanner) Scan() (pos token.Pos, tok token.Token, lit string) {
 }
 
 func NewScanner(src []byte) Scanner {
-	return &scanner{src, 0}
+	return &scanner{src, ' ', 0}
 }
 
 func alphanumeric(r rune) bool {

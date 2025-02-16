@@ -7,6 +7,10 @@ type Expr interface {
 	exprNode()
 }
 
+type File struct {
+	Decls []Node
+}
+
 type NumExpr struct {
 	Value float64
 }

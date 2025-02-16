@@ -5,11 +5,17 @@ import "strconv"
 type Token int
 
 const (
-	EOF Token = iota
-	DEF
-	EXTERN
-	IDENT
-	NUM
+	ILLEGAL Token = iota
+
+	EOF    // EOF
+	DEF    // def
+	EXTERN // extern
+	IDENT  // IDENT
+	NUM    // NUM
+
+	LPAREN // (
+	RPAREN // )
+	COMMA  // ,
 )
 
 var tokens = [...]string{
@@ -18,6 +24,11 @@ var tokens = [...]string{
 	EXTERN: "extern",
 	IDENT:  "IDENT",
 	NUM:    "NUM",
+}
+
+var keywords = map[string]Token{
+	tokens[DEF]:    DEF,
+	tokens[EXTERN]: EXTERN,
 }
 
 func (tok Token) String() string {
@@ -33,12 +44,9 @@ func (tok Token) String() string {
 
 // Lookup maps an identifier to its keyword token or [IDENT] (if not a keyword).
 func Lookup(ident string) Token {
-	switch ident {
-	case tokens[DEF]:
-		return DEF
-	case tokens[EXTERN]:
-		return EXTERN
-	default:
+	if k, ok := keywords[ident]; ok {
+		return k
+	} else {
 		return IDENT
 	}
 }
