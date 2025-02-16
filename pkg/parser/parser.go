@@ -13,20 +13,16 @@ type Parser interface {
 	Parse() ast.Node
 }
 
-var binOpPrec = map[rune]int{
-	'<': 10,
-	'+': 20,
-	'-': 30,
-	'*': 40,
+var binOpPrec = map[token.Token]int{
+	token.LT:  10, // <
+	token.ADD: 20, // +
+	token.SUB: 30, // -
+	token.MUL: 40, // *
 }
 
-func tokPrec(s string) int {
-	if len(s) != 1 {
-		return -1
-	}
-
-	r := rune(s[0])
-	if prec, ok := binOpPrec[r]; ok {
+func tokPrec(tok token.Token) int {
+	fmt.Println("looking up", tok)
+	if prec, ok := binOpPrec[tok]; ok {
 		return prec
 	} else {
 		return -1
@@ -51,12 +47,11 @@ func (p *parser) next() {
 }
 
 func (p *parser) pexpr() ast.Expr {
-	lhs := p.pprimary()
-	if lhs == nil {
+	if lhs := p.pprimary(); lhs != nil {
+		return p.pbinopRhs(0, lhs)
+	} else {
 		return nil
 	}
-
-	return p.pbinopRhs(0, lhs)
 }
 
 func (p *parser) pnum() *ast.NumExpr {
@@ -95,8 +90,7 @@ func (p *parser) pident() ast.Expr {
 	var args []ast.Expr
 	if p.tok != token.RPAREN {
 		for {
-			arg := p.pexpr()
-			if arg != nil {
+			if arg := p.pexpr(); arg != nil {
 				args = append(args, arg)
 			} else {
 				return nil
@@ -107,14 +101,17 @@ func (p *parser) pident() ast.Expr {
 			}
 
 			if p.tok != token.COMMA {
-				panic("expected ',' found '" + p.tok.String() + "'")
+				panic("expected ')' or ',' in argument list, found '" + p.tok.String() + "' (" + p.lit + ")")
 			}
 			p.next()
 		}
 	}
 
 	p.next() // eat ')'
-	return &ast.CallExpr{Callee: name, Args: args}
+	return &ast.CallExpr{
+		Callee: name,
+		Args:   args,
+	}
 }
 
 func (p *parser) pprimary() ast.Expr {
@@ -132,12 +129,12 @@ func (p *parser) pprimary() ast.Expr {
 
 func (p *parser) pbinopRhs(exprPrec int, lhs ast.Expr) ast.Expr {
 	for {
-		prec := tokPrec(p.lit)
+		prec := tokPrec(p.tok)
 		if prec < exprPrec {
 			return lhs
 		}
 
-		op := rune(p.lit[0])
+		op := rune(p.tok.String()[0])
 		p.next()
 
 		rhs := p.pprimary()
@@ -145,7 +142,7 @@ func (p *parser) pbinopRhs(exprPrec int, lhs ast.Expr) ast.Expr {
 			return nil
 		}
 
-		nextPrec := tokPrec(p.lit)
+		nextPrec := tokPrec(p.tok)
 		if prec < nextPrec {
 			rhs = p.pbinopRhs(prec+1, rhs)
 			if rhs == nil {
@@ -230,7 +227,7 @@ func (p *parser) Parse() ast.Node {
 	f := &ast.File{}
 	for p.tok != token.EOF {
 		p.next()
-		if p.lit == ";" {
+		if p.tok == token.SEMI {
 			continue
 		}
 
