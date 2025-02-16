@@ -10,7 +10,7 @@ import (
 )
 
 type Parser interface {
-	Parse()
+	Parse() ast.Node
 }
 
 var binOpPrec = map[rune]int{
@@ -75,8 +75,8 @@ func (p *parser) pparen() ast.Expr {
 		return nil
 	}
 
-	if p.lit != ")" {
-		panic("expected ')' found '" + p.lit + "'")
+	if p.tok != token.RPAREN {
+		panic("expected ')' found '" + p.tok.String() + "'")
 	}
 
 	p.next() // eat ')'
@@ -87,13 +87,13 @@ func (p *parser) pident() ast.Expr {
 	name := p.lit
 	p.next()
 
-	if p.lit != "(" {
+	if p.tok != token.LPAREN {
 		return &ast.VarExpr{Name: name}
 	}
 
 	p.next() // eat '('
 	var args []ast.Expr
-	if p.lit != ")" {
+	if p.tok != token.RPAREN {
 		for {
 			arg := p.pexpr()
 			if arg != nil {
@@ -102,12 +102,12 @@ func (p *parser) pident() ast.Expr {
 				return nil
 			}
 
-			if p.lit == ")" {
+			if p.tok == token.RPAREN {
 				break
 			}
 
-			if p.lit != "," {
-				panic("expected ',' found '" + p.lit + "'")
+			if p.tok != token.COMMA {
+				panic("expected ',' found '" + p.tok.String() + "'")
 			}
 			p.next()
 		}
@@ -118,12 +118,12 @@ func (p *parser) pident() ast.Expr {
 }
 
 func (p *parser) pprimary() ast.Expr {
-	switch {
-	case p.tok == token.IDENT:
+	switch p.tok {
+	case token.IDENT:
 		return p.pident()
-	case p.tok == token.NUM:
+	case token.NUM:
 		return p.pnum()
-	case p.lit == "(":
+	case token.LPAREN:
 		return p.pparen()
 	default:
 		panic("unuspported state: " + p.String())
@@ -169,8 +169,8 @@ func (p *parser) pproto() *ast.Proto {
 	name := p.lit
 	p.next()
 
-	if p.lit != "(" {
-		panic("expected '(' in prototype")
+	if p.tok != token.LPAREN {
+		panic("expected '(' in prototype, found '" + p.tok.String() + "'")
 	}
 	p.next() // eat '('
 
@@ -179,7 +179,7 @@ func (p *parser) pproto() *ast.Proto {
 		args = append(args, p.lit)
 	}
 
-	if p.lit != ")" {
+	if p.tok != token.RPAREN {
 		panic("expected ')' in prototype")
 	}
 
@@ -226,24 +226,25 @@ func (p *parser) pextern() *ast.Proto {
 	return p.pproto()
 }
 
-func (p *parser) Parse() {
+func (p *parser) Parse() ast.Node {
+	f := &ast.File{}
 	for p.tok != token.EOF {
+		p.next()
 		if p.lit == ";" {
-			p.next()
 			continue
 		}
 
 		switch p.tok {
 		case token.DEF:
-			fmt.Println("parsed: ", p.pdef())
+			f.Decls = append(f.Decls, p.pdef())
 		case token.EXTERN:
-			fmt.Println("parsed: ", p.pextern())
+			f.Decls = append(f.Decls, p.pextern())
 		default:
-			fmt.Println("parsed: ", p.ptopexpr())
+			f.Decls = append(f.Decls, p.ptopexpr())
 		}
 	}
 
-	return
+	return f
 }
 
 func (p *parser) String() string {

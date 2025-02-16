@@ -44,6 +44,8 @@ var _ = Describe("Scanner", func() {
 		Entry(nil, "12", 1, []token.Token{token.NUM}, []string{"12"}),
 		Entry(nil, "12.3", 1, []token.Token{token.NUM}, []string{"12.3"}),
 		Entry(nil, "12.3 # test", 1, []token.Token{token.NUM}, []string{"12.3"}),
-		Entry(nil, "test()", 1, []token.Token{token.IDENT}, []string{"test"}),
+		Entry(nil, "test()", 6, []token.Token{token.IDENT, token.LPAREN, token.RPAREN}, []string{"test"}),
+		Entry(nil, "def", 1, []token.Token{token.DEF}, []string{"def"}),
+		Entry(nil, "extern", 1, []token.Token{token.EXTERN}, []string{"extern"}),
 	)
 })
