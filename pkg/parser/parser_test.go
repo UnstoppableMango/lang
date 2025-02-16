@@ -43,8 +43,18 @@ var _ = Describe("Parser", func() {
 		}),
 		Entry(nil, "def foo(x y) x+foo(y, 4.0)", &ast.File{
 			Decls: []ast.Node{&ast.Func{
-				Proto: &ast.Proto{Name: "test"},
-				Body:  &ast.VarExpr{Name: "test2"},
+				Proto: &ast.Proto{Name: "foo", Args: []string{"x", "y"}},
+				Body: &ast.BinExpr{
+					Op:  '+',
+					LHS: &ast.VarExpr{Name: "x"},
+					RHS: &ast.CallExpr{
+						Callee: "foo",
+						Args: []ast.Expr{
+							&ast.VarExpr{Name: "y"},
+							&ast.NumExpr{Value: 4},
+						},
+					},
+				},
 			}},
 		}),
 		Entry(nil, "def foo(x y) x+y y;", &ast.File{

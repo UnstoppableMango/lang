@@ -21,7 +21,6 @@ var binOpPrec = map[token.Token]int{
 }
 
 func tokPrec(tok token.Token) int {
-	fmt.Println("looking up", tok)
 	if prec, ok := binOpPrec[tok]; ok {
 		return prec
 	} else {
@@ -60,6 +59,7 @@ func (p *parser) pnum() *ast.NumExpr {
 		panic(err)
 	}
 
+	p.next()
 	return &ast.NumExpr{Value: num}
 }
 
@@ -83,6 +83,7 @@ func (p *parser) pident() ast.Expr {
 	p.next()
 
 	if p.tok != token.LPAREN {
+		fmt.Println("returning VarExpr", name)
 		return &ast.VarExpr{Name: name}
 	}
 
