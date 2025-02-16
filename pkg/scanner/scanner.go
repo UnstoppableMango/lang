@@ -47,6 +47,26 @@ func (s *scanner) Scan() (pos token.Pos, tok token.Token, lit string) {
 		tok = token.COMMA
 		s.next()
 		return
+	case '+':
+		tok = token.ADD
+		s.next()
+		return
+	case '-':
+		tok = token.SUB
+		s.next()
+		return
+	case '<':
+		tok = token.LT
+		s.next()
+		return
+	case '*':
+		tok = token.MUL
+		s.next()
+		return
+	case ';':
+		tok = token.SEMI
+		s.next()
+		return
 	}
 
 	if unicode.IsLetter(s.last) {
