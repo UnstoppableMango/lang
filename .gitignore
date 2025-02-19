@@ -1,6 +1,7 @@
 bin/
 obj/
 .make
+cmake-build-debug/
 
 *.user
 discord.xml
