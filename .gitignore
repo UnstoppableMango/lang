@@ -1,10 +1,13 @@
 bin/
 obj/
 .make
-cmake-build-debug/
+cmake-build-*/
 
 *.user
 discord.xml
 *.test
 .fake
 .vscode/settings.json
+.idea/**/workspace.xml
+.idea/**/modules.xml
+*.iml
