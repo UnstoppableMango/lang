@@ -4,6 +4,8 @@
 		"editorconfig.editorconfig",
 		"golang.go",
 		"ionide.ionide-fsharp",
-		"dprint.dprint"
+    "dprint.dprint",
+    "ms-vscode.cpptools",
+    "ms-vscode.makefile-tools"
 	]
 }
