@@ -2,6 +2,7 @@ bin/
 obj/
 .make
 cmake-build-*/
+build/
 
 *.user
 discord.xml
