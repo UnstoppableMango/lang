@@ -12,3 +12,4 @@ discord.xml
 .idea/**/workspace.xml
 .idea/**/modules.xml
 *.iml
+.envrc
