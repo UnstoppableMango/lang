@@ -18,7 +18,8 @@ TEST_FLAGS := --github-output --trace --cover
 endif
 
 tmp:
-	cmake --build /home/erik/src/github.com/UnstoppableMango/lang/build --config Debug --target all --
+	cmake --build ${CURDIR}/build \
+	--config Debug --target all --
 
 build: bin/lang-host bin/ir
 gen: .make/buf-gen
