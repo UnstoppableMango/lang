@@ -14,3 +14,4 @@ discord.xml
 .idea/**/modules.xml
 *.iml
 .envrc
+CMakeUserPresets.json
