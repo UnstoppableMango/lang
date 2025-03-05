@@ -17,7 +17,7 @@ else
 TEST_FLAGS := --github-output --trace --cover
 endif
 
-build: bin/lang-host bin/ir
+build: bin/lang-host bin/ir bin/Kaleidoscope
 gen: .make/buf-gen
 test: .make/dotnet-test .make/ginkgo-test
 format: .make/fantomas-format .make/dotnet-format .make/dprint-format .make/buf-format
@@ -53,8 +53,7 @@ bin/lang-host: src/UnMango.Lang.Host/bin/lang-host
 	cp $< $@
 
 bin/devctl: .versions/devctl | bin
-	go install github.com/unmango/devctl/cmd@v$(shell cat $<)
-	mv bin/cmd $@
+	go install github.com/unmango/devctl@v$(shell cat $<)
 
 bin/ginkgo: go.mod | bin
 	go install github.com/onsi/ginkgo/v2/ginkgo
