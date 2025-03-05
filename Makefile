@@ -17,10 +17,6 @@ else
 TEST_FLAGS := --github-output --trace --cover
 endif
 
-tmp:
-	cmake --build ${CURDIR}/build \
-	--config Debug --target all --
-
 build: bin/lang-host bin/ir
 gen: .make/buf-gen
 test: .make/dotnet-test .make/ginkgo-test
@@ -46,6 +42,9 @@ go.mod:
 
 CMakeUserPresets.json: hack/CMakeUserPresets.example.json
 	cp $< $@
+
+bin/Kaleidoscope: | build/Kaleidoscope
+	ln -s ${CURDIR}/$| ${CURDIR}/$@
 
 bin/ir: $(shell $(DEVCTL) list --go)
 	go build -o $@ -tags=llvm19 ./cmd/ir
@@ -76,6 +75,9 @@ bin/buf: .versions/buf | bin/devctl
 
 bin/vcpkg: | tools/vcpkg/vcpkg
 	ln -s ${CURDIR}/$| ${CURDIR}/$@
+
+build/Kaleidoscope:
+	cmake --build ${CURDIR}/build --config Debug --target all --
 
 src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 	dotnet publish src/UnMango.Lang.Host -p:DebugSymbols=false \
