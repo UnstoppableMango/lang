@@ -1,3 +1,14 @@
+#include "llvm/ADT/APFloat.h"
+#include "llvm/ADT/STLExtras.h"
+#include "llvm/IR/BasicBlock.h"
+#include "llvm/IR/Constants.h"
+#include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/Function.h"
+#include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/LLVMContext.h"
+#include "llvm/IR/Module.h"
+#include "llvm/IR/Type.h"
+#include "llvm/IR/Verifier.h"
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -68,6 +79,7 @@ static int gettok() {
 class ExprAST {
 public:
 	virtual ~ExprAST() = default;
+	virtual llvm::Value *codegen() = 0;
 };
 
 class NumberExprAST : public ExprAST {
@@ -75,6 +87,7 @@ class NumberExprAST : public ExprAST {
 
 public:
 	NumberExprAST(double Val) : Val(Val) {}
+  llvm::Value *codegen() override;
 };
 
 class VariableExprAST : public ExprAST {
@@ -82,6 +95,7 @@ class VariableExprAST : public ExprAST {
 
 public:
 	VariableExprAST(const std::string &Name) : Name(Name) {}
+  llvm::Value *codegen() override;
 };
 
 class BinaryExprAST : public ExprAST {
@@ -91,6 +105,7 @@ class BinaryExprAST : public ExprAST {
 public:
 	BinaryExprAST(char Op, std::unique_ptr<ExprAST> LHS, std::unique_ptr<ExprAST> RHS)
 		: Op(Op), LHS(std::move(LHS)), RHS(std::move(RHS)) {}
+	llvm::Value *codegen() override;
 };
 
 class CallExprAST : public ExprAST {
@@ -100,6 +115,7 @@ class CallExprAST : public ExprAST {
 public:
 	CallExprAST(const std::string &Callee, std::vector<std::unique_ptr<ExprAST>> Args)
 		: Callee(Callee), Args(std::move(Args)) {}
+	llvm::Value *codegen() override;
 };
 
 class PrototypeAST {
@@ -333,6 +349,68 @@ static void MainLoop() {
 			break;
 		}
 	}
+}
+
+static std::unique_ptr<llvm::LLVMContext> TheContext;
+static std::unique_ptr<llvm::IRBuilder<>> Builder;
+static std::unique_ptr<llvm::Module> TheModule;
+static std::map<std::string, llvm::Value *> NamedValues;
+
+llvm::Value *LogErrorV(const char *Str) {
+	LogError(Str);
+	return nullptr;
+}
+
+llvm::Value *NumberExprAST::codegen() {
+	return llvm::ConstantFP::get(*TheContext, llvm::APFloat(Val));
+}
+
+llvm::Value *VariableExprAST::codegen() {
+	llvm::Value *V = NamedValues[Name];
+	if (!V)
+		LogErrorV("Unknown variable name");
+
+	return V;
+}
+
+llvm::Value *BinaryExprAST::codegen() {
+	llvm::Value *L = LHS->codegen();
+	llvm::Value *R = RHS->codegen();
+	if (!L && !R)
+		return nullptr;
+
+	switch (Op) {
+	case '+':
+		return Builder->CreateFAdd(L, R, "addtmp");
+	case '-':
+		return Builder->CreateFSub(L, R, "subtmp");
+	case '*':
+		return Builder->CreateFMul(L, R, "multmp");
+	case '<':
+		L = Builder->CreateFCmpULT(L, R, "cmptmp");
+		// Convert bool 0/1 to double 0.0 or 1.0
+		return Builder->CreateUIToFP(L, llvm::Type::getDoubleTy(*TheContext), "booltmp");
+	default:
+		return LogErrorV("invalid binary operator");
+	}
+}
+
+llvm::Value *CallExprAST::codegen() {
+	llvm::Function *CalleeF = TheModule->getFunction(Callee);
+	if (!CalleeF)
+		return LogErrorV("Unknown function referenced");
+
+	if (CalleeF->arg_size() != Args.size())
+		return LogErrorV("Incorrect # arguments passed");
+
+	std::vector<llvm::Value *> ArgsV;
+	for (unsigned i = 0, e = Args.size(); i != e; ++i) {
+		ArgsV.push_back(Args[i]->codegen());
+		if (!ArgsV.back())
+			return nullptr;
+	}
+
+	return Builder->CreateCall(CalleeF, ArgsV, "calltmp");
 }
 
 int main() {
