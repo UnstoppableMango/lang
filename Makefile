@@ -76,7 +76,7 @@ bin/buf: .versions/buf | bin/devctl
 bin/vcpkg: | tools/vcpkg/vcpkg
 	ln -s ${CURDIR}/$| ${CURDIR}/$@
 
-build/Kaleidoscope:
+build/Kaleidoscope: kaleidoscope.cpp
 	cmake --build ${CURDIR}/build --config Debug --target all --
 
 src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
