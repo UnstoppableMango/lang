@@ -1,0 +1,15 @@
+name: Debug Workflow - DELETE ME!
+
+on:
+    push:
+        branches: [build-llvm]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: docker/setup-buildx-action@v3
+
+            - uses: docker/build-push-action@v6
+              with:
+                push: false
