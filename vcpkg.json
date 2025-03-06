@@ -1,1 +1,11 @@
-{}
+{
+	"dependencies": [
+		{
+			"name": "llvm",
+			"default-features": false,
+			"features": [
+				"target-arm"
+			]
+		}
+	]
+}
