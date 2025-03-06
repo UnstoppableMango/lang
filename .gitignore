@@ -4,6 +4,7 @@ obj/
 cmake-build-*/
 build/
 vcpkg_installed/
+llvm-project/
 
 *.user
 discord.xml
