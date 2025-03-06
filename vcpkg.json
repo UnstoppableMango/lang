@@ -4,6 +4,9 @@
 			"name": "llvm",
 			"default-features": false,
 			"features": [
+				"libcxx",
+				"libcxxabi",
+				"libunwind",
 				"target-arm",
 				"target-aarch64",
 				"target-x86"
