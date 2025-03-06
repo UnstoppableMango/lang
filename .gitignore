@@ -3,6 +3,7 @@ obj/
 .make
 cmake-build-*/
 build/
+vcpkg_installed/
 
 *.user
 discord.xml
@@ -12,3 +13,4 @@ discord.xml
 .idea/**/workspace.xml
 .idea/**/modules.xml
 *.iml
+CMakeUserPresets.json
