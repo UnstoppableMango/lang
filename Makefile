@@ -40,8 +40,8 @@ go.mod:
 .envrc: hack/example.envrc
 	cp $< $@
 
-.make bin:
-	mkdir -p $@
+CMakeUserPresets.json: hack/CMakeUserPresets.example.json
+	cp $< $@
 
 bin/ir: $(shell $(DEVCTL) list --go)
 	go build -o $@ -tags=llvm19 ./cmd/ir
@@ -128,3 +128,6 @@ tools/vcpkg/bootstrap-vcpkg.sh:
 .make/buf-format: $(shell $(DEVCTL) list --proto) | .make bin/buf bin/devctl
 	$(BUF) format --write
 	@touch $@
+
+.make bin:
+	mkdir -p $@
