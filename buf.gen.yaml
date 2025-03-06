@@ -16,3 +16,9 @@ plugins:
     out: pkg
     opt:
       - paths=source_relative
+
+  - remote: buf.build/protocolbuffers/cpp:v30.0
+    out: lib
+
+  - remote: buf.build/grpc/cpp:v1.70.1
+    out: lib
