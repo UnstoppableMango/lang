@@ -7,7 +7,7 @@ LLD_LIB_NAMES = lldCOFF lldCommon lldELF lldMachO lldMinGW lldWasm
 LLD_LIBS = $(START_GROUP) $(addprefix -l,$(LLD_LIB_NAMES)) $(END_GROUP)
 
 # Other libraries that are needed to link TinyGo.
-EXTRA_LIB_NAMES = LLVMInterpreter LLVMMCA LLVMRISCVTargetMCA LLVMX86TargetMCA
+EXTRA_LIB_NAMES = LLVMInterpreter LLVMMCA LLVMX86TargetMCA
 
 # All libraries to be built and linked with the tinygo binary (lib/lib*.a).
 LIB_NAMES = clang $(CLANG_LIB_NAMES) $(LLD_LIB_NAMES) $(EXTRA_LIB_NAMES)
@@ -21,7 +21,7 @@ LIB_NAMES = clang $(CLANG_LIB_NAMES) $(LLD_LIB_NAMES) $(EXTRA_LIB_NAMES)
 NINJA_BUILD_TARGETS = clang llvm-config llvm-ar llvm-nm lld $(addprefix lib/lib,$(addsuffix .a,$(LIB_NAMES)))
 
 llvm-project:
-	git clone --depth=1 https://github.com/llvm/llvm-project.git
+	git clone --depth=1 --branch llvmorg-19.1.7 https://github.com/llvm/llvm-project.git
 
 llvm-build/build.ninja:
 	mkdir -p $(dir $@) && cd $(dir $@) && \
@@ -42,4 +42,4 @@ llvm-build/build.ninja:
 	-DCLANG_ENABLE_ARCMT=OFF
 
 llvm-build: llvm-build/build.ninja
-	ninja -C $@ ${NINJA_BUILD_TARGETS}
+	ninja -C $@ check-llvm
