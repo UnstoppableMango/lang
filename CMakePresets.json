@@ -13,5 +13,13 @@
 				"utf8_range_ENABLE_INSTALL": "ON"
 			}
 		}
+		{
+			"name": "vcpkg",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build",
+			"environment": {
+				"CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+			}
+		}
 	]
 }
