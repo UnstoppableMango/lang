@@ -48,8 +48,8 @@ go.mod:
 .envrc: hack/example.envrc
 	cp $< $@
 
-.make bin:
-	mkdir -p $@
+CMakeUserPresets.json: hack/CMakeUserPresets.example.json
+	cp $< $@
 
 bin/ir: $(shell $(DEVCTL) list --go)
 	go build -o $@ -tags=llvm19 ./cmd/ir
@@ -135,3 +135,6 @@ tools/vcpkg/bootstrap-vcpkg.sh:
 
 .make/ninja.zip: .versions/ninja
 	curl -Lo $@ https://github.com/ninja-build/ninja/releases/download/$(shell $(DEVCTL) $<)/ninja-$(shell go env GOOS).zip
+
+.make bin:
+	mkdir -p $@

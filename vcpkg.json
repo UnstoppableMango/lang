@@ -4,7 +4,9 @@
 			"name": "llvm",
 			"default-features": false,
 			"features": [
-				"target-arm"
+				"target-arm",
+				"target-aarch64",
+				"target-x86"
 			]
 		}
 	]
