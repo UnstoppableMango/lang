@@ -1,2 +1,5 @@
 *
 !lib/llvm/Makefile
+!cmd/
+!go.mod
+!go.sum
