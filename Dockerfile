@@ -9,17 +9,20 @@ RUN apt-get update && \
         /var/tmp/* \
         /tmp/*
 
-COPY lib/llvm/Makefile /lang/Makefile
-RUN make -C /lang llvm-project
+# COPY lib/llvm/Makefile /lang/Makefile
+RUN git clone --depth=1 --branch llvmorg-19.1.7 https://github.com/llvm/llvm-project.git
 
 FROM llvm AS llvm-build
-RUN make -C /lang llvm-build
+WORKDIR /llvm-build
+RUN cmake -G Ninja /llvm-project \
+		"-DLLVM_TARGETS_TO_BUILD=X86;ARM;AArch64;WebAssembly"
 
 FROM llvm-build AS build
 
 WORKDIR /lang
 
 COPY go.mod go.sum ./
+RUN go mod download
 
 COPY cmd/ir ./
-RUN go build ./
+RUN go build -tags=byollvm ./
