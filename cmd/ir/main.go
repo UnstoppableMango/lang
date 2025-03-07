@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"tinygo.org/x/go-llvm"
 )
 
@@ -11,9 +9,12 @@ func main() {
 	defer c.Dispose()
 
 	m := c.NewModule("test")
+	// b := c.NewBuilder()
 
-	v := llvm.ConstString("test", true)
-	fmt.Println(v.String())
+	llvm.FunctionType(c.Int32Type(), []llvm.Type{
+		llvm.PointerType(c.Int8Type(), 1),
+		llvm.PointerType(c.Int8Type(), 1),
+	}, true)
 
 	m.Dump()
 }
