@@ -8,9 +8,19 @@ message String {
   string value = 1;
 }
 
+message Prototype {
+  string name = 1;
+}
+
+message Function {
+  Prototype proto = 1;
+}
+
 message Node {
   oneof value {
     String string = 1;
+    Function func = 2;
+    Prototype proto = 3;
   }
 }
 
