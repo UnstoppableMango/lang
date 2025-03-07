@@ -3,7 +3,7 @@ package scanner
 import (
 	"unicode"
 
-	"github.com/unstoppablemango/lang/pkg/token"
+	"github.com/unstoppablemango/lang/pkg/kaleidoscope/token"
 )
 
 type Scanner interface {

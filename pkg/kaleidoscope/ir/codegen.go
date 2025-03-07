@@ -3,7 +3,7 @@ package ir
 import (
 	"reflect"
 
-	"github.com/unstoppablemango/lang/pkg/ast"
+	"github.com/unstoppablemango/lang/pkg/kaleidoscope/ast"
 	"tinygo.org/x/go-llvm"
 )
 

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/unstoppablemango/lang/pkg/ast"
-	"github.com/unstoppablemango/lang/pkg/scanner"
-	"github.com/unstoppablemango/lang/pkg/token"
+	"github.com/unstoppablemango/lang/pkg/kaleidoscope/ast"
+	"github.com/unstoppablemango/lang/pkg/kaleidoscope/scanner"
+	"github.com/unstoppablemango/lang/pkg/kaleidoscope/token"
 )
 
 type Parser interface {
