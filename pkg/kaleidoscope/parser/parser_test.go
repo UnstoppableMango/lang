@@ -4,8 +4,8 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/unstoppablemango/lang/pkg/ast"
-	"github.com/unstoppablemango/lang/pkg/parser"
+	"github.com/unstoppablemango/lang/pkg/kaleidoscope/ast"
+	"github.com/unstoppablemango/lang/pkg/kaleidoscope/parser"
 )
 
 var _ = Describe("Parser", func() {
