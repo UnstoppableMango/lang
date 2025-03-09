@@ -9,12 +9,16 @@ func main() {
 	defer c.Dispose()
 
 	m := c.NewModule("test")
-	// b := c.NewBuilder()
+	b := c.NewBuilder()
 
-	llvm.FunctionType(c.Int32Type(), []llvm.Type{
+	fn := llvm.FunctionType(c.Int32Type(), []llvm.Type{
 		llvm.PointerType(c.Int8Type(), 1),
 		llvm.PointerType(c.Int8Type(), 1),
 	}, true)
+
+	printf := m.NamedFunction("printf")
+
+	b.CreateCall(fn, printf, []llvm.Value{}, "")
 
 	m.Dump()
 }
