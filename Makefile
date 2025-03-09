@@ -50,8 +50,7 @@ bin/lang-host: src/UnMango.Lang.Host/bin/lang-host
 	cp $< $@
 
 bin/devctl: .versions/devctl | bin
-	go install github.com/unmango/devctl/cmd@v$(shell cat $<)
-	mv bin/cmd $@
+	go install github.com/unmango/devctl@v$(shell cat $<)
 
 bin/ginkgo: go.mod | bin
 	go install github.com/onsi/ginkgo/v2/ginkgo
