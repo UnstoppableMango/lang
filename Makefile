@@ -17,16 +17,23 @@ else
 TEST_FLAGS := --github-output --trace --cover
 endif
 
-build: bin/lang-host bin/ir
+all: bin/lang-host bin/ir
 gen: .make/buf-gen
 test: .make/dotnet-test .make/ginkgo-test
 format: .make/fantomas-format .make/dotnet-format .make/dprint-format .make/buf-format
 tidy: go.sum
 dev: .envrc bin/devctl bin/dotnet
-ci: .make test
+ci: .make test build build/lang
 
 clean: .make/dotnet-clean
 	rm -rf src/**/{bin,obj}
+
+.PHONY: build build/lang
+build:
+	cmake --preset default
+
+build/lang:
+	cmake --build build
 
 go.sum: go.mod $(shell $(DEVCTL) list --go)
 	go mod tidy

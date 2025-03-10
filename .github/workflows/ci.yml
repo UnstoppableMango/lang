@@ -29,8 +29,8 @@ jobs:
       #   with:
       #     version: '19.1'
 
-      - uses: ZhongRuoyu/setup-llvm@v0
-        with:
-          llvm-version: 19
+      # - uses: ZhongRuoyu/setup-llvm@v0
+      #   with:
+      #     llvm-version: 19
 
       - run: make ci
