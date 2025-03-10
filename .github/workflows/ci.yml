@@ -13,6 +13,13 @@ jobs:
 
       - run: make .make bin
 
+      - uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/build
+          key: ${{ runner.os }}-${{ hashFiles('CMakeLists.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
       - uses: actions/setup-dotnet@v4
         with:
           global-json-file: global.json
@@ -24,13 +31,9 @@ jobs:
           go-version-file: go.mod
           cache-dependency-path: go.sum
 
-      # https://github.com/KyleMayes/install-llvm-action/pull/84
-      # - uses: KyleMayes/install-llvm-action@v2
-      #   with:
-      #     version: '19.1'
-
-      # - uses: ZhongRuoyu/setup-llvm@v0
-      #   with:
-      #     llvm-version: 19
+      - uses: KyleMayes/install-llvm-action@v2
+        if: false
+        with:
+          version: '19.1'
 
       - run: make ci
