@@ -10,6 +10,7 @@ BUF      ?= ${LOCALBIN}/buf
 DOTNET   ?= ${LOCALBIN}/dotnet
 FANTOMAS ?= ${LOCALBIN}/fantomas
 GINKGO   ?= ${LOCALBIN}/ginkgo
+NINJA    ?= ${LOCALBIN}/ninja
 
 ifeq (${CI},)
 TEST_FLAGS := --label-filter !E2E
@@ -17,16 +18,23 @@ else
 TEST_FLAGS := --github-output --trace --cover
 endif
 
-build: bin/lang-host bin/ir
+all: bin/lang-host bin/ir
 gen: .make/buf-gen
 test: .make/dotnet-test .make/ginkgo-test
 format: .make/fantomas-format .make/dotnet-format .make/dprint-format .make/buf-format
 tidy: go.sum
 dev: .envrc bin/devctl bin/dotnet
-ci: .make test
+ci: .make test build build/lang
 
 clean: .make/dotnet-clean
 	rm -rf src/**/{bin,obj}
+
+.PHONY: build build/lang
+build: | bin/ninja
+	cmake --preset default -DCMAKE_MAKE_PROGRAM=$(NINJA)
+
+build/lang:
+	cmake --build build
 
 go.sum: go.mod $(shell $(DEVCTL) list --go)
 	go mod tidy
@@ -68,6 +76,9 @@ bin/dprint: .versions/dprint | .make/dprint/install.sh bin
 
 bin/buf: .versions/buf | bin/devctl
 	go install github.com/bufbuild/buf/cmd/buf@$(shell $(DEVCTL) $<)
+
+bin/ninja: | .make/ninja.zip
+	unzip ${CURDIR}/$| -d ${LOCALBIN}
 
 src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 	dotnet publish src/UnMango.Lang.Host -p:DebugSymbols=false \
@@ -118,3 +129,6 @@ src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 .make/buf-format: $(shell $(DEVCTL) list --proto) | .make bin/buf bin/devctl
 	$(BUF) format --write
 	@touch $@
+
+.make/ninja.zip: .versions/ninja
+	curl -Lo $@ https://github.com/ninja-build/ninja/releases/download/$(shell $(DEVCTL) $<)/ninja-$(shell go env GOOS).zip
