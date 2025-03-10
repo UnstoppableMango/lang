@@ -44,7 +44,6 @@ jobs:
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
       - uses: KyleMayes/install-llvm-action@v2
-        if: false
         with:
           version: '19.1'
 
