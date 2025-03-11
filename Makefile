@@ -17,6 +17,7 @@ else
 TEST_FLAGS := --github-output --trace --cover
 endif
 
+.PHONY: build
 build: bin/lang-host bin/ir
 gen: .make/buf-gen
 test: .make/dotnet-test .make/ginkgo-test
@@ -27,6 +28,13 @@ ci: .make test
 
 clean: .make/dotnet-clean
 	rm -rf src/**/{bin,obj}
+
+cmake-build-debug:
+	cmake -S ${CURDIR} -B ${CURDIR}/$@ \
+	-DCMAKE_C_COMPILER=clang \
+	-DCMAKE_CXX_COMPILER=clang++ \
+	-DLLVM_DIR=`llvm-config --cmakedir` \
+	-DCMAKE_BUILD_TYPE=Debug
 
 go.sum: go.mod $(shell $(DEVCTL) list --go)
 	go mod tidy
@@ -119,3 +127,6 @@ src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 .make/buf-format: $(shell $(DEVCTL) list --proto) | .make bin/buf bin/devctl
 	$(BUF) format --write
 	@touch $@
+
+.make/cmake-build:
+	cmake --build ${CURDIR}/cmake-build-debug
