@@ -4,12 +4,12 @@ GO_PROJ      := github.com/unstoppablemango/lang
 DOTNET_CONFIG := Debug
 
 LOCALBIN := ${CURDIR}/bin
-DEVCTL   ?= ${LOCALBIN}/devctl
+DEVCTL   ?= go tool devctl
 DPRINT   ?= ${LOCALBIN}/dprint
 BUF      ?= ${LOCALBIN}/buf
 DOTNET   ?= ${LOCALBIN}/dotnet
 FANTOMAS ?= ${LOCALBIN}/fantomas
-GINKGO   ?= ${LOCALBIN}/ginkgo
+GINKGO   ?= go tool ginkgo
 NINJA    ?= ${LOCALBIN}/ninja
 
 ifeq (${CI},)
@@ -57,12 +57,6 @@ bin/ir: $(shell $(DEVCTL) list --go)
 bin/lang-host: src/UnMango.Lang.Host/bin/lang-host
 	cp $< $@
 
-bin/devctl: .versions/devctl | bin
-	go install github.com/unmango/devctl@v$(shell cat $<)
-
-bin/ginkgo: go.mod | bin
-	go install github.com/onsi/ginkgo/v2/ginkgo
-
 bin/dotnet: | .make/dotnet
 	rm -f $@ && ln -s ${CURDIR}/.make/dotnet/dotnet $@
 
@@ -74,13 +68,13 @@ bin/dprint: .versions/dprint | .make/dprint/install.sh bin
 	DPRINT_INSTALL=${CURDIR} .make/dprint/install.sh $(shell $(DEVCTL) v dprint)
 	@touch $@
 
-bin/buf: .versions/buf | bin/devctl
+bin/buf: .versions/buf
 	go install github.com/bufbuild/buf/cmd/buf@$(shell $(DEVCTL) $<)
 
 bin/ninja: | .make/ninja.zip
 	unzip ${CURDIR}/$| -d ${LOCALBIN}
 
-src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
+src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs)
 	dotnet publish src/UnMango.Lang.Host -p:DebugSymbols=false \
 	--use-current-runtime --self-contained --configuration ${DOTNET_CONFIG} --output $(dir $@)
 
@@ -90,19 +84,19 @@ src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 .make/dotnet: global.json | .make/dotnet-install.sh
 	.make/dotnet-install.sh --install-dir $@ --jsonfile $< --no-path
 
-.make/dotnet-build: $(shell $(DEVCTL) list --dotnet) Lang.sln | .make bin/devctl bin/dotnet
+.make/dotnet-build: $(shell $(DEVCTL) list --dotnet) Lang.sln | .make bin/dotnet
 	$(DOTNET) build
 	@touch $@
 
-.make/dotnet-test: $(shell $(DEVCTL) list --dotnet) Lang.sln | .make bin/devctl bin/dotnet
+.make/dotnet-test: $(shell $(DEVCTL) list --dotnet) Lang.sln | .make bin/dotnet
 	$(DOTNET) test
 	@touch $@
 
-.make/dotnet-format: $(shell $(DEVCTL) list --cs) | .make bin/devctl bin/dotnet
+.make/dotnet-format: $(shell $(DEVCTL) list --cs) | .make bin/dotnet
 	$(DOTNET) format --include $?
 	@touch $@
 
-.make/dotnet-clean: | .make bin/devctl bin/dotnet
+.make/dotnet-clean: | .make bin/dotnet
 	$(DOTNET) clean
 	@touch $@
 
@@ -110,7 +104,7 @@ src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs) | bin/devctl
 	$(FANTOMAS) $?
 	@touch $@
 
-.make/ginkgo-test: $(shell $(DEVCTL) list --go) | .make bin/devctl bin/ginkgo bin/lang-host
+.make/ginkgo-test: $(shell $(DEVCTL) list --go) | .make bin/lang-host
 	$(GINKGO) run ${TEST_FLAGS} $(sort $(dir $?))
 	@touch $@
 
