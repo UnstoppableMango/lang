@@ -9,10 +9,14 @@
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Verifier.h"
-#include <iostream>
-#include <memory>
-#include <vector>
+#include <algorithm>
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
 #include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
 enum Token {
 	tok_eof = -1,
@@ -126,7 +130,7 @@ public:
 	PrototypeAST(const std::string &Name, std::vector<std::string> Args)
 		: Name(Name), Args(std::move(Args)) {}
 	llvm::Function *codegen();
-	std::string getName();
+  const std::string &getName() const { return Name; }
 };
 
 class FunctionAST {
@@ -308,52 +312,6 @@ static std::unique_ptr<FunctionAST> ParseTopLevelExpr() {
 	return nullptr;
 }
 
-static void HandleDefinition() {
-	if (ParseDefinition()) {
-		fprintf(stderr, "Parsed a function definition.\n");
-	} else {
-		getNextToken();
-	}
-}
-
-static void HandleExtern() {
-	if (ParseExtern()) {
-		fprintf(stderr, "Parsed an extern\n");
-	} else {
-		getNextToken();
-	}
-}
-
-static void HandleTopLevelExpression() {
-	if (ParseTopLevelExpr()) {
-		fprintf(stderr, "Parsed a top-level expr\n");
-	} else {
-		getNextToken();
-	}
-}
-
-static void MainLoop() {
-	while (true) {
-		fprintf(stderr, "ready> ");
-		switch (CurTok) {
-		case tok_eof:
-			return;
-		case ';': // ignore top-level semicolons
-			getNextToken();
-			break;
-		case tok_def:
-			HandleDefinition();
-			break;
-		case tok_extern:
-			HandleExtern();
-			break;
-		default:
-			HandleTopLevelExpression();
-			break;
-		}
-	}
-}
-
 static std::unique_ptr<llvm::LLVMContext> TheContext;
 static std::unique_ptr<llvm::IRBuilder<>> Builder;
 static std::unique_ptr<llvm::Module> TheModule;
@@ -460,6 +418,80 @@ llvm::Function *FunctionAST::codegen() {
 	return nullptr;
 }
 
+static void InitializeModule() {
+  // Open a new context and module.
+  TheContext = std::make_unique<llvm::LLVMContext>();
+  TheModule = std::make_unique<llvm::Module>("my cool jit", *TheContext);
+
+  // Create a new builder for the module.
+  Builder = std::make_unique<llvm::IRBuilder<>>(*TheContext);
+}
+
+static void HandleDefinition() {
+  if (auto FnAST = ParseDefinition()) {
+    if (auto *FnIR = FnAST->codegen()) {
+      fprintf(stderr, "Read function definition:");
+      FnIR->print(llvm::errs());
+      fprintf(stderr, "\n");
+    }
+  } else {
+    // Skip token for error recovery.
+    getNextToken();
+  }
+}
+
+static void HandleExtern() {
+  if (auto ProtoAST = ParseExtern()) {
+    if (auto *FnIR = ProtoAST->codegen()) {
+      fprintf(stderr, "Read extern: ");
+      FnIR->print(llvm::errs());
+      fprintf(stderr, "\n");
+    }
+  } else {
+    // Skip token for error recovery.
+    getNextToken();
+  }
+}
+
+static void HandleTopLevelExpression() {
+  // Evaluate a top-level expression into an anonymous function.
+  if (auto FnAST = ParseTopLevelExpr()) {
+    if (auto *FnIR = FnAST->codegen()) {
+      fprintf(stderr, "Read top-level expression:");
+      FnIR->print(llvm::errs());
+      fprintf(stderr, "\n");
+
+      // Remove the anonymous expression.
+      FnIR->eraseFromParent();
+    }
+  } else {
+    // Skip token for error recovery.
+    getNextToken();
+  }
+}
+
+static void MainLoop() {
+	while (true) {
+		fprintf(stderr, "ready> ");
+		switch (CurTok) {
+		case tok_eof:
+			return;
+		case ';': // ignore top-level semicolons
+			getNextToken();
+			break;
+		case tok_def:
+			HandleDefinition();
+			break;
+		case tok_extern:
+			HandleExtern();
+			break;
+		default:
+			HandleTopLevelExpression();
+			break;
+		}
+	}
+}
+
 int main() {
 	BinopPrecedence['<'] = 10;
 	BinopPrecedence['+'] = 20;
@@ -469,7 +501,11 @@ int main() {
 	fprintf(stderr, "ready> ");
 	getNextToken();
 
+	InitializeModule();
+
 	MainLoop();
+
+	TheModule->print(llvm::errs(), nullptr);
 
 	return 0;
 }
