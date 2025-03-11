@@ -25,6 +25,7 @@ builder.WebHost.ConfigureKestrel(options => {
 var app = builder.Build();
 
 app.MapGrpcService<ParserService>();
+app.MapGrpcReflectionService();
 
 app.Run();
 
