@@ -2,7 +2,10 @@ module github.com/unstoppablemango/lang
 
 go 1.24.0
 
-tool github.com/unmango/devctl
+tool (
+	github.com/onsi/ginkgo/v2/ginkgo
+	github.com/unmango/devctl
+)
 
 require (
 	github.com/onsi/ginkgo/v2 v2.23.0

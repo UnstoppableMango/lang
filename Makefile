@@ -9,7 +9,7 @@ DPRINT   ?= ${LOCALBIN}/dprint
 BUF      ?= ${LOCALBIN}/buf
 DOTNET   ?= ${LOCALBIN}/dotnet
 FANTOMAS ?= ${LOCALBIN}/fantomas
-GINKGO   ?= ${LOCALBIN}/ginkgo
+GINKGO   ?= go tool ginkgo
 NINJA    ?= ${LOCALBIN}/ninja
 
 ifeq (${CI},)
@@ -56,9 +56,6 @@ bin/ir: $(shell $(DEVCTL) list --go)
 
 bin/lang-host: src/UnMango.Lang.Host/bin/lang-host
 	cp $< $@
-
-bin/ginkgo: go.mod | bin
-	go install github.com/onsi/ginkgo/v2/ginkgo
 
 bin/dotnet: | .make/dotnet
 	rm -f $@ && ln -s ${CURDIR}/.make/dotnet/dotnet $@
@@ -107,7 +104,7 @@ src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs)
 	$(FANTOMAS) $?
 	@touch $@
 
-.make/ginkgo-test: $(shell $(DEVCTL) list --go) | .make bin/devctl bin/ginkgo bin/lang-host
+.make/ginkgo-test: $(shell $(DEVCTL) list --go) | .make bin/devctl bin/lang-host
 	$(GINKGO) run ${TEST_FLAGS} $(sort $(dir $?))
 	@touch $@
 
