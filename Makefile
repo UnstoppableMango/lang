@@ -104,7 +104,7 @@ src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs)
 	$(FANTOMAS) $?
 	@touch $@
 
-.make/ginkgo-test: $(shell $(DEVCTL) list --go) | .make bin/devctl bin/lang-host
+.make/ginkgo-test: $(shell $(DEVCTL) list --go) | .make bin/lang-host
 	$(GINKGO) run ${TEST_FLAGS} $(sort $(dir $?))
 	@touch $@
 
