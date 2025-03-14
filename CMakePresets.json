@@ -12,7 +12,7 @@
 				"protobuf_INSTALL": "ON",
 				"utf8_range_ENABLE_INSTALL": "ON"
 			}
-		}
+		},
 		{
 			"name": "vcpkg",
 			"generator": "Ninja",
