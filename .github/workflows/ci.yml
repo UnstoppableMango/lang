@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Build and Test
-    runs-on: ubuntu-latest
+    runs-on: lang-runners
     env:
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
     steps:
