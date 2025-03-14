@@ -48,8 +48,8 @@ go.mod:
 .envrc: hack/example.envrc
 	cp $< $@
 
-.make bin:
-	mkdir -p $@
+CMakeUserPresets.json: hack/CMakeUserPresets.example.json
+	cp $< $@
 
 bin/ir: $(shell $(DEVCTL) list --go)
 	go build -o $@ -tags=llvm19 ./cmd/ir
@@ -74,9 +74,18 @@ bin/buf: .versions/buf
 bin/ninja: | .make/ninja.zip
 	unzip ${CURDIR}/$| -d ${LOCALBIN}
 
+bin/vcpkg: | tools/vcpkg/vcpkg
+	ln -s ${CURDIR}/$| ${CURDIR}/$@
+
 src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs)
 	dotnet publish src/UnMango.Lang.Host -p:DebugSymbols=false \
 	--use-current-runtime --self-contained --configuration ${DOTNET_CONFIG} --output $(dir $@)
+
+tools/vcpkg/vcpkg: tools/vcpkg/bootstrap-vcpkg.sh
+	$< --disableMetrics
+
+tools/vcpkg/bootstrap-vcpkg.sh:
+	git submodule update --init --recursive
 
 .make/dotnet-install.sh: | .make
 	curl -fsSL https://dot.net/v1/dotnet-install.sh > $@ && chmod +x $@
@@ -126,3 +135,6 @@ src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs)
 
 .make/ninja.zip: .versions/ninja
 	curl -Lo $@ https://github.com/ninja-build/ninja/releases/download/$(shell $(DEVCTL) $<)/ninja-$(shell go env GOOS).zip
+
+.make bin:
+	mkdir -p $@
