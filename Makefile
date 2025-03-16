@@ -4,6 +4,7 @@ GO_PROJ      := github.com/unstoppablemango/lang
 DOTNET_CONFIG := Debug
 
 LOCALBIN := ${CURDIR}/bin
+CMAKE    ?= ${LOCALBIN}/cmake
 DEVCTL   ?= go tool devctl
 DPRINT   ?= ${LOCALBIN}/dprint
 BUF      ?= ${LOCALBIN}/buf
@@ -23,18 +24,18 @@ gen: .make/buf-gen
 test: .make/dotnet-test .make/ginkgo-test
 format: .make/fantomas-format .make/dotnet-format .make/dprint-format .make/buf-format
 tidy: go.sum
-dev: .envrc bin/devctl bin/dotnet
+dev: .envrc bin/dotnet
 ci: .make test build build/lang
 
 clean: .make/dotnet-clean
 	rm -rf src/**/{bin,obj}
 
 .PHONY: build build/lang
-build: | bin/ninja
-	cmake --preset default -DCMAKE_MAKE_PROGRAM=$(NINJA)
+build: | bin/cmake bin/ninja
+	$(CMAKE) --preset default -DCMAKE_MAKE_PROGRAM=$(NINJA)
 
-build/lang:
-	cmake --build build
+build/lang: | bin/cmake
+	$(CMAKE) --build build
 
 go.sum: go.mod $(shell $(DEVCTL) list --go)
 	go mod tidy
@@ -75,6 +76,9 @@ bin/ninja: | .make/ninja.zip
 	unzip ${CURDIR}/$| -d ${LOCALBIN}
 
 bin/vcpkg: | tools/vcpkg/vcpkg
+	ln -s ${CURDIR}/$| ${CURDIR}/$@
+
+bin/cmake: | .make/cmake/bin/cmake
 	ln -s ${CURDIR}/$| ${CURDIR}/$@
 
 src/UnMango.Lang.Host/bin/lang-host: $(shell $(DEVCTL) list --cs)
@@ -122,14 +126,22 @@ tools/vcpkg/bootstrap-vcpkg.sh:
 	curl -fsSL https://dprint.dev/install.sh -o $@
 	chmod +x $@
 
+.make/cmake/install.sh: .versions/cmake | .make
+	mkdir -p $(dir $@)
+	curl -Lo $@ https://github.com/Kitware/CMake/releases/download/$(shell $(DEVCTL) $<)/cmake-$(shell $(DEVCTL) v cmake)-linux-x86_64.sh
+	chmod +x $@
+
+.make/cmake/bin/cmake: .make/cmake/install.sh
+	$< --prefix=.make/cmake --skip-license --exclude-subdir
+
 .make/dprint-format: README.md .dprint.jsonc .github/renovate.json | bin/dprint
 	$(DPRINT) fmt $?
 	@touch $@
 
-.make/buf-gen: $(shell $(DEVCTL) list --proto) | .make bin/buf bin/devctl
+.make/buf-gen: $(shell $(DEVCTL) list --proto) | .make bin/buf
 	$(BUF) generate
 
-.make/buf-format: $(shell $(DEVCTL) list --proto) | .make bin/buf bin/devctl
+.make/buf-format: $(shell $(DEVCTL) list --proto) | .make bin/buf
 	$(BUF) format --write
 	@touch $@
 
