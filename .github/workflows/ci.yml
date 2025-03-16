@@ -49,5 +49,8 @@ jobs:
           version: '19.1'
 
       - run: make bin/vcpkg
+
       - run: bin/vcpkg install
+        if: false
+
       - run: make ci
