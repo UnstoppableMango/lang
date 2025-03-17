@@ -1,0 +1,18 @@
+{
+	"dependencies": [
+		{
+			"name": "llvm",
+			"default-features": false,
+			"features": [
+				"libc",
+				"libcxx",
+				"libcxxabi",
+				"libunwind",
+				"target-arm",
+				"target-aarch64",
+				"target-x86",
+				"target-webassembly"
+			]
+		}
+	]
+}
