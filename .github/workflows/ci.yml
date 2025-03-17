@@ -44,9 +44,11 @@ jobs:
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
       - uses: KyleMayes/install-llvm-action@v2
-        if: false
         with:
           version: '19.1'
+          force-url: https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/LLVM-19.1.7-Linux-X64.tar.xz
+
+      - run: sudo ln -s ${{ env.LLVM_PATH }}/lib/
 
       - run: make bin/vcpkg
 
