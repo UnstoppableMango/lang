@@ -25,7 +25,7 @@ test: .make/dotnet-test .make/ginkgo-test
 format: .make/fantomas-format .make/dotnet-format .make/dprint-format .make/buf-format
 tidy: go.sum
 dev: .envrc bin/dotnet
-ci: .make test build build/lang
+ci: .make test build
 
 clean: .make/dotnet-clean
 	rm -rf src/**/{bin,obj}
