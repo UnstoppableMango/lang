@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <PackageReference Update="FSharp.Core" Version="9.0.300" />
-    <PackageReference Include="libLLVM" Version="16.0.6" />
+    <PackageReference Include="libLLVM" Version="20.1.2" />
     <PackageReference Include="LLVMSharp" Version="16.0.0" />
   </ItemGroup>
   
