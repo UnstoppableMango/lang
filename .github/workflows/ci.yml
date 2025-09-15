@@ -14,7 +14,7 @@ jobs:
     env:
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - run: make .make bin
 
