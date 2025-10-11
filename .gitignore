@@ -1,17 +1,11 @@
-bin/
-obj/
 .make
-cmake-build-*/
+_build/
 build/
-vcpkg_installed/
 
 *.user
 discord.xml
-*.test
-.fake
 .vscode/settings.json
 .idea/**/workspace.xml
 .idea/**/modules.xml
 *.iml
 .envrc
-CMakeUserPresets.json

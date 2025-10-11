@@ -1,0 +1,4 @@
+(executable
+ (public_name mangolang)
+ (name main)
+ (libraries mangolang))
