@@ -1,6 +1,7 @@
 .make
-_build/
 build/
+_build/
+_opam/
 
 *.user
 discord.xml
