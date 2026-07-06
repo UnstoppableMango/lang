@@ -1,9 +1,0 @@
-{
-	"recommendations": [
-		"mkhl.direnv",
-		"editorconfig.editorconfig",
-		"golang.go",
-		"ionide.ionide-fsharp",
-		"dprint.dprint"
-	]
-}
