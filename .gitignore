@@ -2,3 +2,6 @@
 .envrc
 .direnv/
 bin/
+hack/unmangc
+hack/hello
+hack/*.ll

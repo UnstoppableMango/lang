@@ -27,6 +27,7 @@
         {
           devShells.default = pkgs.mkShellNoCC {
             packages = with pkgs; [
+              clang
               gnumake
               nixfmt
             ];
