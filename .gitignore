@@ -3,5 +3,5 @@
 .direnv/
 bin/
 /target/
-/hello
-/*.ll
+hack/hello
+hack/*.ll
