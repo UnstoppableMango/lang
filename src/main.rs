@@ -1,5 +1,4 @@
-// Throwaway hello-world compiler: parses `print "..."` and emits LLVM IR text.
-// Carries no design commitment; see the repo workflow docs.
+// Minimal compiler front end: parses `print "..."` and emits LLVM IR text.
 
 use std::env;
 use std::fs;

@@ -10,7 +10,7 @@ Entry format:
 - Optionally a minimal example, inline.
 - Optionally prior art: other languages, books, videos, papers.
 
-Every foundational decision (paradigm, compilation model, memory strategy, implementation language) is currently open, so entries must not be read as presuming any of them.
+Every foundational decision (paradigm, compilation model, memory strategy) is currently open, so entries must not be read as presuming any of them.
 
 ## Design philosophy
 

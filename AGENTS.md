@@ -5,8 +5,9 @@ This file provides guidance to coding agents when working with code in this repo
 ## What this repository is
 
 A programming language being designed from scratch, deliberately slowly.
-There is no compiler, no spec, and no code yet; the repository is currently a design process and its documents.
-Every foundational decision (paradigm, compilation model, memory strategy, implementation language) is still open, so no document may presume any of them until a decision record reaches stage 3.
+There is no spec yet; most of the repository is a design process and its documents.
+The compiler is implemented in Rust, using `inkwell` for LLVM IR generation and `nom` for parsing; this is a starting point, not a locked-in decision, and may change if a switch proves worthwhile.
+Every other foundational decision (paradigm, compilation model, memory strategy) is still open, so no document may presume any of them until a decision record reaches stage 3.
 
 ## Commands
 

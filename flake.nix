@@ -25,6 +25,30 @@
       perSystem =
         { pkgs, lib, ... }:
         {
+          packages.default = pkgs.rustPlatform.buildRustPackage {
+            pname = "unmangc";
+            version = "0.1.0";
+            src = ./.;
+
+            cargoLock = {
+              lockFile = ./Cargo.lock;
+              outputHashes = {
+                "inkwell-0.10.0" = "sha256-Df2QPCfPsP9lX7l2xIr+ZhRZPApvLMylqH65hSMvbJs=";
+              };
+            };
+
+            nativeBuildInputs = [ pkgs.libllvm.dev ];
+            buildInputs = [
+              pkgs.libffi
+              pkgs.libiconv
+            ];
+
+            # The compiler's Source -> LLVM IR stage links against libLLVM via
+            # inkwell/llvm-sys; unrelated to the separate clang linking stage
+            # (LLVM IR -> binary) that `make hello` drives.
+            LLVM_SYS_211_PREFIX = "${pkgs.libllvm.dev}";
+          };
+
           devShells.default = pkgs.mkShellNoCC {
             packages = with pkgs; [
               clang
@@ -37,8 +61,9 @@
               libiconv
             ];
 
-            # hack/'s Source -> LLVM IR stage links against libLLVM via inkwell/llvm-sys;
-            # both vars are for that build only, unrelated to the clang linking stage.
+            # The compiler's Source -> LLVM IR stage links against libLLVM via
+            # inkwell/llvm-sys; both vars are for that build only, unrelated
+            # to the clang linking stage.
             LLVM_SYS_211_PREFIX = "${pkgs.libllvm.dev}";
             LIBRARY_PATH = lib.makeLibraryPath [
               pkgs.libffi

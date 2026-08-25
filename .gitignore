@@ -2,6 +2,6 @@
 .envrc
 .direnv/
 bin/
-hack/target/
-hack/hello
-hack/*.ll
+/target/
+/hello
+/*.ll
