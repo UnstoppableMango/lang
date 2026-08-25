@@ -24,12 +24,7 @@
   };
 
   outputs =
-    inputs@{
-      flake-parts,
-      fenix,
-      crane,
-      ...
-    }:
+    inputs@{ flake-parts, crane, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = import inputs.systems;
       imports = [ inputs.treefmt-nix.flakeModule ];
@@ -38,11 +33,11 @@
         {
           pkgs,
           lib,
-          system,
+          inputs',
           ...
         }:
         let
-          toolchain = fenix.packages.${system}.stable.toolchain;
+          toolchain = inputs'.fenix.packages.stable.toolchain;
           craneLib = (crane.mkLib pkgs).overrideToolchain (_: toolchain);
 
           # The compiler's Source -> LLVM IR stage links against libLLVM via
