@@ -1,18 +1,12 @@
 {
-  pkgs,
   craneLib,
-  llvmEnv,
+  llvm
 }:
 craneLib.buildPackage (
-  llvmEnv
-  // {
+  {
     src = craneLib.cleanCargoSource ../.;
     strictDeps = true;
 
-    nativeBuildInputs = [ pkgs.libllvm.dev ];
-    buildInputs = [
-      pkgs.libffi
-      pkgs.libiconv
-    ];
+    inherit (llvm) LLVM_SYS_211_PREFIX nativeBuildInputs buildInputs;
   }
 )

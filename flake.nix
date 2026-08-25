@@ -40,33 +40,25 @@
           inherit (inputs'.fenix.packages.stable) toolchain;
           craneLib = (crane.mkLib pkgs).overrideToolchain (_: toolchain);
 
-          # The compiler's Source -> LLVM IR stage links against libLLVM via
-          # inkwell/llvm-sys; unrelated to the separate clang linking stage
-          # (LLVM IR -> binary) that `make hello` drives.
-          llvmEnv = {
-            LLVM_SYS_211_PREFIX = "${pkgs.libllvm.dev}";
-          };
+          llvm = pkgs.callPackage ./nix/llvm.nix { };
         in
         {
-          packages.default = import ./nix/compiler.nix { inherit pkgs craneLib llvmEnv; };
+          packages.default = import ./nix/compiler.nix {
+            inherit craneLib llvm;
+          };
 
           devShells.default = pkgs.mkShellNoCC (
-            llvmEnv
-            // {
+            {
               packages = [
                 pkgs.clang
                 pkgs.gnumake
                 pkgs.nixfmt
                 toolchain
-                pkgs.libllvm.dev
-                pkgs.libffi
-                pkgs.libiconv
-              ];
+              ]
+              ++ llvm.nativeBuildInputs
+              ++ llvm.buildInputs;
 
-              LIBRARY_PATH = lib.makeLibraryPath [
-                pkgs.libffi
-                pkgs.libiconv
-              ];
+              inherit (llvm) LLVM_SYS_211_PREFIX LIBRARY_PATH;
             }
           );
 
