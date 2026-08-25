@@ -37,7 +37,7 @@
           ...
         }:
         let
-          toolchain = inputs'.fenix.packages.stable.toolchain;
+          inherit (inputs'.fenix.packages.stable) toolchain;
           craneLib = (crane.mkLib pkgs).overrideToolchain (_: toolchain);
 
           # The compiler's Source -> LLVM IR stage links against libLLVM via
@@ -48,19 +48,7 @@
           };
         in
         {
-          packages.default = craneLib.buildPackage (
-            llvmEnv
-            // {
-              src = craneLib.cleanCargoSource ./.;
-              strictDeps = true;
-
-              nativeBuildInputs = [ pkgs.libllvm.dev ];
-              buildInputs = [
-                pkgs.libffi
-                pkgs.libiconv
-              ];
-            }
-          );
+          packages.default = import ./nix/compiler.nix { inherit pkgs craneLib llvmEnv; };
 
           devShells.default = pkgs.mkShellNoCC (
             llvmEnv
