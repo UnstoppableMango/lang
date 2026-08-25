@@ -14,62 +14,78 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    crane.url = "github:ipetkov/crane";
   };
 
   outputs =
-    inputs@{ flake-parts, ... }:
+    inputs@{
+      flake-parts,
+      fenix,
+      crane,
+      ...
+    }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = import inputs.systems;
       imports = [ inputs.treefmt-nix.flakeModule ];
 
       perSystem =
-        { pkgs, lib, ... }:
         {
-          packages.default = pkgs.rustPlatform.buildRustPackage {
-            pname = "unmangc";
-            version = "0.1.0";
-            src = ./.;
+          pkgs,
+          lib,
+          system,
+          ...
+        }:
+        let
+          toolchain = fenix.packages.${system}.stable.toolchain;
+          craneLib = (crane.mkLib pkgs).overrideToolchain (_: toolchain);
 
-            cargoLock = {
-              lockFile = ./Cargo.lock;
-              outputHashes = {
-                "inkwell-0.10.0" = "sha256-Df2QPCfPsP9lX7l2xIr+ZhRZPApvLMylqH65hSMvbJs=";
-              };
-            };
-
-            nativeBuildInputs = [ pkgs.libllvm.dev ];
-            buildInputs = [
-              pkgs.libffi
-              pkgs.libiconv
-            ];
-
-            # The compiler's Source -> LLVM IR stage links against libLLVM via
-            # inkwell/llvm-sys; unrelated to the separate clang linking stage
-            # (LLVM IR -> binary) that `make hello` drives.
+          # The compiler's Source -> LLVM IR stage links against libLLVM via
+          # inkwell/llvm-sys; unrelated to the separate clang linking stage
+          # (LLVM IR -> binary) that `make hello` drives.
+          llvmEnv = {
             LLVM_SYS_211_PREFIX = "${pkgs.libllvm.dev}";
           };
+        in
+        {
+          packages.default = craneLib.buildPackage (
+            llvmEnv
+            // {
+              src = craneLib.cleanCargoSource ./.;
+              strictDeps = true;
 
-          devShells.default = pkgs.mkShellNoCC {
-            packages = with pkgs; [
-              clang
-              gnumake
-              nixfmt
-              rustc
-              cargo
-              libllvm.dev
-              libffi
-              libiconv
-            ];
+              nativeBuildInputs = [ pkgs.libllvm.dev ];
+              buildInputs = [
+                pkgs.libffi
+                pkgs.libiconv
+              ];
+            }
+          );
 
-            # The compiler's Source -> LLVM IR stage links against libLLVM via
-            # inkwell/llvm-sys; both vars are for that build only, unrelated
-            # to the clang linking stage.
-            LLVM_SYS_211_PREFIX = "${pkgs.libllvm.dev}";
-            LIBRARY_PATH = lib.makeLibraryPath [
-              pkgs.libffi
-              pkgs.libiconv
-            ];
-          };
+          devShells.default = pkgs.mkShellNoCC (
+            llvmEnv
+            // {
+              packages = [
+                pkgs.clang
+                pkgs.gnumake
+                pkgs.nixfmt
+                toolchain
+                pkgs.libllvm.dev
+                pkgs.libffi
+                pkgs.libiconv
+              ];
+
+              LIBRARY_PATH = lib.makeLibraryPath [
+                pkgs.libffi
+                pkgs.libiconv
+              ];
+            }
+          );
 
           treefmt.programs = {
             nixfmt.enable = true;
