@@ -8,10 +8,10 @@ Zero standing, nothing here is decided, and everything presumes outcomes of open
 People say this and mean some subset of:
 
 1. Hindley-Milner inference (write no type annotations, ever, and it still checks).
-2. Typeclasses (ad-hoc polymorphism resolved by the compiler, not the caller).
-3. Higher-kinded types (`Functor f`, `Monad m`, things generic over type constructors, not just types).
-4. Purity tracked in the type (`IO a` vs `a`, "a function of type `Int -> Int` cannot launch missiles").
-5. Laziness by default.
+1. Typeclasses (ad-hoc polymorphism resolved by the compiler, not the caller).
+1. Higher-kinded types (`Functor f`, `Monad m`, things generic over type constructors, not just types).
+1. Purity tracked in the type (`IO a` vs `a`, "a function of type `Int -> Int` cannot launch missiles").
+1. Laziness by default.
 
 None of these imply any other.
 OCaml has 1 and a weaker 2 without 4 or 5.

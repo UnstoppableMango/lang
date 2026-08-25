@@ -22,14 +22,14 @@ Not the lack of types.
 It's two things bundled together that don't have to travel together:
 
 1. **Retroactive conformance.** I have a `Logger` interface and a third-party `Widget` type, and `Widget` already has a `Log(string)` method, so it just works. No adapter, no `impl` block I have to write and maintain. This is the structural part.
-2. **Minimal interface surface.** You only need the methods you call, not the whole type. A function that calls `.Read()` doesn't care what else the argument can do. This is more about interface segregation than typing discipline at all, arguably you get this in nominal systems too if people write small interfaces (Go proves this, ironically, despite being structural — the discipline could exist in Rust with tiny traits, but culturally doesn't).
+1. **Minimal interface surface.** You only need the methods you call, not the whole type. A function that calls `.Read()` doesn't care what else the argument can do. This is more about interface segregation than typing discipline at all, arguably you get this in nominal systems too if people write small interfaces (Go proves this, ironically, despite being structural — the discipline could exist in Rust with tiny traits, but culturally doesn't).
 
 So maybe the wishlist item isn't "duck typing", it's "structural interface satisfaction, checked statically, with narrow inferred interfaces at call sites."
 That's a Go-like or OCaml-row-polymorphism-like thing, not a Python-like thing.
 
 ## Where it gets weird: what "quacks" means for a value type language
 
-If arena/value semantics wins the memory model decision (see [[arena-memory-model]]), does structural typing even look the same?
+If arena/value semantics wins the memory model decision (see \[[arena-memory-model]\]), does structural typing even look the same?
 In Go, interface satisfaction is about pointer-or-value receivers and it gets subtle (a `T` satisfies an interface if all methods have value receivers, `*T` needs `*T` methods too).
 If this language leans hard into values-by-default, method dispatch through an interface might need to always copy, or the interface itself might need to specify by-ref vs by-value at the boundary.
 Untouched territory, not resolving it here.
@@ -37,9 +37,9 @@ Untouched territory, not resolving it here.
 ## Dead end: full Python-style duck typing (structural + dynamic)
 
 Tempting because it's maximally flexible and "just works" for scripting-style code.
-Died on: it fights every other instinct so far toward compile-time guarantees (see [[no-null-type-or-representation]], [[no-exceptions-explicit-errors]] for the general vibe of "catch it before runtime").
+Died on: it fights every other instinct so far toward compile-time guarantees (see \[[no-null-type-or-representation]\], \[[no-exceptions-explicit-errors]\] for the general vibe of "catch it before runtime").
 A dynamically-typed duck-typing system means `.Quack()` on a value that doesn't have it is a runtime crash, which is exactly the failure mode this project seems to want to design away from by default.
-Not ruling it out as an *opt-in* mode (see [[compiled-first-scripting-alt]]) but it's not the default-path answer.
+Not ruling it out as an *opt-in* mode (see \[[compiled-first-scripting-alt]\]) but it's not the default-path answer.
 
 ## Open tension
 

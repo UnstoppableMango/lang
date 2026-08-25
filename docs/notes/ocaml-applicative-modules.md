@@ -60,6 +60,7 @@ Genuinely unclear, feels like it wants its own note.
 
 Generative functors are what you get "for free" if functor application is implemented like a struct constructor call: run the body, mint new abstract types, done, no memoization needed.
 Applicative functors require the compiler to recognize that two applications with syntactically/semantically equal arguments should unify, which means either:
+
 - structural comparison of the argument module (expensive, or requires argument modules to be fully known at compile time, no separate compilation of the argument), or
 - purely syntactic comparison (same path, e.g. `Make(IntOrd)` textually, is applicative-equal; `Make(struct ... end)` with an anonymous struct literal is not, which is exactly OCaml's actual rule)
 

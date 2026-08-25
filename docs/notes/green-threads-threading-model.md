@@ -63,7 +63,7 @@ So "goroutine-like" as a phrase smuggles in "races are easy to write, we just al
 Two ways out, neither obviously right:
 
 1. **Erlang-style isolation.** Each process has its own heap; nothing is shared, message passing copies. Races become inexpressible by construction (there's no shared mutable memory to race on) at the cost of copying overhead and no path to shared-memory speed even when the programmer knows it'd be safe.
-2. **Static aliasing control (Rust-shaped).** Keep shared memory, but the type system tracks which references can cross a thread boundary and rejects the ones that would alias mutably. Kills the coloring win's sibling problem (now you have a second static discipline, borrow-shaped, riding alongside whatever the base type system already does) but keeps zero-copy sharing.
+1. **Static aliasing control (Rust-shaped).** Keep shared memory, but the type system tracks which references can cross a thread boundary and rejects the ones that would alias mutably. Kills the coloring win's sibling problem (now you have a second static discipline, borrow-shaped, riding alongside whatever the base type system already does) but keeps zero-copy sharing.
 
 Both are legitimate answers.
 Both are also *not* "copy goroutines," which is worth naming plainly since "goroutine-like" is the phrase that keeps coming up in casual description of this corner of the design.

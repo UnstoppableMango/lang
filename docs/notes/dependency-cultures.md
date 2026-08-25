@@ -24,10 +24,10 @@ Answering it late means inheriting someone else's answer.
 Candidate list, roughly in order of how much I think each one matters:
 
 1. **Size of the standard library.** Small stdlib means the ecosystem fills the gap, and it fills it with thousands of tiny packages. Large stdlib means fewer deps and a museum of 2009 API design that can never be removed.
-2. **Friction of publishing.** `npm publish` in four seconds produces left-pad. A curated registry with review produces Debian, and produces packages that are three years stale.
-3. **Granularity of the unit.** If the unit of dependency is a package, people ship packages. If it is a single function or a single module, the graph looks completely different, and so does the diff.
-4. **Version resolution model.** SemVer plus a solver invites version ranges, which invites "works on my machine". MVS (Go) invites pinning. Content addressing (Unison) deletes the question.
-5. **Whether adding a dependency shows up in a diff and costs something visible.** A one-line manifest edit that pulls 300 transitive packages is the single most asymmetric action in modern software.
+1. **Friction of publishing.** `npm publish` in four seconds produces left-pad. A curated registry with review produces Debian, and produces packages that are three years stale.
+1. **Granularity of the unit.** If the unit of dependency is a package, people ship packages. If it is a single function or a single module, the graph looks completely different, and so does the diff.
+1. **Version resolution model.** SemVer plus a solver invites version ranges, which invites "works on my machine". MVS (Go) invites pinning. Content addressing (Unison) deletes the question.
+1. **Whether adding a dependency shows up in a diff and costs something visible.** A one-line manifest edit that pulls 300 transitive packages is the single most asymmetric action in modern software.
 
 Note that only (1) and (3) are language design in the narrow sense.
 The rest is tooling, and the tooling is where the culture actually gets set, which is uncomfortable if you think of the language as the interesting part.
@@ -86,7 +86,7 @@ Then the transitive count stops being the scary number.
 Four hundred pure packages is fine.
 One package that quietly requires `net` and `exec` is the thing worth a code review.
 
-This is the same shape as the capability idea in [[file-primitive]], generalized from files to the whole dependency graph, which is a hint that "capability" might want to be one concept in this language rather than two.
+This is the same shape as the capability idea in \[[file-primitive]\], generalized from files to the whole dependency graph, which is a hint that "capability" might want to be one concept in this language rather than two.
 
 The hard part is not the checking, it is that `alloc` and `time` and `rand` are all capabilities too, and if the annotation burden is high enough nobody writes it, and if there is a default it will be "everything".
 
@@ -97,11 +97,13 @@ A dependency is a hash.
 Names are a local alias for hashes, versions are a social fiction layered on top, and "upgrading" is explicitly rewriting your aliases rather than a solver silently picking for you.
 
 Consequences I like:
+
 - Diamond dependencies stop existing as a category. Two hashes are two different things and both can be present.
 - Reproducible builds are not a feature you add, they are the only thing that can happen. The wishlist wants this from day one.
 - `Blob`-style content addressing shows up in two unrelated notes now, so it may be a real primitive rather than a coincidence.
 
 Consequences I do not like:
+
 - Security patches. If a name is just an alias for a hash, "everyone who depends on this must move" has no mechanism. The whole industry runs on that mechanism working badly, but it does run on it.
 - Humans cannot read hashes, so the alias layer comes back, and the alias layer is where all the version problems lived in the first place.
 

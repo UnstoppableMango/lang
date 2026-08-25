@@ -1,7 +1,7 @@
 # Language server developed alongside the compiler
 
 Expanding the wishlist entry ("a language server planned alongside the compiler, not bolted on afterward") past the one sentence.
-[[dev-tooling-philosophy]] already named the mechanism this needs (shared AST/IR as a library) in passing.
+\[[dev-tooling-philosophy]\] already named the mechanism this needs (shared AST/IR as a library) in passing.
 This note tries to get concrete about what "alongside" means operationally, not just architecturally, and where it gets hard.
 
 ## What "bolted on afterward" actually looks like, so the alternative is legible
@@ -9,10 +9,10 @@ This note tries to get concrete about what "alongside" means operationally, not 
 The failure mode being avoided has a specific shape, worth naming instead of gesturing at:
 
 1. Compiler exists as a CLI binary that takes source, produces output, exits.
-2. Years later, someone wants IDE support.
-3. They cannot import the compiler as a library (it was never factored that way), so they write a second parser.
-4. The second parser drifts from the first: new syntax lands in the compiler, the LSP chokes on it for months until someone ports the change.
-5. The LSP settles for degraded, best-effort analysis (syntax highlighting, maybe scoping) because full type information requires reimplementing the type checker too, which nobody signs up for twice.
+1. Years later, someone wants IDE support.
+1. They cannot import the compiler as a library (it was never factored that way), so they write a second parser.
+1. The second parser drifts from the first: new syntax lands in the compiler, the LSP chokes on it for months until someone ports the change.
+1. The LSP settles for degraded, best-effort analysis (syntax highlighting, maybe scoping) because full type information requires reimplementing the type checker too, which nobody signs up for twice.
 
 TypeScript, Go (pre-`go/packages`), and C++ (clangd took over a decade after clang existed) all lived through some version of this.
 rust-analyzer is the counter-case people point to, but it's worth being honest that rust-analyzer is *also* a second implementation, a from-scratch analyzer that deliberately does not reuse rustc's internals, because rustc's internals were not shaped for incremental, query-based, error-tolerant use.
@@ -75,9 +75,9 @@ This could be a running check, not just a one-time design review, since it's the
 
 ## Where this fights other wishlist/notes items
 
-- [[fast-incremental-compilation]]: if incremental compilation is already a batch-build goal (not just an LSP goal), the query-based architecture reading A needs is *shared infrastructure*, not extra cost paid only for IDE support. This is the strongest argument for Reading A: if incrementality is wanted for `lang build` anyway (faster CI, faster local rebuilds), the LSP gets it nearly free. Worth checking whether that note and this one are actually asking for the same underlying architecture from two different angles.
-- [[arena-memory-model]]: an arena-per-compilation memory strategy is great for a batch compiler (allocate, compile, throw the whole arena away) and actively hostile to an LSP (files stay open and get incrementally re-typechecked for the lifetime of an editor session, so nothing gets to be "done" and freed the way a batch run is done and exits). If arenas are chosen for the compiler's core memory strategy, the language server likely needs a different allocation discipline internally, which is friction against "same library, two entry points."
-- [[codegen-friendly-metaprogramming]]: compile-time execution (comptime-style) means the type checker can run arbitrary user code during typechecking. An LSP needs to typecheck *incomplete, currently-being-edited* code constantly. Running arbitrary compile-time code against a half-written, syntactically-broken buffer on every keystroke is a real problem (rust-analyzer's answer for proc macros is essentially "sandbox it, cache aggressively, degrade gracefully when it can't run"). Worth flagging as a specific hard case rather than assuming metaprogramming and "LSP alongside the compiler" compose for free.
+- \[[fast-incremental-compilation]\]: if incremental compilation is already a batch-build goal (not just an LSP goal), the query-based architecture reading A needs is *shared infrastructure*, not extra cost paid only for IDE support. This is the strongest argument for Reading A: if incrementality is wanted for `lang build` anyway (faster CI, faster local rebuilds), the LSP gets it nearly free. Worth checking whether that note and this one are actually asking for the same underlying architecture from two different angles.
+- \[[arena-memory-model]\]: an arena-per-compilation memory strategy is great for a batch compiler (allocate, compile, throw the whole arena away) and actively hostile to an LSP (files stay open and get incrementally re-typechecked for the lifetime of an editor session, so nothing gets to be "done" and freed the way a batch run is done and exits). If arenas are chosen for the compiler's core memory strategy, the language server likely needs a different allocation discipline internally, which is friction against "same library, two entry points."
+- \[[codegen-friendly-metaprogramming]\]: compile-time execution (comptime-style) means the type checker can run arbitrary user code during typechecking. An LSP needs to typecheck *incomplete, currently-being-edited* code constantly. Running arbitrary compile-time code against a half-written, syntactically-broken buffer on every keystroke is a real problem (rust-analyzer's answer for proc macros is essentially "sandbox it, cache aggressively, degrade gracefully when it can't run"). Worth flagging as a specific hard case rather than assuming metaprogramming and "LSP alongside the compiler" compose for free.
 
 ## Dead ends / cautions, recorded so they don't get rediscovered the hard way
 
@@ -87,7 +87,7 @@ This could be a running check, not just a one-time design review, since it's the
 
 ## Threads worth pulling later
 
-- Whether "compiler as a library with a query API" should itself be a decision record, since it's foundational enough to gate a lot of downstream tooling work (formatter, linter, and LSP in [[dev-tooling-philosophy]] all want the same boundary).
+- Whether "compiler as a library with a query API" should itself be a decision record, since it's foundational enough to gate a lot of downstream tooling work (formatter, linter, and LSP in \[[dev-tooling-philosophy]\] all want the same boundary).
 - What incremental typechecking actually costs to build for *this* language's type system, once that system is chosen; Hindley-Milner-style inference is notoriously non-local (one edit can change inferred types far away), which is a harder incremental story than a language with mostly-local type annotations.
-- Whether the language server ships as part of the same toolchain binary (`lang server` as a subcommand, per the [[dev-tooling-philosophy]] "one verb space" doodle) or as a separate artifact with its own release cadence, since an LSP arguably needs to ship *faster* than the compiler (editor users want fixes now) which is in tension with one shared version number.
+- Whether the language server ships as part of the same toolchain binary (`lang server` as a subcommand, per the \[[dev-tooling-philosophy]\] "one verb space" doodle) or as a separate artifact with its own release cadence, since an LSP arguably needs to ship *faster* than the compiler (editor users want fixes now) which is in tension with one shared version number.
 - Whether error-tolerant parsing (needed for the LSP) should just be *the* parser, used by the batch compiler too, rather than maintaining a tolerant-parser/strict-parser split. Rust and C# both eventually concluded one tolerant parser used everywhere beats two parsers.

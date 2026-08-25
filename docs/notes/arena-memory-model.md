@@ -16,6 +16,7 @@ This is attractive for a language "designed from scratch, deliberately slowly" b
 Where do arena boundaries come from?
 
 Option A: lexical blocks are arenas.
+
 ```
 arena {
     let buf = alloc_thing()
@@ -23,15 +24,18 @@ arena {
     use(list)
 } // everything allocated in this block dies here
 ```
+
 Nice because it mirrors control flow the reader already sees.
 Ugly because "everything allocated in this block" is a strong claim, if arenas nest you need to know which one an allocation lands in, and if a function called inside the block secretly allocates into the caller's arena that's spooky action at a distance.
 
 Option B: arenas are explicit values, threaded like a capability/effect.
+
 ```
 fn build_list(a: Arena, buf) -> List {
     a.alloc(Node { ... })
 }
 ```
+
 This is the Zig/Odin move (allocator-passing).
 Every allocating function takes an arena parameter (or reads one from context).
 Verbose, but the allocation site is never a mystery, and you can pass a different arena (or a longer-lived one) explicitly when you need to.
@@ -49,8 +53,8 @@ That question is exactly what a borrow checker exists to answer.
 So either:
 
 1. The language accepts arenas as a convention/discipline, not a checked guarantee (Zig's stance: allocator passed explicitly, use-after-free is a "you" problem, tooling like sanitizers/valgrind catches it later).
-2. The language adds enough type-level tracking (lifetimes, regions-as-types a la Cyclone/Rust) to reject dangling-out-of-arena at compile time, which drags in most of the complexity ownership types were supposed to spare us.
-3. Arenas are only ever used for structures provably local (never returned, never stored past the block), enforced by a much narrower and simpler check than full borrow checking: something like "no reference derived from this arena crosses this boundary," which is close to what escape analysis already does in GC'd languages, just inverted (escape analysis normally decides stack vs heap, here it'd decide arena-local vs must-be-longer-lived).
+1. The language adds enough type-level tracking (lifetimes, regions-as-types a la Cyclone/Rust) to reject dangling-out-of-arena at compile time, which drags in most of the complexity ownership types were supposed to spare us.
+1. Arenas are only ever used for structures provably local (never returned, never stored past the block), enforced by a much narrower and simpler check than full borrow checking: something like "no reference derived from this arena crosses this boundary," which is close to what escape analysis already does in GC'd languages, just inverted (escape analysis normally decides stack vs heap, here it'd decide arena-local vs must-be-longer-lived).
 
 Option 3 feels like the sweet spot to chase, if it's tractable.
 Escape analysis is well trodden.
@@ -64,7 +68,7 @@ Sketch: arenas as the *default* and fast path for "this bag of stuff has one cle
 That's basically what a lot of real systems do already (per-request arena in a web server, GC for everything else) but usually as a library pattern, not a language primitive.
 Could the language make "this value's lifetime is one arena" the common/cheap case and "this value needs the general-purpose allocator" the opt-in/slower case, syntactically distinguished so the reader always knows which regime they're in?
 
-## Arenas and [[green-threads-threading-model]]
+## Arenas and \[[green-threads-threading-model]\]
 
 If green threads/goroutines are in the language, arena-per-task is an obvious pairing: spin up a task, give it an arena, tear down both together.
 Structured concurrency (task can't outlive its scope) and arena lifetime (allocations can't outlive their scope) are the same shape of constraint.

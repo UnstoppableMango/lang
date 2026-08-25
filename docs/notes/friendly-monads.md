@@ -9,9 +9,9 @@ Worth separating "monad the abstract interface" from "monadic types the everyday
 A few candidate senses, not necessarily compatible:
 
 1. Friendly to the *reader*: `x?.foo?.bar` or `x |> Option.map f |> Option.bind g` reads top-to-bottom, no nested if-null pyramids.
-2. Friendly to the *writer*: once you know the shape (return/bind), you can build a new one for any "computation with extra structure" (errors, missing values, async, logging, nondeterminism) by filling in two functions.
-3. Friendly to the *type checker*: failure modes become visible in the type instead of living in a comment or a wiki page ("this can throw", "this can be null").
-4. Friendly to *composition*: the whole point is chaining without re-deriving the plumbing each time. do-notation / bind chains / `?` operator are all the same friendliness wearing different syntax.
+1. Friendly to the *writer*: once you know the shape (return/bind), you can build a new one for any "computation with extra structure" (errors, missing values, async, logging, nondeterminism) by filling in two functions.
+1. Friendly to the *type checker*: failure modes become visible in the type instead of living in a comment or a wiki page ("this can throw", "this can be null").
+1. Friendly to *composition*: the whole point is chaining without re-deriving the plumbing each time. do-notation / bind chains / `?` operator are all the same friendliness wearing different syntax.
 
 These could be in tension with each other.
 Sense 2 (writer power) is exactly what makes sense 1 (reader clarity) fragile in poorly-chosen abstractions, since custom bind implementations can hide arbitrary side work inside what looks like "just chaining."

@@ -4,7 +4,7 @@
 It could mean two different things.
 
 1. The language has metaprogramming facilities (macros, derive, comptime), and those facilities are friendly to tooling: debuggable, inspectable, not a black box.
-2. The language is a friendly *target* for external codegen, the way protoc, sqlc, or buf generate source files in some language and that language either cooperates or fights back.
+1. The language is a friendly *target* for external codegen, the way protoc, sqlc, or buf generate source files in some language and that language either cooperates or fights back.
 
 These pull in different directions enough that they deserve separate threads.
 Both threads below, no resolution on which one the wishlist entry actually meant.
@@ -28,6 +28,7 @@ But hygiene is exactly the mechanism that makes expansion opaque to a human or a
 Powerful, but the tooling cost is real and historically under-paid-for (see Rust's ecosystem-bolted-on `cargo expand`).
 
 **Comptime-as-plain-execution (Zig style).**
+
 ```
 fn derive_eq(comptime T: type) type {
     return struct {
@@ -37,6 +38,7 @@ fn derive_eq(comptime T: type) type {
     };
 }
 ```
+
 No macro language, no quoting, no hygiene problem to solve because there's no text splicing at all, just a normal function that happens to run at compile time and return a type.
 Debug info is comparatively sane because it's literally normal code execution, not a separate expansion pass.
 This reframes "metaprogramming" as "programming, at compile time, with types as values" rather than as a distinct macro sublanguage.
@@ -48,9 +50,9 @@ Fewer moving parts for a debugger, an LSP, or a formatter to special-case.
 
 Separate question: if `protoc` or a schema compiler is going to vomit source files in this language, what makes that pleasant versus painful?
 
-- Insignificant whitespace, or at least whitespace that's easy to emit correctly without a generator tracking indent state (see [[insignificant-whitespace]]).
+- Insignificant whitespace, or at least whitespace that's easy to emit correctly without a generator tracking indent state (see \[[insignificant-whitespace]\]).
   Python codegen tools spend real effort just getting indentation right; that's accidental complexity a generator shouldn't have to carry.
-- A canonical formatter as an escape hatch (see [[single-canonical-formatter]]).
+- A canonical formatter as an escape hatch (see \[[single-canonical-formatter]\]).
   Generator emits ugly-but-correct output, `lang fmt` cleans it, output is diffable and reviewable in a PR without the generator itself needing a pretty-printer.
 - A `// Code generated, DO NOT EDIT` convention (Go's), cheap and it works.
 - Source-mapping from generated output back to whatever schema or template produced it, so a compile error in generated code points somewhere a human can act on, not at a `.lang` file nobody is supposed to hand-edit.
@@ -62,7 +64,7 @@ It's closer to: don't make external tools reverse-engineer the formatter's opini
 ## Where the two threads collide: compile-time execution and reproducibility
 
 Comptime-as-plain-execution (thread 1's tentative favorite) means arbitrary user code runs during compilation.
-That's a build input, and an unpinned or unsandboxed one is exactly the kind of thing that breaks reproducible builds (see [[nix-first-build-system]]).
+That's a build input, and an unpinned or unsandboxed one is exactly the kind of thing that breaks reproducible builds (see \[[nix-first-build-system]\]).
 Rust proc-macros have the same property and mostly get away with it because the ecosystem doesn't prioritize bit-for-bit reproducibility as hard as this project apparently wants to.
 Open question, not resolved: does comptime execution need to be sandboxed, deterministic-by-construction, or otherwise fenced off to keep the reproducibility story intact, or is "compilation is a build step and build steps are already trusted" enough of an answer.
 

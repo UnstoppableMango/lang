@@ -30,7 +30,7 @@ match shape {
 
 Guards (`if r > 10.0`) are the obvious want once you have matching at all, but they reopen the exhaustiveness question: a guard can fail, so `Circle { radius } if r > 10.0` doesn't fully cover `Circle`, the checker has to know that and still demand a fallback `Circle { .. }` arm (or fold the guard's "else" into the next pattern, which is what happens above by accident, relying on arm order).
 Is arm-order-as-fallback intentional design or a footgun?
-Rust accepts it; some guard-heavy code reads like a decision table but silently depends on top-to-bottom order, which is exactly the kind of implicit control flow [[no-exceptions-explicit-errors]] worries about in a different context.
+Rust accepts it; some guard-heavy code reads like a decision table but silently depends on top-to-bottom order, which is exactly the kind of implicit control flow \[[no-exceptions-explicit-errors]\] worries about in a different context.
 
 ## Doodle: or-patterns
 
@@ -62,7 +62,7 @@ Every downstream `match` that used to be exhaustive is now a compile error, ever
 Two answers exist in the wild:
 
 1. **Rust's `#[non_exhaustive]`**: the enum author opts an enum into "consumers must always write a wildcard arm," trading exhaustiveness's main benefit (compiler tells you every call site that needs updating) for library stability.
-2. **Closed by default, explicit opt-in to open** (the inverse): most enums are exhaustive-checked hard, and only enums explicitly marked extensible get the wildcard requirement.
+1. **Closed by default, explicit opt-in to open** (the inverse): most enums are exhaustive-checked hard, and only enums explicitly marked extensible get the wildcard requirement.
 
 (2) seems more consistent with a "compiler-checked exhaustiveness" wishlist entry read literally, since it keeps the strong guarantee as the default and makes the escape hatch visible at the definition site rather than the call site.
 But it means every enum author has to decide up front whether they'll ever add a variant, which is a hard question to answer honestly for a `Result<T, E>`-shaped type versus a closed `Ordering { Less, Equal, Greater }`-shaped type.
@@ -100,7 +100,7 @@ Parking as an open wrinkle, not solved here.
 
 ## Doodle: matching through structural/duck-typed values
 
-[[duck-typing]] leans toward structural typing checked statically.
+\[[duck-typing]\] leans toward structural typing checked statically.
 Does pattern matching work on structural types the way it works on nominal sum types?
 
 ```
@@ -141,8 +141,8 @@ That's a type-system question this note shouldn't try to resolve, just flagging 
 
 ## Where this connects
 
-- Matching on `Option<T>` and `Result<T, E>` is the load-bearing use case referenced in [[no-null-type-or-representation]] and [[no-exceptions-explicit-errors]]; whatever "robust" means here has to make those two notes' sketches read naturally, not just the toy `Some`/`None` examples.
-- Structural destructuring intersects [[duck-typing]]'s structural-vs-nominal axis directly, see above.
+- Matching on `Option<T>` and `Result<T, E>` is the load-bearing use case referenced in \[[no-null-type-or-representation]\] and \[[no-exceptions-explicit-errors]\]; whatever "robust" means here has to make those two notes' sketches read naturally, not just the toy `Some`/`None` examples.
+- Structural destructuring intersects \[[duck-typing]\]'s structural-vs-nominal axis directly, see above.
 - Exhaustiveness-vs-library-evolution is really a module/versioning question; might deserve its own note someday rather than living as a subsection here.
 
 ## Dead end: pattern matching as the *only* control flow

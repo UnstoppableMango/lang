@@ -83,7 +83,7 @@ this seems like the actual sweet spot: keep Go's zero-ceremony grouping, borrow 
 ## tangent: does this fight the compiled-first plan?
 
 if the module system is "directory = module, resolved at compile time by walking the filesystem," that's dead simple to reconcile with a batch compiler: walk the tree once, resolve everything, done.
-gets more interesting against the [[compiled-first-scripting-alt]] idea of a `mango run scratch.mn` no-ceremony single file mode: a lone file with no directory-mates is trivially "a module of one," so single-file scripts fall out of directory scoping for free, no special case needed.
+gets more interesting against the \[[compiled-first-scripting-alt]\] idea of a `mango run scratch.mn` no-ceremony single file mode: a lone file with no directory-mates is trivially "a module of one," so single-file scripts fall out of directory scoping for free, no special case needed.
 that's a nice consistency point between these two notes, worth remembering if both survive to sketch stage.
 
 ## dead end considered

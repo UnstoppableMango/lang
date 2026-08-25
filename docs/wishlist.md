@@ -18,19 +18,25 @@ Every foundational decision (paradigm, compilation model, memory strategy, imple
 ## Syntax and surface
 
 - Pattern matching with compiler-checked exhaustiveness.
+
   - Prior art: OCaml, Rust, Erlang.
 
   ```
   match x { Some(n) => n, None => 0 }
   ```
+
 - Significant or insignificant whitespace chosen deliberately rather than inherited by habit.
+
   - Prior art: Python, Haskell layout rule, Go's semicolon insertion.
 
 ## Types
 
 - Type inference strong enough that annotations are for communication, not for the compiler.
+
   - Prior art: Hindley-Milner, F#, Elm.
+
 - Nullability absent from the language, with optionality expressed in the type system.
+
   - Prior art: Rust, Kotlin, Tony Hoare's "billion dollar mistake" talk.
 
   ```
@@ -40,12 +46,15 @@ Every foundational decision (paradigm, compilation model, memory strategy, imple
 ## Semantics and evaluation
 
 - Expressions over statements wherever possible, so most constructs yield a value.
+
   - Prior art: Rust, ML family.
 
   ```
   let x = if c { a } else { b }
   ```
+
 - A clearly defined and small set of implicit conversions, possibly empty.
+
   - Prior art: Go (none), C (many, regretted).
 
 ## Memory and resources
@@ -58,12 +67,15 @@ Every foundational decision (paradigm, compilation model, memory strategy, imple
 ## Errors and failure
 
 - Recoverable errors as values distinct from unrecoverable panics.
+
   - Prior art: Rust, Go, Erlang's "let it crash".
 
   ```
   Result<T, E> plus panic
   ```
+
 - Error messages designed as a first-class feature with their own quality bar.
+
   - Prior art: Elm, Rust diagnostics.
 
 ## Concurrency
@@ -90,12 +102,15 @@ Every foundational decision (paradigm, compilation model, memory strategy, imple
 ## Metaprogramming
 
 - Compile-time code execution rather than a separate textual macro language.
+
   - Prior art: Zig comptime, Rust const eval, Lisp macros as the ancestor.
 
   ```
   const fn / comptime
   ```
+
 - Derivable boilerplate (equality, formatting, serialization) generated from type definitions.
+
   - Prior art: Rust `#[derive]`, Haskell `deriving`.
 
 ## Tooling and developer experience

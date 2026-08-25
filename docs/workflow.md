@@ -12,13 +12,13 @@ Nothing advances quickly, nothing skips stages, and every advancement leaves a w
 
 Every feature has a stage, modeled after the TC39 process.
 
-| Stage | Name         | Lives in                        | Means                                        |
+| Stage | Name | Lives in | Means |
 | ----- | ------------ | ------------------------------- | -------------------------------------------- |
-| 0     | Wishlist     | `docs/wishlist.md`              | An idea worth remembering.                   |
-| 1     | Sketch       | `docs/design/NNNN-slug.md`      | A problem worth solving, shape still rough.  |
-| 2     | Draft design | same file                       | A concrete design with resolved semantics.   |
-| 3     | Accepted     | same file                       | Design frozen, awaiting specification.       |
-| 4     | Specified    | `docs/spec/` (future)           | Formal spec text exists, design doc is historical record. |
+| 0 | Wishlist | `docs/wishlist.md` | An idea worth remembering. |
+| 1 | Sketch | `docs/design/NNNN-slug.md` | A problem worth solving, shape still rough. |
+| 2 | Draft design | same file | A concrete design with resolved semantics. |
+| 3 | Accepted | same file | Design frozen, awaiting specification. |
+| 4 | Specified | `docs/spec/` (future) | Formal spec text exists, design doc is historical record. |
 
 Movement is one stage at a time, in either direction.
 A feature can also be rejected or parked at any stage.

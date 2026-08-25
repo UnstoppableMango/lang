@@ -31,7 +31,7 @@ Two very different flavors worth separating:
 1. **Python style**: indentation IS the block delimiter.
    No brace ever legal for grouping statements.
    Consistent indent within a block enforced by the lexer (INDENT/DEDENT tokens).
-2. **Haskell layout rule**: indentation is sugar for explicit braces/semicolons the parser could equally accept.
+1. **Haskell layout rule**: indentation is sugar for explicit braces/semicolons the parser could equally accept.
    You can always fall back to `let { x = 1; y = 2 } in x + y` explicit form.
    The whitespace-sensitive version is desugared to the explicit-delimiter version before or during parsing.
 
@@ -51,7 +51,7 @@ That feels like it could get "the best of both": write the pretty layout form, b
 ## what does insignificant whitespace lose?
 
 - Nothing forces you to *use* consistent formatting, hence `gofmt`/`prettier`/etc as an entire tooling category that exists to compensate.
-- If the project already lands on [[single-canonical-formatter]], is significant whitespace actually buying anything beyond what a mandatory formatter already gives you?
+- If the project already lands on \[[single-canonical-formatter]\], is significant whitespace actually buying anything beyond what a mandatory formatter already gives you?
   A formatter-enforced language already has one canonical shape per AST; whitespace being "insignificant" to the grammar doesn't mean it's insignificant to the humans, it's just insignificant to the *parser*.
 - This reframes the question: significant whitespace looks like it's really about *where the enforcement lives*.
   Python puts block structure enforcement in the grammar itself (can't even parse malformed indentation).
@@ -67,7 +67,7 @@ So maybe the real axis isn't "significant vs not" but "how large is the whitespa
 
 ## tangent: significant whitespace and macros/metaprogramming
 
-If [[ast-in-public-api]] ever goes anywhere and macros operate on syntax trees rather than raw tokens, does whitespace-sensitivity make macro-generated code harder to splice?
+If \[[ast-in-public-api]\] ever goes anywhere and macros operate on syntax trees rather than raw tokens, does whitespace-sensitivity make macro-generated code harder to splice?
 A macro that generates a block of statements to insert at some call site, in a Python-like world, needs to know the ambient indentation of the splice point to emit legally-indented code.
 In a brace world it just emits `{ ... }` and does not care where it lands.
 This feels like a real tax on indentation-sensitive grammars for any kind of code-generation-as-text approach, though it goes away if macros operate purely on ASTs and only render to text at the very end via a pretty-printer (circles back to the Haskell layout-rule idea: define the grammar in terms of delimiters, treat the indentation-sensitive form as one particular rendering).
@@ -76,6 +76,6 @@ This feels like a real tax on indentation-sensitive grammars for any kind of cod
 
 Kind of talked myself toward "the grammar should probably be delimiter-driven underneath (for macro/codegen/copy-paste sanity), with an optional Haskell-style layout rule as sugar if a light-indentation-based surface syntax is wanted later."
 But that's a real design commitment with implications for the parser architecture, and it's presuming outcomes on macros/AST-in-public-API that are nowhere near decided.
-Also haven't touched: does significant whitespace interact with [[functional-implicit-return]] or expression-orientation generally?
+Also haven't touched: does significant whitespace interact with \[[functional-implicit-return]\] or expression-orientation generally?
 Expression-oriented languages with implicit returns (last expression in a block is the value) seem to lean toward needing very clear block delimiters precisely because "what's the last expression of this block" is a question braces answer trivially and indentation answers more ambiguously (what's the last statement at this indent level, going by feel, not rule).
 Open question, not chased down yet.

@@ -4,7 +4,7 @@ Starting premise: minimizing dependencies is not a value to nudge people toward,
 The mechanism under test: when you take a dependency, you fork its source, trim it down to what you actually use, and only the trimmed fork ever reaches the compiler.
 Zero standing, presumes outcomes of open decision records freely.
 
-[[dependency-cultures]] already recorded a dead end that looks adjacent to this: "forbid transitive dependencies" dies because everyone vendors anyway and the graph becomes invisible instead of shallow.
+\[[dependency-cultures]\] already recorded a dead end that looks adjacent to this: "forbid transitive dependencies" dies because everyone vendors anyway and the graph becomes invisible instead of shallow.
 This note exists to find out whether mandatory, tooled vendoring is the same dead end wearing a disguise, or a genuinely different animal because the vendoring is forced, automatic, and visible in-repo rather than an escape hatch someone reaches for quietly.
 
 ## The basic shape
@@ -27,7 +27,7 @@ That is the part I like best here: an entire subsystem (package manager, resolve
 
 ## Why "trim" and not just "vendor"
 
-Plain vendoring (copy the file in, C-style, per [[dependency-cultures]]) freezes a copy but keeps the whole thing, including the 95% of the package you never call.
+Plain vendoring (copy the file in, C-style, per \[[dependency-cultures]\]) freezes a copy but keeps the whole thing, including the 95% of the package you never call.
 Trimming is vendoring plus reachability analysis: dead code elimination performed at fork time, on source, before a single line reaches the compiler, rather than as a linker pass afterward.
 
 Consequence I like: the diff you actually review is small.
@@ -76,19 +76,19 @@ $ lang vendor update http
 
 This reframes "update" as "regenerate and diff", closer to a lockfile regen than a git merge, which is nice because it is mechanical and re-runnable.
 But it exposes the sharp edge immediately: if you ever hand-edited the trimmed fork (fixed a bug, patched a security hole yourself because upstream was slow), updating means merging your patch against a re-trim, and that is a real merge conflict, not a version bump.
-[[dependency-cultures]] flagged "security patches" as the unresolved cost of content-addressed dependencies, where a name is just an alias for a hash and there's no mechanism for "everyone who depends on this must move".
+\[[dependency-cultures]\] flagged "security patches" as the unresolved cost of content-addressed dependencies, where a name is just an alias for a hash and there's no mechanism for "everyone who depends on this must move".
 Fork-and-trim has the opposite problem: there is a mechanism (re-vendor), but it competes with your own local edits every single time, which is a tax the content-addressing approach doesn't pay, because it never lets you edit the dependency in the first place.
 
 ## Doodle: trimming pushes the "granularity of the unit" lever without changing what a package is
 
-[[dependency-cultures]] lists "granularity of the unit" as a culture lever: package-shaped ecosystems produce package-sized dependencies, function-shaped ecosystems don't.
+\[[dependency-cultures]\] lists "granularity of the unit" as a culture lever: package-shaped ecosystems produce package-sized dependencies, function-shaped ecosystems don't.
 Trimming doesn't require redesigning what a package is.
 Upstream can still publish coarse, kitchen-sink packages.
 But what actually lands in your repo, post-trim, is function-shaped, because reachability analysis doesn't care about the package's intended unit, only about what you call.
 So you might get function-granularity dependencies for free, as a side effect of the trim step, without ever having to convince an ecosystem to publish that way.
 That feels like it might be the actual point of this idea, more than the "fewer dependencies" framing on the tin.
 
-## Where this fights the other doodles in [[dependency-cultures]]
+## Where this fights the other doodles in \[[dependency-cultures]\]
 
 Three different answers to "how do you take a dependency" now exist across these two notes: capability-checked packages, content-addressed hashes, and fork-and-trim.
 They are not obviously compatible.
@@ -105,12 +105,12 @@ Flagging it because a language that wants all three properties (capabilities, co
 
 ## Dead ends, recorded so I stop rediscovering them
 
-- **"Trim by hand every time."** Forces real engagement with what you're importing, in the spirit of the C vendoring culture already in [[dependency-cultures]]. Dies on scale: the moment a dependency has more than a handful of call sites, hand-trimming is just re-implementing reachability analysis badly, and worse, inconsistently between people.
+- **"Trim by hand every time."** Forces real engagement with what you're importing, in the spirit of the C vendoring culture already in \[[dependency-cultures]\]. Dies on scale: the moment a dependency has more than a handful of call sites, hand-trimming is just re-implementing reachability analysis badly, and worse, inconsistently between people.
 - **"Trim once, never re-trim."** Simplest possible version, and it just becomes permanent forking with a nicer first diff. All the update problems above still exist, they just have no tooling answer at all. Worse than the tooled version, not obviously worse than the ecosystem status quo.
 
 ## Where this leaves me, unresolved
 
-The "add is cheap, everything else is expensive" cost structure that [[dependency-cultures]] identifies as the root cause of npm-style culture is directly attacked here: `lang vendor add` is deliberately not cheap, it produces a diff you have to look at before the dependency exists at all.
+The "add is cheap, everything else is expensive" cost structure that \[[dependency-cultures]\] identifies as the root cause of npm-style culture is directly attacked here: `lang vendor add` is deliberately not cheap, it produces a diff you have to look at before the dependency exists at all.
 That is the strongest part of the idea.
 
 The weakest part is "update", which trades a solved problem (semver ranges, however badly they work) for an unsolved one (mechanical re-trim plus manual merge of local patches), and I don't have a story for why that trade is obviously worth it at scale, only that it might be worth it for a language whose whole premise is having very few dependencies in the first place, where "at scale" may never actually arrive.

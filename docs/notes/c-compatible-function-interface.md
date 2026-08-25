@@ -6,16 +6,16 @@ This note picks at what "C-compatible" actually commits us to, since the phrase 
 ## What "C-compatible" could mean, ranked by how much it costs
 
 1. Callable from C, with a C header generated for our functions.
-This is the cheap version: our compiler emits `.h` files, our ABI matches the platform C ABI for exported symbols only.
-Internal calling convention can be anything.
+   This is the cheap version: our compiler emits `.h` files, our ABI matches the platform C ABI for exported symbols only.
+   Internal calling convention can be anything.
 
-2. Callable from C AND able to call C, bidirectionally, but only through explicit `extern "C"`-style boundary blocks.
-Everything inside those blocks pays the FFI tax (marshaling, no fancy types); everything outside is free to be weird.
-This is Rust's approach, essentially.
+1. Callable from C AND able to call C, bidirectionally, but only through explicit `extern "C"`-style boundary blocks.
+   Everything inside those blocks pays the FFI tax (marshaling, no fancy types); everything outside is free to be weird.
+   This is Rust's approach, essentially.
 
-3. C ABI as the native calling convention for all functions.
-Zig leans this way for extern-facing things but not necessarily for internal calls.
-Nobody serious makes their WHOLE calling convention C's, because C's ABI is bad (no multiple return values, no fat pointers, poor struct-passing rules that vary by platform).
+1. C ABI as the native calling convention for all functions.
+   Zig leans this way for extern-facing things but not necessarily for internal calls.
+   Nobody serious makes their WHOLE calling convention C's, because C's ABI is bad (no multiple return values, no fat pointers, poor struct-passing rules that vary by platform).
 
 Option 2 is almost certainly right.
 "C-compatible" should mean "has a boundary that speaks C," not "is secretly C inside."
@@ -30,6 +30,7 @@ The hard parts are all about what crosses the boundary conceptually, not mechani
 C strings are null-terminated bytes with no length.
 Our strings (if we have a real string type) are probably length-prefixed, maybe UTF-8-validated, maybe rope-like internally.
 Crossing the boundary means either:
+
 - exposing `(ptr, len)` pairs and asking C callers to use a companion length param (fine for our own headers, useless for THEIR headers)
 - eating the null-terminator scan cost and validation gap when receiving a `char*`
 - never passing strings directly, only opaque handles with getter functions
@@ -41,11 +42,12 @@ Every language's C interop docs spend the most words here.
 
 Who frees a pointer that crosses the FFI line?
 If our memory strategy ends up being GC'd (still an open decision record), then any pointer we hand to C must either:
+
 - be pinned/never-move for the lifetime C might hold it (GC languages hate this)
 - be copied into a C-owned allocation on the way out, freed by an explicit `free` function we also export
 - be borrowed only for the duration of the call, never stored (this is the sane default, but C code doesn't always respect "don't store this")
 
-This is actually downstream of [[arena-memory-model]] and the not-yet-written memory strategy decision.
+This is actually downstream of \[[arena-memory-model]\] and the not-yet-written memory strategy decision.
 Can't fully design the FFI story until that lands, but the note is worth keeping because the FFI requirement should probably be a design CONSTRAINT feeding the memory decision, not an afterthought bolted on after.
 Arenas make the "who frees this" question easier in one direction: hand C a pointer into an arena, and as long as the arena outlives the call, no ownership transfer needed at all, since nobody frees anything until the arena dies.
 
@@ -67,7 +69,7 @@ That's probably correct: an explicit compile error at the boundary ("this type i
 
 ### Error handling across the boundary
 
-If [[no-exceptions-explicit-errors]] settles on `Result<T, E>`-shaped errors, that's another non-C-representable type at the boundary.
+If \[[no-exceptions-explicit-errors]\] settles on `Result<T, E>`-shaped errors, that's another non-C-representable type at the boundary.
 C convention is sentinel return values plus `errno`-style out-of-band state, or a `(bool ok, T value)` out-param pair.
 Feels like the FFI layer needs its own error convention, distinct from whatever the "native" error story is: something like every `extern "C"` function returns an int status code and takes an out-pointer for the real return value.
 That's what gRPC/protobuf-adjacent C APIs do, what SQLite does, what basically every serious C library does.
@@ -76,6 +78,7 @@ That's what gRPC/protobuf-adjacent C APIs do, what SQLite does, what basically e
 
 C callbacks are just pointers, no captured environment.
 If we have closures, a closure crossing the boundary needs either:
+
 - to be restricted to non-capturing functions only when going to C (compile error otherwise)
 - to be represented as a `(fn_ptr, void* userdata)` pair, which is the universal C convention for "callback with context" (see: `qsort_r`, most C callback APIs)
 

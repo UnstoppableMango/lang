@@ -74,6 +74,7 @@ Feels like it belongs in a "what if the language has algebraic effects" note mor
 Java tried "exceptions, but the signature has to declare them" (`throws IOException`).
 It's arguably the closest existing thing to "explicit error handling without a Result type."
 It died in practice because:
+
 - checked exceptions don't compose through higher-order functions (what's the throws clause of `map`?)
 - people papered over it with `throws Exception` or wrapping in unchecked exceptions anyway
 

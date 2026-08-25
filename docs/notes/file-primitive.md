@@ -16,8 +16,8 @@ The language quietly moved a byte range from the author's machine into the build
 Three separable ideas hiding in that:
 
 1. Paths are relative to the file that wrote them, not to the process's cwd. Nix resolves `./foo` against the source file's directory.
-2. Referencing a file is an act of dependency declaration, not of reading.
-3. Identity is content, not location. Two files with the same bytes are the same value.
+1. Referencing a file is an act of dependency declaration, not of reading.
+1. Identity is content, not location. Two files with the same bytes are the same value.
 
 Any of the three could be stolen without the other two.
 

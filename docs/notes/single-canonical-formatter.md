@@ -1,6 +1,6 @@
 # A single canonical formatter, Go-style
 
-[[dev-tooling-philosophy]] already named "Format: one canonical style, zero configuration" as one bullet in a checklist of eleven.
+\[[dev-tooling-philosophy]\] already named "Format: one canonical style, zero configuration" as one bullet in a checklist of eleven.
 This note zooms into just that bullet.
 Not "should there be a formatter," that question already got answered there (dead end: "ship the formatter as a separate optional install" and "configurable formatter with sane defaults" both die).
 The question here is narrower and more interesting: what does "canonical" actually mean mechanically, and which of gofmt's specific design choices are the ones worth stealing versus the ones that are just what Go happened to land on.
@@ -11,12 +11,14 @@ The popular take on gofmt is "it removes all formatting choices."
 That's not quite true, and the gap is the interesting part.
 
 gofmt does NOT:
+
 - enforce a line length limit (no 80-col, no 100-col wrapping, ever)
 - reflow a multi-line struct literal into one line, or vice versa
 - decide how you group your `if` conditions across lines
 - touch blank line placement beyond collapsing 2+ consecutive blanks into 1
 
 gofmt DOES:
+
 - normalize indentation to tabs, consistently
 - normalize spacing around operators, commas, braces
 - align consecutive struct tags / short var decls / map entries into columns (the tabwriter behavior)
@@ -89,7 +91,7 @@ gofmt gets this almost for free because of *how* it's built: it's not a text-to-
 Feed the output back through the parser, get the same AST (comments aside, see below), pretty-print again, get the same text.
 Idempotence isn't a property gofmt tries to have, it falls out of the architecture as long as parse and print are both deterministic.
 
-This connects hard to [[dev-tooling-philosophy]]'s "tools that share one data structure" doodle: the formatter isn't really a separate tool from the compiler's front end at all, it's `print(parse(x))` using the exact same parser the compiler uses.
+This connects hard to \[[dev-tooling-philosophy]\]'s "tools that share one data structure" doodle: the formatter isn't really a separate tool from the compiler's front end at all, it's `print(parse(x))` using the exact same parser the compiler uses.
 If mangolang's parser is a library (already argued for elsewhere), the formatter might not be eleven-tools'-worth of new work, it might be a few hundred lines of pretty-printer sitting on top of a parser that already has to exist.
 That reframes "build a formatter" from "build a tool" to "write a printer for an AST you already have," which is a much smaller lift and makes "ship it on day one, not as a later toolchain item" more plausible.
 

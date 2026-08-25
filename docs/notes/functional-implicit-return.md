@@ -47,9 +47,10 @@ Ruby has implicit return of the last evaluated statement, but it's not really "f
 these are two separate axes, worth not conflating:
 
 1. is a function body's trailing expression its return value by default? (implicit tail return)
-2. is there a `return` keyword for early exit? (explicit early return)
+1. is there a `return` keyword for early exit? (explicit early return)
 
 matrix:
+
 - yes / no: pure expression-oriented, no early exit except via expression composition (some point-free/combinator-heavy styles, or a hypothetical minimal ML dialect)
 - yes / yes: Rust, Ruby (kind of, `return` exists but is rarely needed)
 - no / yes: C, Go, most procedural languages, everything is a statement, `return` is mandatory

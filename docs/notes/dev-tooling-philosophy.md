@@ -1,7 +1,7 @@
 # Development tooling philosophy
 
 Riffing on "comprehensive tooling, Go-style" as a design stance rather than a feature list.
-[[go-simplicity]] already touched this in one section ("tooling as part of the simplicity story").
+\[[go-simplicity]\] already touched this in one section ("tooling as part of the simplicity story").
 This note is the expansion: what would it actually mean for this language to ship a `go`-shaped toolchain, and is that even the right shape to copy.
 
 ## The core claim to test
@@ -73,7 +73,7 @@ This connects to the wishlist's "language server planned alongside the compiler,
 
 ## Doodle: the toolchain reports what it's doing, not just the result
 
-Stolen from the [[dependency-cultures]] build-cost doodle, generalized past dependencies to the whole toolchain:
+Stolen from the \[[dependency-cultures]\] build-cost doodle, generalized past dependencies to the whole toolchain:
 
 ```
 $ lang build
@@ -100,7 +100,7 @@ Comprehensive and opinionated are almost the same axis, and that's the thing to 
 The moment there's a plugin ecosystem or a second formatter, "no config" becomes "no config, but you can just not use gofmt," which is a worse outcome than either configurability or true uniformity.
 So a comprehensive toolchain either has to stay a closed, first-party system forever, or it has to accept that "comprehensive" decays into "comprehensive-ish, plus whatever the ecosystem bolted on," which is exactly the fragmented outcome this whole note is trying to avoid.
 
-Also worth naming: Go's toolchain is comprehensive partly because Go the language stayed small for a decade (see [[go-simplicity]]).
+Also worth naming: Go's toolchain is comprehensive partly because Go the language stayed small for a decade (see \[[go-simplicity]\]).
 A small language surface is cheap to build eleven tools around.
 If this language ends up with a large or unsettled surface (macros, comptime, an effect system, whatever lands from the wishlist), "one canonical formatter, one canonical vet pass" gets harder in direct proportion to how much the language itself still has open decision records.
 Comprehensive tooling might be a *late* project, achievable only once the language design has mostly stopped moving, rather than an early one.
@@ -117,5 +117,5 @@ Not resolved: maybe the resolution is that the *architecture* (shared AST/IR as 
 
 - Whether the toolchain binary should itself be self-hosting (written in this language) before or after 1.0, since a self-hosted `lang fmt` is the strongest possible proof the language is pleasant to write real programs in.
 - What "vet" actually checks for *this* language specifically, once the memory model and error story are decided, since Go's vet checks (printf format strings, struct tags, lock copying) are downstream of Go's specific footguns, not a generic template.
-- How module/dependency tooling here reconciles with the capability-checking doodle in [[dependency-cultures]], since "lang mod tidy" and "prove this package can't open a socket" are two different tools today in every existing language and maybe shouldn't be here.
+- How module/dependency tooling here reconciles with the capability-checking doodle in \[[dependency-cultures]\], since "lang mod tidy" and "prove this package can't open a socket" are two different tools today in every existing language and maybe shouldn't be here.
 - Release cadence for the toolchain itself: tied to language version (Go's model, eventually) or decoupled (each tool versioned independently, more Rust/Cargo-shaped)?

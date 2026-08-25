@@ -1,6 +1,6 @@
 # Language AST exposed in the public API
 
-Prompted by [[dev-tooling-philosophy]]'s doodle: "define the AST/IR once, in a form the compiler, formatter, linter, and language server all import as a library."
+Prompted by \[[dev-tooling-philosophy]\]'s doodle: "define the AST/IR once, in a form the compiler, formatter, linter, and language server all import as a library."
 That doodle assumed the shared AST question without asking it directly.
 This note asks it directly: what does it actually mean for this language's AST to be a *public*, versioned, importable artifact, not just an internal implementation detail the compiler happens to have?
 
@@ -9,7 +9,7 @@ This note asks it directly: what does it actually mean for this language's AST t
 Two very different things get called "the AST is public":
 
 1. The compiler is structured as a library, and that library's AST types are part of its public API surface, the way `go/ast` is importable from any Go program.
-2. The AST's shape is part of the language's own specification, the way it might show up in `docs/design/NNNN-*.md` as a stable, documented data structure a spec reader could implement against.
+1. The AST's shape is part of the language's own specification, the way it might show up in `docs/design/NNNN-*.md` as a stable, documented data structure a spec reader could implement against.
 
 These are not the same claim and they don't have to be decided together.
 A language could have (1) without (2): the reference compiler's AST types are importable Go/Rust/whatever structs, but nothing says another implementation has to produce the same shape.
@@ -65,6 +65,7 @@ match stmt {
 ```
 
 Possible outs, none obviously right:
+
 - Non-exhaustive-by-default for AST-shaped enums specifically, carving out an exception to the general exhaustiveness story.
 - A closed AST core plus an explicit "unknown/extension node" variant, so exhaustive matches stay exhaustive but new syntax rides in a bucket that has to be handled generically anyway (which defeats a lot of the benefit of exposing structured nodes to begin with).
 - Version the AST crate independently of the language (`lang-ast v3` vs `lang v1`), so an old formatter can keep working against an old tree shape while the compiler internally uses a newer one and translates at the boundary. Cost: now there are two things to keep in sync forever, which is exactly the "shared AST" doodle's whole premise, undone.
@@ -91,7 +92,7 @@ Not obviously true that satisfying one satisfies the other, an AST shaped for `g
 
 ## Dead ends, recorded so I stop rediscovering them
 
-- **"AST as the spec."** Tried this thought and it collapses immediately: a spec that says "the AST looks like this Rust struct" ties the specification of the language to one implementation language's type system forever. If a second implementation exists in a different host language, "the AST" can't literally be that struct, at best it's isomorphic to it. Spec-vs-reference-compiler ([[spec-vs-reference-compiler]]) already covers this ground more generally, this is just a specific instance of it.
+- **"AST as the spec."** Tried this thought and it collapses immediately: a spec that says "the AST looks like this Rust struct" ties the specification of the language to one implementation language's type system forever. If a second implementation exists in a different host language, "the AST" can't literally be that struct, at best it's isomorphic to it. Spec-vs-reference-compiler (\[[spec-vs-reference-compiler]\]) already covers this ground more generally, this is just a specific instance of it.
 - **"Solve exhaustiveness-vs-public-AST by never adding new syntax."** Not a real answer, the language will grow, the wishlist alone has a dozen half-formed features that would each need new node kinds.
 
 ## Threads worth pulling later

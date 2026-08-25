@@ -26,18 +26,18 @@ candidate shapes, from least to most divergent:
    scripting-like only in invocation, not in language design.
    this is the "cargo script" / "go run" move: same type checker, same everything, just skip the ceremony of a build step.
 
-2. **same language, relaxed mode.**
+1. **same language, relaxed mode.**
    `mango run --loose` (or a `#!/usr/bin/env mango --script` shebang) turns off some compiled-language rigor: top-level statements allowed outside a function, implicit `main`, maybe looser numeric coercion.
    danger: now there are two dialects of the same language and every design decision has to be made twice ("does this feature exist in loose mode?").
    this is how you get Python's `from __future__ import` accretion, or TypeScript's `any`.
 
-3. **genuinely different surface syntax, shared IR/semantics.**
+1. **genuinely different surface syntax, shared IR/semantics.**
    two front ends compiling to the same core language, the way ReScript and OCaml share semantics but not surface syntax, or the way ClojureScript and Clojure share semantics but not host.
    the scripting front end could look nothing like the compiled one: dynamic-looking, no explicit types, semicolon-optional, whatever "feels like a script" means.
    underneath, it desugars to the same typed core, maybe with holes filled by inference or by a lightweight runtime type.
    this preserves "one language, one semantics" while giving very different day-to-day ergonomics.
 
-4. **actually a different language that happens to interop.**
+1. **actually a different language that happens to interop.**
    at this point it's not "the language, but scripty" — it's two languages, like Java and Groovy, or Kotlin and Kotlin Script.
    probably out of scope for a single-language wishlist entry, but worth naming as the far end of the spectrum so we know when we've crossed it.
 

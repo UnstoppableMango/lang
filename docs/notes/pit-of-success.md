@@ -33,27 +33,27 @@ Six mechanisms, in decreasing order of how hard they are to weasel out of:
    No null type means no null-deref class of bug, full stop, not "usually caught," gone.
    This is the only technique that's bulletproof, and the only one that can't be added after the fact without a breaking rewrite of everything downstream, which is the actual argument for deciding this early rather than "cleaning it up in v2."
 
-2. **Make the wrong thing require an incantation.**
+1. **Make the wrong thing require an incantation.**
    `unsafe { ... }` as a visible, lexical, grep-able marker, not a runtime flag or a config setting.
    The pit is still hard-walled, but there's a marked ladder out, and code review can `grep unsafe` the whole repo and count the ladders.
    Contrast with a "strict mode" opt-in (TypeScript's `strict: true`, JS's `"use strict"`): that inverts the pit, since the *default* stays loose and the thing you must opt into is the safe one.
    Everyone who doesn't know to opt in, which is every beginner pasting from Stack Overflow, lands in the unsafe default forever.
    An escape hatch has to escape *out of* safety, never *into* it.
 
-3. **Make the correct API shorter to type than the incorrect one.**
+1. **Make the correct API shorter to type than the incorrect one.**
    Asymmetric ergonomics as a design constraint on the standard library itself: if the safe function name is longer or the safe call site needs more boilerplate than the dangerous one, most people will reach for whichever their fingers find first, and that's the dangerous one.
 
-4. **Collapse choice.**
-   Already argued in [[dev-tooling-philosophy]] for formatting (`gofmt`, zero configuration): the fewer ways there are to do a thing, the fewer of those ways can be the wrong one.
+1. **Collapse choice.**
+   Already argued in \[[dev-tooling-philosophy]\] for formatting (`gofmt`, zero configuration): the fewer ways there are to do a thing, the fewer of those ways can be the wrong one.
    This generalizes past formatting to API surface: one canonical HTTP client, one canonical way to spawn concurrent work, one canonical serialization format for the stdlib's own types.
    Every second sanctioned way to do something is a second thing that can be the wrong one to reach for under time pressure.
 
-5. **Make ignoring the result ugly, not just possible.**
+1. **Make ignoring the result ugly, not just possible.**
    Rust's `#[must_use]` on `Result` is the compromise version of this: ignoring an error is still legal, but it produces a visible warning, so silence at the call site becomes a code-review flag instead of nothing.
    Go's `_ = err` shows the failure mode: the discard is exactly as easy to type as the check, so under pressure people type the shorter one, and the language has no opinion either way.
    Whatever this language does with errors, the discard path should never be the terse one.
 
-6. **Sane zero values.**
+1. **Sane zero values.**
    Go's actual pit-of-success win: every type has a zero value that's safe to use unintialized, so "forgot to initialize" degrades to "acts like the empty case" instead of "reads garbage memory."
    Cheap to copy, easy to forget it's a deliberate decision rather than an accident of how zeroed memory happens to look.
 
@@ -94,5 +94,5 @@ The `unsafe` block doodle above is this note's best current answer (wall stays, 
 
 - Whether "hard pit of success" (unrepresentable) is even affordable before the type system and memory model decision records land, since technique 1 above is really just a slogan for whatever those decisions turn out to be.
 - Whether `unsafe`-as-visible-marker (technique 2) implies unsafe code has to be lexically scoped and non-composable with safe code in the same function, the way Rust does it, or whether a looser marker (a naming convention, a required doc comment) gets most of the grep-ability at less type-system cost.
-- Whether "collapse choice" (technique 4) is really the same claim as [[dev-tooling-philosophy]]'s formatter argument generalized, or a distinct argument that happens to rhyme; they're filed as the same idea here but that might be sloppy.
+- Whether "collapse choice" (technique 4) is really the same claim as \[[dev-tooling-philosophy]\]'s formatter argument generalized, or a distinct argument that happens to rhyme; they're filed as the same idea here but that might be sloppy.
 - A concrete stdlib API (something like "read a file" or "spawn a task") worth designing twice, once the fast/obvious way and once the pit-of-success way, to see how far apart they actually land in character count and mental model.

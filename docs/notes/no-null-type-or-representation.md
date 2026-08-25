@@ -69,7 +69,7 @@ fn greetUser(id: UserId) {
 ```
 
 This isn't really a different representation mechanism, more a style/lint layer on top of (1): "resolve your Options at the edges, don't let them infect deep call chains."
-Interesting because it's the same shape of complaint as the `?`-propagation "eighteen frames of busywork" problem in [[no-exceptions-explicit-errors]] but inverted: there the complaint is too much ceremony propagating, here the risk is too little, `Option<T>` seeping everywhere and every function having to handle a None it has no opinion about.
+Interesting because it's the same shape of complaint as the `?`-propagation "eighteen frames of busywork" problem in \[[no-exceptions-explicit-errors]\] but inverted: there the complaint is too much ceremony propagating, here the risk is too little, `Option<T>` seeping everywhere and every function having to handle a None it has no opinion about.
 Same underlying tension (explicit-everywhere vs explicit-at-the-boundary) showing up in both the error note and this one.
 Suggests these two notes are actually one open question about the language: "how does explicit-by-type interact with propagation," not two.
 
@@ -77,6 +77,7 @@ Suggests these two notes are actually one open question about the language: "how
 
 If there's no null, there's no such thing as a struct with an "unset" field mid-construction.
 That means either:
+
 - constructors must supply every field in one shot (no incremental builder pattern that leaves fields null in between), or
 - a builder pattern exists but is typed so the builder's type changes as fields get filled in (typestate-ish), so "call `.build()` before all fields are set" is a compile error, not a null-field-at-runtime bug.
 
@@ -130,7 +131,7 @@ Rejecting this outright, but worth having written down why, since it's the obvio
 
 ## Loose thread
 
-If the language ends up going the effect-system route floated in [[no-exceptions-explicit-errors]], does "no null" get to fold into the same machinery as "no exceptions"?
+If the language ends up going the effect-system route floated in \[[no-exceptions-explicit-errors]\], does "no null" get to fold into the same machinery as "no exceptions"?
 Absence and failure aren't the same thing (a `None` isn't an error, a lookup miss can be a totally expected, non-exceptional outcome), but both are "this call didn't give you the straightforward thing you asked for," and some languages (Zig sort of, with error unions) mash them into one mechanism.
 Not clear that's right here.
 Keeping them conceptually separate for now: `Option<T>` for "might not exist," `Result<T, E>` for "might fail," and a function that can do both is `Result<Option<T>, E>` or `Option<Result<T, E>>` depending on which failure mode is "outer."

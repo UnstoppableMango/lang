@@ -19,6 +19,7 @@ Go's bet was the opposite: primitives that are individually a little blunt, but 
 ## The "no" as a design tool
 
 Go's simplicity is mostly visible in what shipped without:
+
 - generics (for a decade, on purpose)
 - exceptions (error values instead)
 - inheritance (embedding instead)

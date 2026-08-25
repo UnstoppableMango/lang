@@ -4,7 +4,7 @@ the pitch: editing one function and re-running `mango build` should feel instant
 worth separating two things that get conflated under "incremental compilation":
 
 1. incremental *rebuilds* across process invocations (edit a file, run the CLI again, only the changed part re-executes).
-2. incremental *analysis* inside one long-lived process (a language server watching keystrokes, needs sub-100ms turnaround on every reparse).
+1. incremental *analysis* inside one long-lived process (a language server watching keystrokes, needs sub-100ms turnaround on every reparse).
 
 these have wildly different constraints.
 (1) can afford disk-backed caches, hashing, serialization.
@@ -26,7 +26,7 @@ mango build
 
 this is what most build systems do (make, and by extension most C/C++ toolchains) and it's dead simple to implement and reason about.
 the failure mode is well known though: change one function in a file with 2000 lines and 40 unrelated functions, the whole file re-typechecks, because the cache granularity is "file," not "function."
-if [[directory-scoped-modules]] lands, this gets worse in one specific way: a directory *is* the module, so does the cache granularity become "directory" instead of "file"?
+if \[[directory-scoped-modules]\] lands, this gets worse in one specific way: a directory *is* the module, so does the cache granularity become "directory" instead of "file"?
 that would mean editing `token.mn` invalidates the cached analysis of every sibling file in `parser/`, even ones that don't reference `Token` at all, purely because they're nominally "the same module" and module-level facts (name resolution, visibility) got computed as one unit.
 that's a real tension between directory-scoping's zero-ceremony grouping and fine-grained incrementality, worth flagging if both ideas survive to sketch stage.
 
@@ -67,13 +67,13 @@ local type inference (infer within a function body, require signatures at functi
 this seems like the actual design lever: how much can be inferred *within* an item without touching how other items get analyzed.
 
 **module boundaries as cache boundaries.**
-[[directory-scoped-modules]]'s open tension (directory-as-module vs finer per-item boundaries) turns out to matter here too, not just for visibility.
+\[[directory-scoped-modules]\]'s open tension (directory-as-module vs finer per-item boundaries) turns out to matter here too, not just for visibility.
 a module system where "what's visible to importers" is a small, explicit, syntactically obvious set (option B in that note, `pub` per item) gives the compiler a natural incremental boundary: recompiling a module's *internals* never has to re-typecheck importers, only recompiling its *exported* signatures does.
 if visibility is implicit or capitalization-based, the compiler has to conservatively assume more surface area changed than actually did.
 
 ## approach C: don't build a novel incremental engine, reuse LLVM/existing infra
 
-tangent worth naming and setting aside: if [[compiled-first-scripting-alt]] wants a `mango run` no-ceremony mode, does that mode even want incrementality, or does it want *fast enough from-scratch compilation that caching doesn't matter*?
+tangent worth naming and setting aside: if \[[compiled-first-scripting-alt]\] wants a `mango run` no-ceremony mode, does that mode even want incrementality, or does it want *fast enough from-scratch compilation that caching doesn't matter*?
 a sufficiently fast non-incremental compiler (think: single-pass, no separate optimization pass, tree-walk-adjacent codegen for the "run a script" case) sidesteps the whole caching problem for the common case, and only the "large project, `mango build --release`" case needs real incrementality.
 this bifurcation (interpreter-fast-path for `run`, incremental-cached-path for `build`) mirrors how a lot of language ecosystems actually ended up (a bytecode VM for dev-loop speed, AOT/LTO for release builds) without anyone deciding it as one unified strategy up front.
 worth remembering as a possible "you don't need one answer" escape hatch if approach A vs B stalls out as a false binary.
