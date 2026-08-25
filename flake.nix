@@ -41,10 +41,15 @@
           craneLib = (crane.mkLib pkgs).overrideToolchain (_: toolchain);
 
           llvm = pkgs.callPackage ./nix/llvm.nix { };
+
+          compiler = pkgs.callPackage ./nix/compiler.nix {
+            inherit craneLib llvm;
+          };
         in
         {
-          packages.default = import ./nix/compiler.nix {
-            inherit craneLib llvm;
+          packages = {
+            inherit compiler;
+            default = compiler;
           };
 
           devShells.default = pkgs.mkShellNoCC ({
@@ -58,6 +63,7 @@
             ++ llvm.buildInputs;
 
             inherit (llvm) LLVM_SYS_211_PREFIX LIBRARY_PATH;
+            UNMANGC = lib.getExe compiler;
           });
 
           treefmt.programs = {
