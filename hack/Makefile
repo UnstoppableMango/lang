@@ -4,13 +4,11 @@ run: hello
 hello: hello.ll
 	clang -Wno-override-module hello.ll -o hello
 
-hello.ll: unmangc hello.lang
-	./unmangc hello.lang > hello.ll
-
-unmangc: unmangc.c
-	clang -Wall -o unmangc unmangc.c
+hello.ll: hello.lang Cargo.toml src/main.rs
+	cargo run --quiet -- hello.lang > hello.ll
 
 clean:
-	rm -f unmangc hello hello.ll
+	cargo clean
+	rm -f hello hello.ll
 
 .PHONY: run clean

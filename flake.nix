@@ -23,13 +23,26 @@
       imports = [ inputs.treefmt-nix.flakeModule ];
 
       perSystem =
-        { pkgs, ... }:
+        { pkgs, lib, ... }:
         {
           devShells.default = pkgs.mkShellNoCC {
             packages = with pkgs; [
               clang
               gnumake
               nixfmt
+              rustc
+              cargo
+              libllvm.dev
+              libffi
+              libiconv
+            ];
+
+            # hack/'s Source -> LLVM IR stage links against libLLVM via inkwell/llvm-sys;
+            # both vars are for that build only, unrelated to the clang linking stage.
+            LLVM_SYS_211_PREFIX = "${pkgs.libllvm.dev}";
+            LIBRARY_PATH = lib.makeLibraryPath [
+              pkgs.libffi
+              pkgs.libiconv
             ];
           };
 

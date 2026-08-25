@@ -1,0 +1,11 @@
+[package]
+name = "unmangc"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+nom = "8"
+inkwell = { git = "https://github.com/TheDan64/inkwell", rev = "7ed9819c9e231c2a317bda6db34ef99399df0f37", features = [
+  "llvm21-1-force-dynamic",
+] }
