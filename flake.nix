@@ -47,20 +47,18 @@
             inherit craneLib llvm;
           };
 
-          devShells.default = pkgs.mkShellNoCC (
-            {
-              packages = [
-                pkgs.clang
-                pkgs.gnumake
-                pkgs.nixfmt
-                toolchain
-              ]
-              ++ llvm.nativeBuildInputs
-              ++ llvm.buildInputs;
+          devShells.default = pkgs.mkShellNoCC ({
+            packages = [
+              pkgs.clang
+              pkgs.gnumake
+              pkgs.nixfmt
+              toolchain
+            ]
+            ++ llvm.nativeBuildInputs
+            ++ llvm.buildInputs;
 
-              inherit (llvm) LLVM_SYS_211_PREFIX LIBRARY_PATH;
-            }
-          );
+            inherit (llvm) LLVM_SYS_211_PREFIX LIBRARY_PATH;
+          });
 
           treefmt.programs = {
             nixfmt.enable = true;

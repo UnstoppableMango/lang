@@ -1,12 +1,10 @@
 {
   craneLib,
-  llvm
+  llvm,
 }:
-craneLib.buildPackage (
-  {
-    src = craneLib.cleanCargoSource ../.;
-    strictDeps = true;
+craneLib.buildPackage {
+  src = craneLib.cleanCargoSource ../.;
+  strictDeps = true;
 
-    inherit (llvm) LLVM_SYS_211_PREFIX nativeBuildInputs buildInputs;
-  }
-)
+  inherit (llvm) LLVM_SYS_211_PREFIX nativeBuildInputs buildInputs;
+}
