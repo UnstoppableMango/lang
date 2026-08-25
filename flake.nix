@@ -35,7 +35,13 @@
 
           treefmt.programs = {
             nixfmt.enable = true;
+            mdformat.enable = true;
           };
+
+          treefmt.settings.global.excludes = [
+            ".agents/skills/**"
+            ".claude/skills/**"
+          ];
         };
     };
 }
