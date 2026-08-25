@@ -16,6 +16,7 @@ Nix drives everything (a direnv devshell provides `gnumake` and `nixfmt`):
 - `command make check` (or `nix flake check`): lint/check, same as CI.
 - `command make fmt` (or `nix fmt`): format via treefmt (nixfmt for .nix files).
 - `command make build` (or `nix build .#`): build, same as CI.
+- `hack/Makefile` (`make run` inside `hack/`) compiles and runs `hack/hello.lang` through the built compiler, the only working end-to-end example in the repo.
 
 There are no tests beyond `nix flake check`.
 
