@@ -42,8 +42,12 @@
 
           llvm = pkgs.callPackage ./nix/llvm.nix { };
 
+          features = pkgs.callPackage ./nix/feature-flags.nix {
+            enabled = { };
+          };
+
           compiler = pkgs.callPackage ./nix/compiler.nix {
-            inherit craneLib llvm;
+            inherit craneLib features llvm;
           };
         in
         {
