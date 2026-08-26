@@ -24,12 +24,12 @@ Working backwards from the smallest useful library, roughly in order of how load
    Without this, the library is either stringly typed or unusable.
 1. A failure-shaped return type and a way to chain it without pyramids.
    Every parser returns success-with-remainder or failure-with-reason.
-   See [[no-exceptions-explicit-errors]] and [[friendly-monads]]: this is the exact shape those notes are circling.
+   See \[[no-exceptions-explicit-errors]\] and \[[friendly-monads]\]: this is the exact shape those notes are circling.
 1. Recursive definitions, including mutual recursion between grammar rules.
    `expr` calls `term` calls `factor` calls `expr`.
    Eager evaluation plus a value-level definition makes this an infinite loop at construction time in some designs, which is why so many libraries have a `lazy` or `defer` or `rec` escape hatch.
 
-Beyond the top five, still relevant but less structural: operator syntax for sequencing and alternation, slices/views over the input that do not copy, and pattern matching on results ([[robust-pattern-matching]]).
+Beyond the top five, still relevant but less structural: operator syntax for sequencing and alternation, slices/views over the input that do not copy, and pattern matching on results (\[[robust-pattern-matching]\]).
 
 ## syntax doodles
 
@@ -55,7 +55,7 @@ let number = int_of_chars <$> many1 digit
 
 Flavor A reads best cold and needs zero language support beyond methods on a type.
 Flavor B needs a pipeline operator, which is a language-wide decision that should not be made because of one library.
-Flavor C is dense and lovely once fluent, and is exactly the thing [[pit-of-success]] would push against: a newcomer cannot guess what `<$>` does.
+Flavor C is dense and lovely once fluent, and is exactly the thing \[[pit-of-success]\] would push against: a newcomer cannot guess what `<$>` does.
 
 Tentative lean: if the library can only be written comfortably in flavor C, the language failed the test.
 Flavor C should be *possible* for people who want it, but the library that ships should read like A or B.
@@ -92,7 +92,7 @@ fn assignment(input) = {
 ```
 
 D is honest and gets ugly fast at arity 5 or 6, and every library that starts there ends up with `seq7`.
-E is the nicest to read and costs a real language feature, one that generalizes past parsers if it is built on an interface rather than special-cased ([[friendly-monads]] calls this exact fork).
+E is the nicest to read and costs a real language feature, one that generalizes past parsers if it is built on an interface rather than special-cased (\[[friendly-monads]\] calls this exact fork).
 F is tempting because it reuses the `?` operator the wishlist already wants, but notice the threading of `rest` through by hand.
 That threading is the State monad wearing a disguise, and doing it manually is precisely the boilerplate combinators exist to remove.
 So F is a dead end for the *library*, though it might be fine for a hand-written recursive descent parser, which is a different program.
@@ -119,7 +119,7 @@ In a world with eager evaluation, the usual answers are:
   Cost: the compiler has to reason about value-level recursion, and the error when it *cannot* is subtle.
 
 Third option is the most pleasant and the most work.
-Worth noticing that the wishlist already wants dependency cycles *rejected* at the module level ([[directory-scoped-modules]]) while this wants them *embraced* within a module.
+Worth noticing that the wishlist already wants dependency cycles *rejected* at the module level (\[[directory-scoped-modules]\]) while this wants them *embraced* within a module.
 That is not a contradiction, but it is a place where "no cycles" needs a qualifier.
 
 ## the parts that only show up when you actually write one
@@ -136,7 +136,7 @@ Things that a toy version hides and a real library exposes.
   Suspect the latter, which is useful information: not every hard part of the target is a language problem.
 - Zero-copy input.
   A parser wants to hand back a slice of the original input, not a fresh string per token.
-  This is a direct question for the memory decision, and [[arena-memory-model]] would answer it very differently than refcounting would.
+  This is a direct question for the memory decision, and \[[arena-memory-model]\] would answer it very differently than refcounting would.
   A combinator library is a good stress test precisely because it allocates many small short-lived things and a few long-lived ones.
 - Performance expectations.
   Nobody minds a slow combinator library for a config file, everybody minds one in a compiler.
@@ -147,7 +147,7 @@ Things that a toy version hides and a real library exposes.
 If the language can host a combinator library, and a combinator library can parse the language, the parser stops being Rust-shaped.
 That is a long way off and worth writing down anyway, because it changes what "good enough" means.
 A library that is pleasant for parsing JSON is a much lower bar than one that can carry a real grammar with decent errors and acceptable speed.
-Related: [[ast-in-public-api]] wants the AST to be a public library, which pairs oddly well with this.
+Related: \[[ast-in-public-api]\] wants the AST to be a public library, which pairs oddly well with this.
 If the AST is public and the parser is a library written in the language, the boundary between "the compiler" and "a program someone wrote" gets thin, which might be the actually interesting outcome here.
 
 ## dead ends noted

@@ -72,7 +72,11 @@
 
           treefmt.programs = {
             nixfmt.enable = true;
-            mdformat.enable = true;
+            mdformat = {
+              enable = true;
+              # Design docs carry YAML frontmatter; plain mdformat rewrites it into a heading.
+              plugins = ps: [ ps.mdformat-frontmatter ];
+            };
           };
 
           treefmt.settings.global.excludes = [

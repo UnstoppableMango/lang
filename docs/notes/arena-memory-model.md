@@ -1,5 +1,10 @@
 # Arena memory model
 
+> **Dead as a primary model, as of 2026-08-26.**
+> Candidate D in `docs/design/0001-decision-memory-strategy.md` was rejected: the author named phase-shaped allocation as the scenario allowed to be awkward and the long-lived ownerless graph as one that must be good, which is the exact inverse of what arenas are good at.
+> This note is retained as the record of the exploration, and the "Open tension" section at the bottom turns out to have been asking the deciding question.
+> Regions may still return as a second regime or as a compiler optimization, so the mechanics below are not wasted.
+
 Poking at whether "arena allocation" could be THE memory strategy, not just an optimization bolted onto GC or ownership later.
 
 ## The pitch

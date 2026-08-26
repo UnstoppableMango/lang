@@ -5,3 +5,5 @@ bin/
 /target/
 hack/hello
 hack/*.ll
+.claude/*
+!.claude/skills/
