@@ -137,6 +137,10 @@ Every foundational decision (paradigm, compilation model, memory strategy) is cu
   - Prior art: Rust's `Mutex<T>` alongside channels.
 - The language treats very-high-fan-out I/O, tens or hundreds of thousands of concurrent in-flight tasks, as a target workload.
   - Prior art: Go, Erlang.
+- A panic inside a `scope` cancels its sibling tasks, waits for them to finish, then propagates.
+  - Prior art: Trio, Kotlin's structured concurrency.
+- The reference-counted regime has a separate, atomically-counted variant required to cross a task boundary.
+  - Prior art: Rust's `Rc`/`Arc`.
 
 ## Modules and packaging
 

@@ -88,6 +88,25 @@ Each one is a candidate open question for the stage 2 pass.
 1. **This record now depends concretely on how the memory-strategy record's stage 2 pass specifies crossing a thread boundary.**
    Answer 3 presumes a `Send`/`Sync`-shaped bound exists to extend, but `0001` has not yet specified the mechanism for checking or transferring a value across any boundary in that level of detail, boundary-crossing there was discussed only for the C FFI case.
 
+## Answers to the tensions
+
+Answers given by the author on 2026-08-27 to three of the five tensions raised above.
+
+1. **Panic inside a `scope`:** cancel siblings, wait, then propagate.
+   Trio and Kotlin's structured-concurrency behavior: a panic in one child cancels the whole scope, siblings are cancelled cooperatively and awaited, and the original panic propagates once everything has unwound.
+   This gives candidate D's failure-isolation concern a real, if narrower, successor: not supervision trees, but a language-level guarantee that a panic cannot leave orphaned siblings running or silently swallow their state.
+
+1. **Thread-safe variant of the reference-counted regime:** yes, a separate atomically-counted variant exists, checked at compile time, required to cross a task boundary.
+   Rust's `Rc`/`Arc` split: the ordinary refcounted regime stays cheap for single-task use, and only the atomic variant may cross the boundary this record's chosen shape introduced.
+
+1. **The novel B-plus-E pairing, unproven anywhere the search found:** flagged as higher-risk, with candidate D kept alive as a documented fallback.
+   Candidate D, actor-model process isolation, remains a live alternative if the stackful-scheduling-plus-static-aliasing-check combination proves unworkable during implementation, rather than being closed off the way candidates A and C were.
+
+### What this revises in "what this rules out"
+
+Candidate D should no longer be read as flatly dead.
+It is not the chosen primary model, the answers above still pick the B-plus-E hybrid, but it is retained as the documented fallback specifically because the chosen combination has no known precedent, a materially different status than A and C, which are dead on their own independent merits (no-coloring violation for C, insufficient at the fan-out scenario for A) regardless of how the primary choice fares.
+
 ## Not asked
 
 Questions 7, 8, and 9 remain blocked: the memory-strategy record (`0001`), the paradigm record (`0003`), and the compilation-model record (`0002`).
