@@ -80,6 +80,39 @@ Each one is a candidate open question for the stage 2 pass.
    Pin or transfer requires a stable address, so the language must be able to promise that a value does not move.
    Whether the default regime is allowed to relocate values is now a question, and it was not one before.
 
+## Tensions resolved by later interviews
+
+Two of the five tensions above turned out to be answered by interviews conducted after this one, on 2026-08-27, without either interview referencing the other at the time.
+
+1. **Tension 1 (does "no runtime at all" allow a runtime check) is resolved.**
+   `docs/notes/concurrency-interview-answers.md` clarifies that "no runtime at all," as answered across all three foundational interviews, means no separately-installed binary, not zero inline machinery.
+   A reference-count table, a generation table, or an allocator support library compiled into the single binary is fine; only a separately-installed runtime component would violate the answer.
+   Answers 3 and 4 in this record are therefore compatible as stated.
+
+1. **Tension 2 (regime visible in source vs. the annotation budget) is resolved by adoption.**
+   `docs/wishlist.md`'s paradigm-derived entry already states the resolution this tension proposed: "which regime a value belongs to is a property of its type's definition, not something restated in every function signature that passes the value along."
+   That entry came from the paradigm interview, not this one, but it directly answers this record's own open tension.
+
+## Answers to the remaining tensions
+
+Answers given by the author on 2026-08-27 to tensions 3, 4, and 5.
+
+1. **Tension 3, does `&`/`&mut` count toward the 10% annotation budget:** no.
+   A borrow sigil is ordinary type syntax describing a value's shape, the same way `*T` or `T[]` isn't treated as an annotation elsewhere.
+   The budget is about lifetime parameters, explicit region names, or witness types.
+   This removes the "hard constraint on candidate B" the original tension raised: the default ownership-and-borrowing regime clears the budget as stated, with no further counting question outstanding.
+
+1. **Tension 4, how the reference-counted regime handles cycles:** a weak-reference tool; cycles are the programmer's problem.
+   Swift's actual answer: `weak`/`unowned`-shaped references exist alongside strong references in the second regime, breaking a cycle manually where the programmer knows one exists.
+
+1. **Tension 5, can the default regime relocate a value:** yes, values move by default.
+   Only a value pinned at the C FFI boundary gets a stable address; pinning is opt-in at the boundary that needs it, not a property of the regime as a whole.
+
+### A new tension these answers created
+
+The weak-reference tool (tension 4's answer) is specific to the second, reference-counted regime, and the concurrency record's answer 3 extends the *default* ownership-and-borrowing regime across a thread boundary, not the reference-counted one.
+Whether a value in the reference-counted regime needs a thread-safe (atomically counted) variant to cross that same boundary, Rust's `Rc` versus `Arc` split, is unexamined here and is a candidate open question for whichever record's stage 2 pass reaches the interaction first.
+
 ## Not asked
 
 Questions 8, 9, and 10 remain blocked.

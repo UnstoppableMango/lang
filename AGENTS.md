@@ -34,6 +34,8 @@ Key points:
   Agents may draft artifacts, but advancement is human-approved.
 - There is no hand-maintained index of features; state is read from `docs/wishlist.md` plus `ls docs/design/` and each file's frontmatter.
 - Foundational choices are "decision records" in the same pipeline, titled `Decision: ...`.
+- A wishlist entry is exactly one sentence (never semicolon-chained clauses) and states the decision/feature itself, never that a decision needs to be made ("chosen as an explicit decision" is not a decision).
+- A decision record's design doc sketch often pairs with `docs/notes/<slug>-interview-answers.md`: the author's answers to its open questions, carrying zero standing until written into the doc at stage 2. Check for one before assuming a record's open questions are unanswered.
 
 Project skills automate the mechanical parts: `/play` (notes playground), `/sketch` (gate 0→1, allocates the next doc number and scaffolds the template), `/advance` (verifies a gate checklist, reports gaps, never writes missing artifacts).
 The skills defer to `docs/workflow.md` on any disagreement.

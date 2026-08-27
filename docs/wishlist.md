@@ -100,6 +100,10 @@ Every foundational decision (paradigm, compilation model, memory strategy) is cu
 - A type opts into deterministic cleanup of a non-memory resource by declaring a release action, run wherever the language reclaims a value of that type.
   - Prior art: C++/Rust RAII (`Drop`).
 - A value crossing the C FFI boundary pins to a stable address or transfers ownership across it.
+- Values are movable by default, and only a value pinned at a boundary that requires one is guaranteed a stable address.
+  - Prior art: Rust's move semantics and `Pin`.
+- The reference-counted regime provides a weak-reference tool so a cycle can be broken manually, rather than being collected automatically.
+  - Prior art: Swift's `weak`/`unowned`.
 
 ## Errors and failure
 
@@ -123,6 +127,16 @@ Every foundational decision (paradigm, compilation model, memory strategy) is cu
   - Prior art: Trio, Kotlin coroutines, "Notes on structured concurrency" (Nathaniel J. Smith).
 - Concurrency without function coloring: any function can block, no async-marked type infects its callers.
   - Prior art: Go goroutines, Erlang processes, Java virtual threads (Loom).
+- Tasks are stackful and scheduled M:N onto a pool of OS threads, not compiled to stackless state machines.
+  - Prior art: Go's scheduler.
+- Moving or sharing a value across a task boundary is checked at compile time by the same ownership-and-borrowing regime the memory strategy already uses, not a separate capability system.
+  - Prior art: Rust's `Send`/`Sync`.
+- `scope` and `spawn` are language keywords, not a library convention added after the fact.
+  - Prior art: Java's structured concurrency JEPs, Trio.
+- Both lock-shaped primitives and channels exist as synchronization primitives.
+  - Prior art: Rust's `Mutex<T>` alongside channels.
+- The language treats very-high-fan-out I/O, tens or hundreds of thousands of concurrent in-flight tasks, as a target workload.
+  - Prior art: Go, Erlang.
 
 ## Modules and packaging
 
