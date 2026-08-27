@@ -56,6 +56,11 @@ Add the sentence, optionally a minimal example and prior art, and move on.
 - A feature may reference prior art from other languages, books, videos, or papers.
 - Wishlist entries carry no commitment.
   Listing a feature does not mean the language will have it, and contradictory entries may coexist at stage 0.
+- An entry states the feature or decision itself, in whatever provisional form the author currently believes it, never that a decision needs to be made.
+  "A memory strategy chosen as an explicit decision" describes wanting an answer, not an answer.
+  If there is no answer yet to state, the idea is not ready for the wishlist; see Decision records below for what to do instead.
+- One sentence means one sentence, not several independent clauses stitched together with semicolons to fit under one bullet.
+  If a decision has multiple genuinely separate facets, that is multiple wishlist entries, each with its own sentence and its own prior art, not one bullet wearing a semicolon-joined list.
 
 **Artifacts to advance (to stage 1):**
 
@@ -230,6 +235,11 @@ These are decision records.
 - They follow the same stages, but stage 4 for a decision means the decision is reflected in the spec's front matter or introduction rather than in a feature clause.
 - Until a relevant decision record reaches stage 3, feature designs must not presume its outcome.
   A feature that cannot be designed without presuming an open decision is blocked on that decision, and the block is listed in its open questions.
+- A decision record's stage 0 entry is bound by the same rule as any other wishlist entry: it must record what today's answer actually is, not that the language needs an answer.
+  If there is no answer yet, do not add a placeholder entry.
+  Sketch the design doc's candidates and open questions directly from the underlying tension (a wishlist entry is not a prerequisite for opening a decision record), interview the author on whichever open questions are not blocked on other decisions, and only then write the wishlist entry, stating the answer the interview produced.
+  `docs/notes/compilation-model-interview-answers.md` and `docs/notes/memory-strategy-interview-answers.md` are worked examples of this order.
+  An interview's answers carry no more standing than any other note until they are written into the design doc itself, which is stage 2 work; the wishlist entry and the interview note can exist before that without jumping the gate.
 
 ## Rejection, demotion, and parking
 

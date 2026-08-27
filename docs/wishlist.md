@@ -92,8 +92,14 @@ Every foundational decision (paradigm, compilation model, memory strategy) is cu
 
 - Deterministic resource cleanup tied to scope.
   - Prior art: RAII in C++/Rust, Python `with`, C# `using`.
-- A memory strategy chosen as an explicit decision, with arena/region allocation one candidate among tracing GC, ownership, and refcounting.
-  - Prior art: Zig/Odin arenas, Go/Java GC, Rust ownership, Swift refcounting.
+- The default memory regime is ownership and borrowing, checked statically with no runtime cost.
+  - Prior art: Rust ownership and borrowing.
+- A second, explicitly marked regime exists for values that are genuinely shared or graph-shaped, reclaimed by compiler-inserted reference counting rather than a tracing collector.
+  - Prior art: Perceus-style compiler-inserted reference counting.
+- Which regime a value belongs to is a property of its type's definition, not something restated in every function signature that passes the value along.
+- A type opts into deterministic cleanup of a non-memory resource by declaring a release action, run wherever the language reclaims a value of that type.
+  - Prior art: C++/Rust RAII (`Drop`).
+- A value crossing the C FFI boundary pins to a stable address or transfers ownership across it.
 
 ## Errors and failure
 
@@ -176,8 +182,20 @@ Every foundational decision (paradigm, compilation model, memory strategy) is cu
   - Prior art: C, Scheme.
 - A no-ceremony way to run a single file, with no separate build step and no second scripting dialect.
   - Prior art: `go run`, `cargo script`.
-- The compiler compiles ahead-of-time to native code via LLVM, with no runtime; comptime code runs in a restricted subset of the language on a compiler-internal interpreter operating over the same IR the AOT backend consumes; the compiler is architected as an incremental query system from the start, serving both ordinary builds and the language server.
-  - Prior art: Zig `comptime` (restricted-subset compile-time execution), rust-analyzer (incremental query architecture), Julia (JIT latency and precompilation as a cautionary case for what an unmanaged comptime cache costs).
+- The compiler compiles ahead-of-time to native code via LLVM, with no runtime.
+  - Prior art: Go, Rust.
+- Comptime code runs on a compiler-internal interpreter, restricted to a subset of the language, operating over the same IR the AOT backend consumes.
+  - Prior art: Zig `comptime` (restricted-subset compile-time execution).
+- The compiler is architected as an incremental query system from the start, serving both ordinary builds and the language server, including caching comptime results in the same query graph.
+  - Prior art: rust-analyzer's salsa-based incremental architecture, Julia's JIT latency and precompilation as a cautionary case for what an unmanaged comptime cache costs.
+- Data with a closed, recursive shape, such as the compiler's own AST, is modeled as an algebraic data type and inspected by pattern matching.
+  - Prior art: OCaml, Rust, Haskell.
+- Values are immutable by default, and mutating a binding requires an explicit marker.
+  - Prior art: Rust's `let mut`.
+- A method call is sugar over a free function that takes the value as its first argument, rather than a second, independent way to attach behavior to data.
+  - Prior art: Rust's method resolution, D's uniform function call syntax.
+- A function counts as one of a type's methods by taking that type as its first parameter, and a value satisfies an interface purely by that method set matching, with no declared relationship anywhere between the type and the interface.
+  - Prior art: Go interfaces.
 
 ## Rejected
 
