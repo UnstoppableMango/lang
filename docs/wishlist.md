@@ -48,6 +48,18 @@ Every foundational decision (paradigm, compilation model, memory strategy) is cu
 
   - Prior art: Go interfaces, TypeScript.
 
+- Sum types are exhaustiveness-checked by default; a type must be explicitly marked `open` at its definition before consumers are required to write a wildcard arm.
+
+  - Prior art: the inverse of Rust's `#[non_exhaustive]`.
+
+- A guarded match arm requires an explicit fallback arm, since a guard can fail without covering its pattern.
+
+  - Prior art: Maranget's exhaustiveness-checking algorithm, which has known limitations around guards.
+
+- Structural destructuring works on any value with a matching shape, always behind a required trailing wildcard arm, since exhaustiveness only applies to closed nominal sum types.
+
+- A range pattern over a floating-point value always requires a wildcard arm, and `NaN` falls through to it.
+
 ## Types
 
 - Type inference scoped locally within a function body, with explicit signatures at function and module boundaries.
