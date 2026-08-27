@@ -9,6 +9,13 @@ There is no spec yet; most of the repository is a design process and its documen
 The compiler is implemented in Rust, using `inkwell` for LLVM IR generation and `nom` for parsing; this is a starting point, not a locked-in decision, and may change if a switch proves worthwhile.
 Every other foundational decision (paradigm, compilation model, memory strategy) is still open, so no document may presume any of them until a decision record reaches stage 3.
 
+## Layout
+
+- `src/` — the Rust compiler (`unmangc`), currently a small stub with no AST or passes.
+- `hack/` — `hello.lang` plus a `Makefile` that builds and runs it through the compiler, the one working end-to-end example.
+- `docs/` — the design process: `wishlist.md`, `design/`, `notes/`, `workflow.md`.
+- `nix/feature-flags.nix` — toggles which `src/features/<name>` directories are built into the compiler; this is the mechanism `docs/workflow.md`'s stage 3 → 4 gate means by "implemented behind a flag."
+
 ## Commands
 
 Nix drives everything (a direnv devshell provides `gnumake` and `nixfmt`):
@@ -36,6 +43,8 @@ Key points:
 - Foundational choices are "decision records" in the same pipeline, titled `Decision: ...`.
 - A wishlist entry is exactly one sentence (never semicolon-chained clauses) and states the decision/feature itself, never that a decision needs to be made ("chosen as an explicit decision" is not a decision).
 - A decision record's design doc sketch often pairs with `docs/notes/<slug>-interview-answers.md`: the author's answers to its open questions, carrying zero standing until written into the doc at stage 2. Check for one before assuming a record's open questions are unanswered.
+- Before re-asking a "new tension" from an interview note, check whether another record's interview-answers note already resolves it by derivation, terms like "no runtime" get reused ambiguously across records and a later clarification in one can settle an earlier tension in another.
+- When two records independently reject the same underlying idea under different names (e.g. arenas vs. data-oriented layout), write one shared `docs/notes/` file both point back to instead of duplicating the parallel in each.
 
 Project skills automate the mechanical parts: `/play` (notes playground), `/sketch` (gate 0→1, allocates the next doc number and scaffolds the template), `/advance` (verifies a gate checklist, reports gaps, never writes missing artifacts).
 The skills defer to `docs/workflow.md` on any disagreement.
