@@ -98,6 +98,21 @@ Answer 2 (restricted comptime subset) is now in mild tension with answer 1 (spec
 What it can stay silent about is *how* comptime is executed; it cannot stay silent about *what is allowed* inside comptime.
 The spec needs a defined comptime subset (a real stage 2 artifact for the comptime feature itself), even though the execution engine behind it is unspecified.
 
+## The runtime-definition clarification does not revive candidate C
+
+`docs/notes/concurrency-interview-answers.md` (2026-08-27) clarified that "no runtime at all," as answered across this record and the memory-strategy record, meant no separately-installed binary, not zero inline machinery, a runtime component is fine if it ships as part of the single compiled binary.
+That clarification was flagged there as a live loose end for this record, since answer 5's rejection of candidate C, a bytecode VM plus a tiered JIT, cited "a runtime component by definition" as the reason.
+
+Checked against this record's own answers, the loosened definition does not change candidate C's fate.
+Answer 1 is the stronger and independent objection: "the compiled program has exactly one way to run: ahead-of-time to native code. No interpreted fallback mode for running a finished program."
+A tiered JIT does not run a program ahead-of-time to native code from the start, it starts by interpreting and lazily promotes hot paths, which contradicts answer 1 regardless of whether the JIT engine itself would be statically linked into the binary with nothing separate to install.
+The same reasoning kills candidates B and D again too: both were already rejected primarily on answer 1's "one execution semantics" grounds, not on the runtime objection, so neither is revived either.
+
+This also clarifies why the compiler-internal comptime interpreter (answer 2) was never actually in tension with "no runtime at all" in the first place, under either definition: it runs inside the *compiler*, at build time, and never ships as part of the *compiled program*, so it was never the kind of runtime component answer 5 or answer 1 were ruling out.
+
+Candidate C stays dead.
+The loose end is closed, not by the runtime definition, but by a second, independent, and unaffected objection this record already had on record.
+
 ## Not asked
 
 Questions 7 and 8 remain blocked: the memory-strategy record (`0001`) and the paradigm record.
