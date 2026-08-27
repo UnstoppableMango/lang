@@ -176,6 +176,8 @@ Every foundational decision (paradigm, compilation model, memory strategy) is cu
   - Prior art: C, Scheme.
 - A no-ceremony way to run a single file, with no separate build step and no second scripting dialect.
   - Prior art: `go run`, `cargo script`.
+- The compiler compiles ahead-of-time to native code via LLVM, with no runtime; comptime code runs in a restricted subset of the language on a compiler-internal interpreter operating over the same IR the AOT backend consumes; the compiler is architected as an incremental query system from the start, serving both ordinary builds and the language server.
+  - Prior art: Zig `comptime` (restricted-subset compile-time execution), rust-analyzer (incremental query architecture), Julia (JIT latency and precompilation as a cautionary case for what an unmanaged comptime cache costs).
 
 ## Rejected
 
