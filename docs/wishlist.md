@@ -196,6 +196,10 @@ Every foundational decision (paradigm, compilation model, memory strategy) is cu
   - Prior art: Rust's method resolution, D's uniform function call syntax.
 - A function counts as one of a type's methods by taking that type as its first parameter, and a value satisfies an interface purely by that method set matching, with no declared relationship anywhere between the type and the interface.
   - Prior art: Go interfaces.
+- A function only counts toward a type's method set if it is defined in the same module as the type.
+  - Prior art: Go's package-scoped method sets.
+- The reference compiler is eventually self-hosted, rewritten in its own target language.
+  - Prior art: Go (self-hosted since 1.5), Rust (self-hosted).
 
 ## Rejected
 

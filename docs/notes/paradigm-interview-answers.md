@@ -82,6 +82,27 @@ Each one is a candidate open question for the stage 2 pass.
    Both were rejected as the *primary* organizing idea and both remain available only as a compiler-internal optimization for bulk, phase-shaped work.
    Whether that parallel is meaningful, the two rejected candidates describing the same underlying idea from two different records, or coincidental, is worth asking directly rather than tracking as two independent footnotes.
 
+## Answers to the tensions
+
+Answers given by the author on 2026-08-27 to four of the tensions raised above.
+
+1. **Collision protection:** restrict a type's method set to functions defined in the same module as the type, Go's actual rule.
+1. **Mutation and memory regime:** independent.
+   The mutability marker governs mutability regardless of which memory regime a value is in; a reference-counted value can still be declared immutable.
+1. **Self-hosting:** yes, eventually.
+   The paradigm should be judged partly on what it would take to rewrite the compiler in its own target language someday.
+1. **Naming Rust explicitly in the stage 2 doc:** no.
+   Keep the candidate analysis framed on its own terms rather than naming Rust as the target; let the convergence stay implicit in the candidates and their costs.
+
+Tension 6, whether candidate E's fate paralleling arenas' fate in the memory-strategy record is meaningful or coincidental, was not asked; it is a reflective question for whoever does the stage 2 pass, not one with a clean yes/no shape.
+
+### What the tension answers narrow further
+
+The collision-protection answer turns out not to cost anything against the duck-typing note's own motivating scenario.
+That scenario is retroactive conformance to a *new interface* (`Logger`, defined after the fact, in your own module) over a type's *existing* methods (`Widget.Log`, already defined in `Widget`'s own module), never retroactively adding a *new method* to someone else's type from outside it.
+Restricting a type's method set to its own defining module costs nothing there; it only forecloses a scenario the language was never trying to support in the first place, adding a new method to a type you don't own.
+This is worth stating plainly at the stage 2 pass rather than leaving it as an apparent tension between "structural, retroactive conformance" and "methods are module-scoped."
+
 ## Not asked
 
 Questions 6, 7, and 8 remain blocked: the memory-strategy record (`0001`), the compilation-model record's dispatch-mechanics question (`0002`), and the concurrency model, which has no decision record.
