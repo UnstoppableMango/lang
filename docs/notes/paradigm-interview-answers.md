@@ -94,7 +94,8 @@ Answers given by the author on 2026-08-27 to four of the tensions raised above.
 1. **Naming Rust explicitly in the stage 2 doc:** no.
    Keep the candidate analysis framed on its own terms rather than naming Rust as the target; let the convergence stay implicit in the candidates and their costs.
 
-Tension 6, whether candidate E's fate paralleling arenas' fate in the memory-strategy record is meaningful or coincidental, was not asked; it is a reflective question for whoever does the stage 2 pass, not one with a clean yes/no shape.
+Tension 6, whether candidate E's fate paralleling arenas' fate in the memory-strategy record is meaningful or coincidental, was answered on 2026-08-27: meaningful.
+`docs/notes/bulk-phase-shaped-optimization.md` now tracks both rejected candidates as one deferred idea, a batch of same-shaped values laid out and reclaimed together, rather than as two independent footnotes.
 
 ### What the tension answers narrow further
 

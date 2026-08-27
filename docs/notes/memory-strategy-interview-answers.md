@@ -32,6 +32,7 @@ Everything below is derivation, not authored answer, and it is the part most lik
   Regions are the phase-shaped answer, so naming phase-shaped allocation as the case allowed to be awkward says directly that regions are not what the language is organized around.
   Worth flagging plainly: `docs/notes/arena-memory-model.md` is the note that motivated opening this decision record, and this interview pushed against its premise.
   Regions survive as a possible second regime or as an optimization, not as the spine.
+  `docs/notes/bulk-phase-shaped-optimization.md` (2026-08-27) tracks this rejection alongside the paradigm record's parallel rejection of data-oriented layout as one deferred idea, confirmed by the author to be the same underlying concept rather than a coincidence.
 
 - **Candidate E, mutable value semantics: weakened.**
   It is the option that is worst at the long-lived ownerless graph, and answer 2 says that scenario must be good.
