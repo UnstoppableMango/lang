@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Build and Test
-    runs-on: lang-runners
+    runs-on: thecluster
     container: ghcr.io/catthehacker/ubuntu:runner-latest
     env:
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
