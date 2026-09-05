@@ -13,7 +13,7 @@ require (
 	github.com/unmango/go v0.3.0
 	google.golang.org/grpc v1.71.0
 	google.golang.org/protobuf v1.36.5
-	tinygo.org/x/go-llvm v0.0.0-20250422114502-b8f170971e74
+	tinygo.org/x/go-llvm v0.0.0-20260721072906-185673ef46a5
 )
 
 require (
