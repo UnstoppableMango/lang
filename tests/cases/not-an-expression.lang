@@ -1,2 +1,2 @@
 print "ok"
-print 42
+print @

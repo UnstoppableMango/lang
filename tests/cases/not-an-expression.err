@@ -1,0 +1,5 @@
+error: expected an expression
+ --> not-an-expression.lang:2:7
+  |
+2 | print @
+  |       ^

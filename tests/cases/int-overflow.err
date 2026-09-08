@@ -1,0 +1,5 @@
+error: expected an integer that fits in 64 bits
+ --> int-overflow.lang:1:7
+  |
+1 | print 99999999999999999999
+  |       ^

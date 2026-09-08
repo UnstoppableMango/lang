@@ -3,15 +3,15 @@
 use nom::{
     branch::alt,
     bytes::complete::{is_not, tag},
-    character::complete::{alpha1, alphanumeric1, char, multispace0, multispace1},
-    combinator::{cut, map, recognize, value, verify},
-    error::{context, ContextError, ErrorKind, ParseError},
-    multi::{fold_many0, many0_count},
+    character::complete::{alpha1, alphanumeric1, char, digit1, multispace0, multispace1},
+    combinator::{consumed, cut, map, map_res, recognize, value, verify},
+    error::{context, ContextError, ErrorKind, FromExternalError, ParseError},
+    multi::{fold_many0, many0, many0_count},
     sequence::{delimited, pair, preceded},
     IResult, Parser,
 };
 
-use crate::ast::{Expr, Stmt};
+use crate::ast::{BinOp, Expr, Stmt};
 use crate::diag::Diagnostic;
 
 /// Words a name may not be. The list is ad hoc and states no reserved-word
@@ -46,6 +46,15 @@ impl<'a> ParseError<&'a str> for Expected<'a> {
             other
         } else {
             self
+        }
+    }
+}
+
+impl<'a, E> FromExternalError<&'a str, E> for Expected<'a> {
+    fn from_external_error(input: &'a str, _: ErrorKind, _: E) -> Self {
+        Expected {
+            input,
+            what: Some("an integer that fits in 64 bits"),
         }
     }
 }
@@ -139,8 +148,73 @@ fn identifier(input: &str) -> PResult<'_, &str> {
     .parse(input)
 }
 
+fn int_literal(input: &str) -> PResult<'_, Expr<'_>> {
+    map_res(digit1, |text: &str| text.parse().map(Expr::Int)).parse(input)
+}
+
+fn primary(input: &str) -> PResult<'_, Expr<'_>> {
+    context(
+        "an expression",
+        alt((
+            int_literal,
+            map(string_literal, Expr::Str),
+            map(identifier, Expr::Name),
+            delimited(
+                char('('),
+                preceded(multispace0, expr),
+                preceded(multispace0, cut(context("a closing `)`", char(')')))),
+            ),
+        )),
+    )
+    .parse(input)
+}
+
+/// One level of left-associative infix operators over `next`.
+fn infix<'a>(
+    input: &'a str,
+    operator: impl Parser<&'a str, Output = BinOp, Error = Expected<'a>>,
+    next: impl Fn(&'a str) -> PResult<'a, Expr<'a>>,
+) -> PResult<'a, Expr<'a>> {
+    let (input, first) = next(input)?;
+    let (input, rest) = many0(pair(
+        delimited(multispace0, consumed(operator), multispace0),
+        &next,
+    ))
+    .parse(input)?;
+
+    let folded = rest
+        .into_iter()
+        .fold(first, |lhs, ((at, op), rhs)| Expr::Binary {
+            op,
+            at,
+            lhs: Box::new(lhs),
+            rhs: Box::new(rhs),
+        });
+
+    Ok((input, folded))
+}
+
+fn multiplicative(input: &str) -> PResult<'_, Expr<'_>> {
+    infix(
+        input,
+        alt((value(BinOp::Mul, char('*')), value(BinOp::Div, char('/')))),
+        primary,
+    )
+}
+
+// Whitespace around an operator is multispace0, so `print 1\n+ 2` is one
+// statement. That follows from the parser counting no newlines anywhere, which
+// is the same position the statement loop takes.
+fn additive(input: &str) -> PResult<'_, Expr<'_>> {
+    infix(
+        input,
+        alt((value(BinOp::Add, char('+')), value(BinOp::Sub, char('-')))),
+        multiplicative,
+    )
+}
+
 fn expr(input: &str) -> PResult<'_, Expr<'_>> {
-    alt((map(string_literal, Expr::Str), map(identifier, Expr::Name))).parse(input)
+    additive(input)
 }
 
 fn let_stmt(input: &str) -> PResult<'_, Stmt<'_>> {
