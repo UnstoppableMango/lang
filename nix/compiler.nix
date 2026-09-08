@@ -32,6 +32,8 @@ craneLib.buildPackage {
 
   inherit (llvm) LLVM_SYS_211_PREFIX nativeBuildInputs buildInputs;
 
+  RUSTFLAGS = "-C link-arg=-Wl,-rpath,${llvm.libPath}";
+
   meta = {
     description = "Compiler for MangoLang (tbd)";
     mainProgram = "unmangc";

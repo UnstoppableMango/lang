@@ -67,6 +67,7 @@
             ++ llvm.buildInputs;
 
             inherit (llvm) LLVM_SYS_211_PREFIX LIBRARY_PATH;
+            LD_LIBRARY_PATH = llvm.libPath;
             UNMANGC = lib.getExe compiler;
           });
 
