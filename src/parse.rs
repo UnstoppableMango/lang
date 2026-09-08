@@ -2,11 +2,11 @@
 
 use nom::{
     branch::alt,
-    bytes::complete::{tag, take_until},
+    bytes::complete::{is_not, tag},
     character::complete::{alpha1, alphanumeric1, char, multispace0, multispace1},
-    combinator::{map, recognize, verify},
+    combinator::{cut, map, recognize, value, verify},
     error::{context, ContextError, ErrorKind, ParseError},
-    multi::many0_count,
+    multi::{fold_many0, many0_count},
     sequence::{delimited, pair, preceded},
     IResult, Parser,
 };
@@ -59,10 +59,64 @@ impl<'a> ContextError<&'a str> for Expected<'a> {
     }
 }
 
-fn string_literal(input: &str) -> PResult<'_, &str> {
+/// A run of ordinary characters, or one escape sequence.
+enum Fragment<'a> {
+    Literal(&'a str),
+    Escaped(char),
+}
+
+/// Everything up to the next quote or backslash. `is_not` accepts newlines, so
+/// an unterminated string swallows the rest of the file and is reported at the
+/// end of it.
+fn literal_chunk(input: &str) -> PResult<'_, &str> {
+    is_not("\"\\").parse(input)
+}
+
+/// Always fails, at the character after the backslash.
+fn unknown_escape(input: &str) -> PResult<'_, char> {
+    Err(nom::Err::Failure(Expected {
+        input,
+        what: Some("a known escape: \\n, \\t, \\\\ or \\\""),
+    }))
+}
+
+fn escape(input: &str) -> PResult<'_, char> {
+    preceded(
+        char('\\'),
+        // Without the cut, an unknown escape would end the fragment loop
+        // quietly and the failure would be blamed on the missing closing quote.
+        cut(alt((
+            value('\n', char('n')),
+            value('\t', char('t')),
+            value('\\', char('\\')),
+            value('"', char('"')),
+            unknown_escape,
+        ))),
+    )
+    .parse(input)
+}
+
+fn string_literal(input: &str) -> PResult<'_, String> {
     context(
         "a string literal",
-        delimited(tag("\""), take_until("\""), tag("\"")),
+        delimited(
+            char('"'),
+            fold_many0(
+                alt((
+                    map(literal_chunk, Fragment::Literal),
+                    map(escape, Fragment::Escaped),
+                )),
+                String::new,
+                |mut text, fragment| {
+                    match fragment {
+                        Fragment::Literal(chunk) => text.push_str(chunk),
+                        Fragment::Escaped(c) => text.push(c),
+                    }
+                    text
+                },
+            ),
+            cut(context("a closing `\"`", char('"'))),
+        ),
     )
     .parse(input)
 }
@@ -83,7 +137,7 @@ fn identifier(input: &str) -> PResult<'_, &str> {
 
 fn expr(input: &str) -> PResult<'_, Expr<'_>> {
     alt((
-        map(string_literal, |text: &str| Expr::Str(text.to_string())),
+        map(string_literal, Expr::Str),
         map(identifier, Expr::Name),
     ))
     .parse(input)

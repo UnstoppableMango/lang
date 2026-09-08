@@ -1,5 +1,5 @@
-error: expected a string literal
- --> unterminated-string.lang:1:8
+error: expected a closing `"`
+ --> unterminated-string.lang:1:11
   |
 1 | print "abc
-  |        ^
+  |           ^

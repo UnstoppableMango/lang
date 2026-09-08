@@ -1,0 +1,5 @@
+error: expected a known escape: \n, \t, \\ or \"
+ --> bad-escape.lang:1:10
+  |
+1 | print "a\qb"
+  |          ^
