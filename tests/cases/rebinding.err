@@ -1,0 +1,5 @@
+error: `x` is already bound
+ --> rebinding.lang:2:5
+  |
+2 | let x = "two"
+  |     ^

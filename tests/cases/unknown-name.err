@@ -1,0 +1,5 @@
+error: unknown name `greeting`
+ --> unknown-name.lang:1:7
+  |
+1 | print greeting
+  |       ^

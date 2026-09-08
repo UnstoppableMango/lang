@@ -1,0 +1,5 @@
+error: expected an identifier
+ --> keyword-as-name.lang:1:5
+  |
+1 | let print = "no"
+  |     ^
