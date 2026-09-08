@@ -1,0 +1,5 @@
+error: empty source file
+ --> empty.lang:1:1
+  |
+1 | 
+  | ^

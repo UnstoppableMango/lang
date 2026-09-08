@@ -10,16 +10,18 @@ let
   base = fileset.unions [
     ../Cargo.toml
     ../Cargo.lock
+    ../tests
     (fileset.difference ../src (fileset.maybeMissing ../src/features))
   ];
 in
 craneLib.buildPackage {
-  src = craneLib.cleanCargoSource (
-    fileset.toSource {
-      root = ../.;
-      fileset = fileset.union base features.fileset;
-    }
-  );
+  # No cleanCargoSource: it keeps only *.rs, *.toml and Cargo.lock, which would
+  # silently drop every golden test case and leave a suite that tests nothing.
+  # The fileset above already names exactly what belongs in the source.
+  src = fileset.toSource {
+    root = ../.;
+    fileset = fileset.union base features.fileset;
+  };
 
   # Derivation features drop into place next to the in-repo ones.
   postUnpack = lib.concatLines (
