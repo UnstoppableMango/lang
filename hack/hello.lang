@@ -1,1 +1,4 @@
 print "Hello, World!"
+print "second statement"
+
+print "third, after a blank line" print "same line as the third"
