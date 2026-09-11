@@ -53,8 +53,10 @@ fn string_literal(input: &str) -> PResult<'_, &str> {
 fn statement(input: &str) -> PResult<'_, Print> {
     context(
         "a statement",
-        map(preceded(tag("print "), string_literal), |text: &str| Print {
-            text: text.to_string(),
+        map(preceded(tag("print "), string_literal), |text: &str| {
+            Print {
+                text: text.to_string(),
+            }
         }),
     )
     .parse(input)
