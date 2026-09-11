@@ -136,11 +136,7 @@ fn identifier(input: &str) -> PResult<'_, &str> {
 }
 
 fn expr(input: &str) -> PResult<'_, Expr<'_>> {
-    alt((
-        map(string_literal, Expr::Str),
-        map(identifier, Expr::Name),
-    ))
-    .parse(input)
+    alt((map(string_literal, Expr::Str), map(identifier, Expr::Name))).parse(input)
 }
 
 fn let_stmt(input: &str) -> PResult<'_, Stmt<'_>> {
