@@ -104,9 +104,11 @@ impl<'ctx, 'src> Codegen<'ctx, 'src> {
     fn value(&self, expr: &Expr<'src>) -> Result<StrConst<'ctx>, Diagnostic> {
         match expr {
             Expr::Str(text) => Ok(self.const_str(text)),
-            Expr::Name(name) => self.env.get(name).copied().ok_or_else(|| {
-                Diagnostic::at(format!("unknown name `{name}`"), self.source, name)
-            }),
+            Expr::Name(name) => {
+                self.env.get(name).copied().ok_or_else(|| {
+                    Diagnostic::at(format!("unknown name `{name}`"), self.source, name)
+                })
+            }
         }
     }
 
