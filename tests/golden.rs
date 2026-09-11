@@ -11,6 +11,7 @@
 //! then read the diff. Blessing without reading defeats the point.
 
 use std::env;
+use std::ffi::OsStr;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -22,7 +23,7 @@ fn cases_dir() -> PathBuf {
 
 #[test]
 fn goldens() {
-    let update = env::var_os("UPDATE_GOLDENS").is_some();
+    let update = update_requested(env::var_os("UPDATE_GOLDENS").as_deref());
 
     let mut cases: Vec<PathBuf> = fs::read_dir(cases_dir())
         .expect("tests/cases is missing")
@@ -70,6 +71,18 @@ fn goldens() {
         "\n{}\nrerun with UPDATE_GOLDENS=1 to accept",
         failures.join("\n")
     );
+}
+
+fn update_requested(value: Option<&OsStr>) -> bool {
+    value == Some(OsStr::new("1"))
+}
+
+#[test]
+fn update_goldens_requires_exactly_1() {
+    assert!(update_requested(Some(OsStr::new("1"))));
+    assert!(!update_requested(Some(OsStr::new("0"))));
+    assert!(!update_requested(Some(OsStr::new(""))));
+    assert!(!update_requested(None));
 }
 
 fn report(golden: &Path, expected: &str, actual: &str) -> String {
