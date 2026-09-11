@@ -121,9 +121,11 @@ impl<'ctx, 'src> Codegen<'ctx, 'src> {
             Expr::Int(int) => Ok(Value::Int(
                 self.context.i64_type().const_int(*int as u64, true),
             )),
-            Expr::Name(name) => self.env.get(name).copied().ok_or_else(|| {
-                Diagnostic::at(format!("unknown name `{name}`"), self.source, name)
-            }),
+            Expr::Name(name) => {
+                self.env.get(name).copied().ok_or_else(|| {
+                    Diagnostic::at(format!("unknown name `{name}`"), self.source, name)
+                })
+            }
             // These are the real LLVM instruction builders. LLVM folds
             // constant operands itself, and every operand the language can
             // currently express is a constant, so the emitted IR shows the
