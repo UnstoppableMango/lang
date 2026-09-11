@@ -78,6 +78,11 @@
               # Design docs carry YAML frontmatter; plain mdformat rewrites it into a heading.
               plugins = ps: [ ps.mdformat-frontmatter ];
             };
+            rustfmt = {
+              enable = true;
+              package = inputs'.fenix.packages.stable.rustfmt;
+              edition = "2021";
+            };
           };
 
           treefmt.settings.global.excludes = [
