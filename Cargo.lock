@@ -33,7 +33,7 @@ checksum = "d45db016d36b838f563236e9193d0ee6ce38f3f68b6c94e914b4929c96bbb890"
 [[package]]
 name = "inkwell"
 version = "0.10.0"
-source = "git+https://github.com/TheDan64/inkwell?rev=7ed9819c9e231c2a317bda6db34ef99399df0f37#7ed9819c9e231c2a317bda6db34ef99399df0f37"
+source = "git+https://github.com/TheDan64/inkwell?rev=f9a523bc7656350fca7b53ddaadc14c4b7ee75ae#f9a523bc7656350fca7b53ddaadc14c4b7ee75ae"
 dependencies = [
  "bitflags",
  "inkwell_internals",
@@ -45,7 +45,7 @@ dependencies = [
 [[package]]
 name = "inkwell_internals"
 version = "0.15.0"
-source = "git+https://github.com/TheDan64/inkwell?rev=7ed9819c9e231c2a317bda6db34ef99399df0f37#7ed9819c9e231c2a317bda6db34ef99399df0f37"
+source = "git+https://github.com/TheDan64/inkwell?rev=f9a523bc7656350fca7b53ddaadc14c4b7ee75ae#f9a523bc7656350fca7b53ddaadc14c4b7ee75ae"
 dependencies = [
  "proc-macro2",
  "quote",
