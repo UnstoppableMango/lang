@@ -1,0 +1,5 @@
+error: division by zero
+ --> div-by-zero.lang:1:9
+  |
+1 | print 1 / 0
+  |         ^

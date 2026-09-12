@@ -137,11 +137,34 @@ impl<'ctx, 'src> Codegen<'ctx, 'src> {
                     BinOp::Add => self.builder.build_int_add(lhs, rhs, "add"),
                     BinOp::Sub => self.builder.build_int_sub(lhs, rhs, "sub"),
                     BinOp::Mul => self.builder.build_int_mul(lhs, rhs, "mul"),
-                    BinOp::Div => self.builder.build_int_signed_div(lhs, rhs, "div"),
+                    BinOp::Div => {
+                        self.check_division(lhs, rhs, at)?;
+                        self.builder.build_int_signed_div(lhs, rhs, "div")
+                    }
                 };
                 Ok(Value::Int(result.unwrap()))
             }
         }
+    }
+
+    /// `sdiv` is undefined for these operand pairs. Every operand is a
+    /// constant today, so they are rejected at compile time; runtime operands
+    /// will need a check in the emitted code instead.
+    fn check_division(
+        &self,
+        lhs: IntValue<'ctx>,
+        rhs: IntValue<'ctx>,
+        at: &'src str,
+    ) -> Result<(), Diagnostic> {
+        let message = match (
+            lhs.get_sign_extended_constant(),
+            rhs.get_sign_extended_constant(),
+        ) {
+            (_, Some(0)) => "division by zero",
+            (Some(i64::MIN), Some(-1)) => "division result does not fit in 64 bits",
+            _ => return Ok(()),
+        };
+        Err(Diagnostic::at(message.to_string(), self.source, at))
     }
 
     fn int_operand(
