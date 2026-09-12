@@ -1,0 +1,3 @@
+print "tab:\there"
+print "quoted: \"x\""
+print "back\\slash"
