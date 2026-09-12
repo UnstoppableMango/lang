@@ -176,9 +176,11 @@ fn infix<'a>(
     next: impl Fn(&'a str) -> PResult<'a, Expr<'a>>,
 ) -> PResult<'a, Expr<'a>> {
     let (input, first) = next(input)?;
+    // Once an operator matches, a missing right operand is the error; without
+    // the cut, many0 would stop quietly and leave the operator unconsumed.
     let (input, rest) = many0(pair(
         delimited(multispace0, consumed(operator), multispace0),
-        &next,
+        cut(&next),
     ))
     .parse(input)?;
 
