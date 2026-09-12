@@ -12,7 +12,10 @@ hello.ll: hello.lang $(UNMANGC)
 $(UNMANGC):
 	$(error no compiler binary at $(UNMANGC); build one (e.g. 'nix build' at the repo root) and/or pass UNMANGC=<path>)
 
+check: hello
+	./hello | diff -u hello.expected -
+
 clean:
 	rm -f hello hello.ll
 
-.PHONY: run clean
+.PHONY: run check clean

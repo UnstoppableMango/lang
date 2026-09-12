@@ -56,6 +56,24 @@
             default = compiler;
           };
 
+          # The golden tests run under `cargo test` inside the compiler build.
+          # This covers the part they cannot: that the emitted IR links and runs.
+          checks.e2e =
+            pkgs.runCommand "unmangc-e2e"
+              {
+                nativeBuildInputs = [
+                  compiler
+                  pkgs.clang
+                ];
+              }
+              ''
+                unmangc ${./hack/hello.lang} > hello.ll
+                clang -Wno-override-module hello.ll -o hello
+                ./hello > actual.txt
+                diff -u ${./hack/hello.expected} actual.txt
+                touch $out
+              '';
+
           devShells.default = pkgs.mkShellNoCC ({
             packages = [
               pkgs.clang

@@ -11,7 +11,7 @@ Every other foundational decision (paradigm, compilation model, memory strategy)
 
 ## Layout
 
-- `src/` — the Rust compiler (`unmangc`), currently a small stub with no AST or passes.
+- `src/` — the Rust compiler (`unmangc`): a library (`parse`, `codegen`, `diag`, `ast`) with a thin binary around it, plus `tests/` holding the golden suite.
 - `hack/` — `hello.lang` plus a `Makefile` that builds and runs it through the compiler, the one working end-to-end example.
 - `docs/` — the design process: `wishlist.md`, `design/`, `notes/`, `workflow.md`.
 - `nix/feature-flags.nix` — toggles which `src/features/<name>` directories are built into the compiler; this is the mechanism `docs/workflow.md`'s stage 3 → 4 gate means by "implemented behind a flag."
@@ -23,9 +23,11 @@ Nix drives everything (a direnv devshell provides `gnumake` and `nixfmt`):
 - `command make check` (or `nix flake check`): lint/check, same as CI.
 - `command make fmt` (or `nix fmt`): format via treefmt (nixfmt for .nix files).
 - `command make build` (or `nix build .#`): build, same as CI.
-- `hack/Makefile` (`make run` inside `hack/`) compiles and runs `hack/hello.lang` through the built compiler, the only working end-to-end example in the repo.
+- `hack/Makefile` (`make run` inside `hack/`) compiles and runs `hack/hello.lang` through the built compiler; `make check` there diffs its output against `hack/hello.expected`, the same thing the `e2e` flake check does.
+- `command make test`: run the test suite (`cargo test` in the devshell), which is golden tests plus unit tests.
+- `command make bless`: rewrite the golden files under `tests/cases/` after an intended change, then read the diff.
 
-There are no tests beyond `nix flake check`.
+`nix build .#` runs `cargo test` as part of the build, so the golden suite gates CI without extra wiring.
 
 ## The feature design workflow
 

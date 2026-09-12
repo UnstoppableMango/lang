@@ -1,0 +1,5 @@
+error: expected a string literal
+ --> not-a-string.lang:2:7
+  |
+2 | print 42
+  |       ^
