@@ -1,0 +1,5 @@
+error: expected an escape character after `\`
+ --> trailing-backslash.lang:1:9
+  |
+1 | print "a\
+  |         ^

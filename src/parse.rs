@@ -81,19 +81,23 @@ fn unknown_escape(input: &str) -> PResult<'_, char> {
 }
 
 fn escape(input: &str) -> PResult<'_, char> {
-    preceded(
-        char('\\'),
-        // Without the cut, an unknown escape would end the fragment loop
-        // quietly and the failure would be blamed on the missing closing quote.
-        cut(alt((
-            value('\n', char('n')),
-            value('\t', char('t')),
-            value('\\', char('\\')),
-            value('"', char('"')),
-            unknown_escape,
-        ))),
-    )
-    .parse(input)
+    let (rest, _) = char('\\').parse(input)?;
+    if rest.is_empty() {
+        return Err(nom::Err::Failure(Expected {
+            input,
+            what: Some("an escape character after `\\`"),
+        }));
+    }
+    // Without the cut, an unknown escape would end the fragment loop quietly
+    // and the failure would be blamed on the missing closing quote.
+    cut(alt((
+        value('\n', char('n')),
+        value('\t', char('t')),
+        value('\\', char('\\')),
+        value('"', char('"')),
+        unknown_escape,
+    )))
+    .parse(rest)
 }
 
 fn string_literal(input: &str) -> PResult<'_, String> {
