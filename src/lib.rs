@@ -11,5 +11,5 @@ pub use diag::Diagnostic;
 /// Compile source text to LLVM IR text.
 pub fn compile(source: &str) -> Result<String, Diagnostic> {
     let stmts = parse::program(source)?;
-    Ok(codegen::emit(&stmts))
+    codegen::emit(source, &stmts)
 }

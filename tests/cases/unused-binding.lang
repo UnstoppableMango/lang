@@ -1,0 +1,2 @@
+let unused = "never printed"
+print "only this"

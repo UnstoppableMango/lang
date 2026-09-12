@@ -1,15 +1,22 @@
 //! Source text to syntax tree.
 
 use nom::{
+    branch::alt,
     bytes::complete::{tag, take_until},
-    combinator::map,
+    character::complete::{alpha1, alphanumeric1, char, multispace0, multispace1},
+    combinator::{map, recognize, verify},
     error::{context, ContextError, ErrorKind, ParseError},
-    sequence::{delimited, preceded},
+    multi::many0_count,
+    sequence::{delimited, pair, preceded},
     IResult, Parser,
 };
 
-use crate::ast::Print;
+use crate::ast::{Expr, Stmt};
 use crate::diag::Diagnostic;
+
+/// Words a name may not be. The list is ad hoc and states no reserved-word
+/// policy; it exists so `let let = "x"` does not parse.
+const KEYWORDS: [&str; 2] = ["let", "print"];
 
 /// What the parser wanted, and where.
 ///
@@ -31,6 +38,16 @@ impl<'a> ParseError<&'a str> for Expected<'a> {
     fn append(_: &'a str, _: ErrorKind, other: Self) -> Self {
         other
     }
+
+    fn or(self, other: Self) -> Self {
+        // Of two alternatives, the one that consumed the most describes the
+        // failure best. A tie goes to the one tried first.
+        if other.input.len() < self.input.len() {
+            other
+        } else {
+            self
+        }
+    }
 }
 
 impl<'a> ContextError<&'a str> for Expected<'a> {
@@ -50,22 +67,56 @@ fn string_literal(input: &str) -> PResult<'_, &str> {
     .parse(input)
 }
 
-fn statement(input: &str) -> PResult<'_, Print> {
+fn identifier(input: &str) -> PResult<'_, &str> {
     context(
-        "a statement",
-        map(preceded(tag("print "), string_literal), |text: &str| {
-            Print {
-                text: text.to_string(),
-            }
-        }),
+        "an identifier",
+        verify(
+            recognize(pair(
+                alt((alpha1, tag("_"))),
+                many0_count(alt((alphanumeric1, tag("_")))),
+            )),
+            |name: &str| !KEYWORDS.contains(&name),
+        ),
     )
     .parse(input)
+}
+
+fn expr(input: &str) -> PResult<'_, Expr<'_>> {
+    alt((
+        map(string_literal, |text: &str| Expr::Str(text.to_string())),
+        map(identifier, Expr::Name),
+    ))
+    .parse(input)
+}
+
+fn let_stmt(input: &str) -> PResult<'_, Stmt<'_>> {
+    map(
+        (
+            tag("let"),
+            multispace1,
+            identifier,
+            multispace0,
+            char('='),
+            multispace0,
+            expr,
+        ),
+        |(_, _, name, _, _, _, value)| Stmt::Let { name, value },
+    )
+    .parse(input)
+}
+
+fn print_stmt(input: &str) -> PResult<'_, Stmt<'_>> {
+    map(preceded((tag("print"), multispace1), expr), Stmt::Print).parse(input)
+}
+
+fn statement(input: &str) -> PResult<'_, Stmt<'_>> {
+    context("a statement", alt((let_stmt, print_stmt))).parse(input)
 }
 
 // Whitespace between statements is skipped rather than counted, so a newline is
 // no more of a separator than a space. Nothing here presumes a line-oriented
 // grammar; that question belongs to a design doc, not to this parser.
-pub fn program(source: &str) -> Result<Vec<Print>, Diagnostic> {
+pub fn program(source: &str) -> Result<Vec<Stmt<'_>>, Diagnostic> {
     let mut input = source;
     let mut stmts = Vec::new();
 
