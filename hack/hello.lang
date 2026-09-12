@@ -3,3 +3,6 @@ print "second statement"
 
 print "third, after a blank line" print "same line as the third"
 print "tab:\tquoted: \"x\""
+
+let answer = 6 * 7
+print answer

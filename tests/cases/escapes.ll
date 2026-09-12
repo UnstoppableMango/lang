@@ -7,6 +7,8 @@ source_filename = "unmang"
 
 declare i32 @puts(ptr)
 
+declare i32 @printf(ptr, ...)
+
 define i32 @main() {
 entry:
   %call = call i32 @puts(ptr @.str)

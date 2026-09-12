@@ -1,0 +1,5 @@
+error: division result does not fit in 64 bits
+ --> div-overflow.lang:1:37
+  |
+1 | print (0 - 9223372036854775807 - 1) / (0 - 1)
+  |                                     ^

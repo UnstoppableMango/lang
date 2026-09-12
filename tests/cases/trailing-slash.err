@@ -1,0 +1,5 @@
+error: expected an expression
+ --> trailing-slash.lang:1:10
+  |
+1 | print 1 /
+  |          ^

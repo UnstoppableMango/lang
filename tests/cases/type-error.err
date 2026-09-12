@@ -1,0 +1,5 @@
+error: cannot apply `+` to a string
+ --> type-error.lang:1:11
+  |
+1 | print "a" + 1
+  |           ^
