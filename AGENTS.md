@@ -68,4 +68,4 @@ The five default triage labels, each named for its role. See `docs/agents/triage
 
 ### Domain docs
 
-Single-context: one root `CONTEXT.md`, with decision records in `docs/design/` standing in for ADRs. See `docs/agents/domain.md`.
+Single-context: one root `CONTEXT.md` and `docs/adr/`, whose records start at ADR-0001; `docs/design/` is legacy until migrated. See `docs/agents/domain.md`.
