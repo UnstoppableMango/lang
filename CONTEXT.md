@@ -19,11 +19,11 @@ A conflict between two answers the author has given, which a decision must resol
 ## Compilation
 
 **Compiled program**:
-The single binary the compiler produces for a user's source.
+What the compiler produces from a user's source.
 _Avoid_: Artifact, executable
 
 **Runtime**:
-Machinery that executes alongside the compiled program and ships inside its binary, such as a scheduler or a reference-count check.
+Machinery that executes alongside the compiled program and ships as part of it, such as a scheduler or a reference-count check.
 _Avoid_: VM
 
 **Separate runtime**:
@@ -45,7 +45,7 @@ A strategy by which the language reclaims a value's memory, such as ownership ch
 _Avoid_: Memory model, mode
 
 **Release action**:
-What a type declares to run when the language reclaims one of its values, used to free a non-memory resource.
+What a type declares to run to free a non-memory resource.
 _Avoid_: Destructor, finalizer, drop
 
 **Pinning**:
