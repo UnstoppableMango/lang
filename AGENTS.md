@@ -55,3 +55,17 @@ The skills defer to `docs/workflow.md` on any disagreement.
 
 - In markdown, each sentence goes on its own line; don't hard-wrap.
 - The design doc template (frontmatter, required sections) is in `docs/workflow.md`; copy it exactly when creating a new doc.
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked in this repository's GitHub Issues. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five default triage labels, each named for its role. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one root `CONTEXT.md`, with decision records in `docs/design/` standing in for ADRs. See `docs/agents/domain.md`.
