@@ -23,18 +23,11 @@ The `/domain-modeling` skill (reached via `/grill-with-docs` and `/improve-codeb
 Cite an ADR as `ADR-0007`, so it never reads as an issue number.
 Write a plan as tickets, never as a plan file.
 
-## The legacy design workflow
+## Open decisions
 
-This repository is migrating away from the staged workflow in `docs/workflow.md`: `docs/wishlist.md`, the stage 1-3 docs in `docs/design/`, and the scratch notes in `docs/notes/`.
-Until those are pruned and converted into the files above, they still hold the project's thinking, so read the ones that touch your area.
-
-- Never add to them: no new wishlist entry, design doc, decision record, or note.
-  New work goes where [New work](#new-work) says.
-- A decision record (a `docs/design/` doc titled `Decision: ...`) at stage 3 or later is settled exactly as an ADR is.
-- Anything below stage 3, and everything in `docs/notes/`, is still open: no output may presume it.
-- A `docs/notes/<slug>-interview-answers.md` holds the author's answers to a record's open questions; read it before asking them again.
-
-When one of those open questions is settled, record the outcome as a new ADR rather than advancing the old record.
+The foundational decisions (paradigm, compilation model, memory strategy, concurrency, pattern matching) are open, each a `ready-for-human` issue holding its candidates and the author's answers so far.
+No output may presume one until its issue is closed by an ADR.
+Read the issue before asking one of its questions again.
 
 ## File structure
 
@@ -73,6 +66,6 @@ If the concept you need isn't in the glossary yet, that's a signal: either you'r
 
 ## Flag ADR conflicts
 
-If your output contradicts an existing ADR, or a legacy decision record at stage 3 or later, surface it explicitly rather than silently overriding:
+If your output contradicts an existing ADR, surface it explicitly rather than silently overriding:
 
 > _Contradicts ADR-0007 (event-sourced orders), but worth reopening because…_

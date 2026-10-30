@@ -7,7 +7,7 @@
 //! A binding here means no more than "a name refers to a value known at compile
 //! time". It is deliberately not evidence about mutability, the memory model,
 //! scoping, typing, or evaluation order, all of which are open decisions in
-//! `docs/design/`. There is no assignment syntax, rebinding is rejected rather
+//! the issue tracker. There is no assignment syntax, rebinding is rejected rather
 //! than given a meaning, a string lives in read-only data and is never
 //! allocated or copied, and with no blocks in the grammar the question of
 //! lexical versus dynamic scope is not asked.
