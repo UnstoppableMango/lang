@@ -16,6 +16,17 @@ _Avoid_: Option, proposal
 **Tension**:
 A conflict between two answers the author has given, which a decision must resolve before it can close.
 
+**Influence**:
+A trait of another language that the author has recorded as a like or a dislike, as a soft guide for design; a principle binds and an influence only informs.
+_Avoid_: Wishlist, inspiration, feature request, prior art
+
+**Like**:
+An influence the author wants the language to draw on.
+
+**Dislike**:
+An influence the author wants the language to steer away from.
+_Avoid_: Anti-pattern, pitfall, wart
+
 ## Compilation
 
 **Compiled program**:
