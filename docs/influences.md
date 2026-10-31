@@ -1,11 +1,11 @@
 # Influences
 
-Traits of other languages the author likes or dislikes, kept as a soft guide for design.
+Traits of other languages that I like or dislike, kept as a soft guide for design.
 The README's principles bind every design choice; an influence only informs one, and a principle wins any conflict.
 Nothing here is a commitment to build anything, and nothing here is a decision.
 
 A decision may cite an influence, and its candidates may say which influences they draw on, but no candidate has to honour one.
-Likes may pull in different directions: the author can draw on one in one place and another elsewhere, and two such Likes are not a tension.
+Likes may pull in different directions: I can draw on one in one place and another elsewhere, and two such Likes are not a tension.
 A trait missing from this list is not a dislike.
 
 Each entry is one line: Like or Dislike, the language, the thing, and why.
