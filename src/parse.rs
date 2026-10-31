@@ -81,11 +81,12 @@ fn literal_chunk(input: &str) -> PResult<'_, &str> {
     is_not("\"\\\0").parse(input)
 }
 
-/// Fails at a raw NUL byte, which would otherwise end the string early at
-/// runtime, since strings print through C's `puts`. Rejecting it decides
-/// nothing about what a string may hold; it only refuses what would be
-/// silently cut short. Anywhere else, it fails softly so the fragment loop
-/// moves on to the closing quote.
+/// Always fails: hard at a raw NUL byte, softly anywhere else so the fragment
+/// loop moves on to the closing quote. Codegen prints strings through C's
+/// `puts`, which would end the string at the NUL when the compiled program
+/// runs. Rejecting it decides nothing about what a string may hold; it only
+/// refuses what would be silently cut short, and should go once codegen
+/// prints with an explicit length.
 fn nul_byte(input: &str) -> PResult<'_, Fragment<'_>> {
     if input.starts_with('\0') {
         Err(nom::Err::Failure(Expected {

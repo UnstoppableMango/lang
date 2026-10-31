@@ -1,0 +1,2 @@
+# Raw NUL bytes would make git treat these as binary and hide their diffs.
+tests/cases/nul-byte.* diff
