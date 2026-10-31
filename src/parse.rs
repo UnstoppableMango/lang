@@ -74,11 +74,27 @@ enum Fragment<'a> {
     Escaped(char),
 }
 
-/// Everything up to the next quote or backslash. `is_not` accepts newlines, so
-/// an unterminated string swallows the rest of the file and is reported at the
-/// end of it.
+/// Everything up to the next quote, backslash, or NUL byte. `is_not` accepts
+/// newlines, so an unterminated string swallows the rest of the file and is
+/// reported at the end of it.
 fn literal_chunk(input: &str) -> PResult<'_, &str> {
-    is_not("\"\\").parse(input)
+    is_not("\"\\\0").parse(input)
+}
+
+/// Fails at a raw NUL byte, which would otherwise end the string early at
+/// runtime, since strings print through C's `puts`. Rejecting it decides
+/// nothing about what a string may hold; it only refuses what would be
+/// silently cut short. Anywhere else, it fails softly so the fragment loop
+/// moves on to the closing quote.
+fn nul_byte(input: &str) -> PResult<'_, Fragment<'_>> {
+    if input.starts_with('\0') {
+        Err(nom::Err::Failure(Expected {
+            input,
+            what: Some("a string character other than NUL"),
+        }))
+    } else {
+        Err(nom::Err::Error(Expected { input, what: None }))
+    }
 }
 
 /// Always fails, at the character after the backslash.
@@ -118,6 +134,7 @@ fn string_literal(input: &str) -> PResult<'_, String> {
                 alt((
                     map(literal_chunk, Fragment::Literal),
                     map(escape, Fragment::Escaped),
+                    nul_byte,
                 )),
                 String::new,
                 |mut text, fragment| {
@@ -278,5 +295,46 @@ fn to_diagnostic(source: &str, err: nom::Err<Expected<'_>>) -> Diagnostic {
             e.input,
         ),
         nom::Err::Incomplete(_) => unreachable!("every parser used here is complete"),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Parse `source`, which must fail, and return the diagnostic.
+    fn error(source: &str) -> Diagnostic {
+        match program(source) {
+            Ok(stmts) => panic!("expected an error, parsed {} statements", stmts.len()),
+            Err(d) => d,
+        }
+    }
+
+    #[test]
+    fn rejects_a_nul_byte_at_the_start_of_a_string() {
+        let d = error("print \"\0cd\"\n");
+        assert_eq!(d.message, "expected a string character other than NUL");
+        assert_eq!(d.offset, 7);
+    }
+
+    #[test]
+    fn rejects_a_nul_byte_in_the_middle_of_a_string() {
+        let d = error("print \"ab\0cd\"\n");
+        assert_eq!(d.message, "expected a string character other than NUL");
+        assert_eq!(d.offset, 9);
+    }
+
+    #[test]
+    fn rejects_a_nul_byte_at_the_end_of_a_string() {
+        let d = error("print \"ab\0\"\n");
+        assert_eq!(d.message, "expected a string character other than NUL");
+        assert_eq!(d.offset, 9);
+    }
+
+    #[test]
+    fn rejects_a_nul_byte_after_an_escape() {
+        let d = error("print \"a\\n\0\"\n");
+        assert_eq!(d.message, "expected a string character other than NUL");
+        assert_eq!(d.offset, 10);
     }
 }
