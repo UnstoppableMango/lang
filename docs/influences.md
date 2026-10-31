@@ -25,15 +25,15 @@ A topic appears once it has an entry.
 
 ## Paradigm and syntax
 
-- Like, Rust: immutable by default, with `mut` required to mutate, so a mutation is always visible where the binding is made.
-- Like, Rust and D: a method call is sugar over a free function taking the value first, so there is one mechanism with two spellings.
+- Like, Rust: immutable by default, with `mut` required to mutate a binding, so the common case of mutation is visible where the binding is made.
+- Like, Rust and D: a method call is sugar for a function call taking the value first (Rust's `x.foo()` is `Type::foo(x)`, D's uniform function call syntax), so there is one mechanism with two spellings.
 - Like, OCaml and Rust: a function body's trailing expression is its return value, with no `return` needed for the common case.
 - Like, F#, Elixir, and OCaml: the `|>` pipeline operator, which reads a chain of calls in the order it runs.
 - Dislike: semicolons, a terminator the parser could do without.
 
 ## Pattern matching
 
-- Like, OCaml, Rust, and Erlang: exhaustiveness checking, nested destructuring, guards, and or-patterns, so a match takes a value apart in one place and the compiler says which case is missing.
+- Like, OCaml and Rust: exhaustiveness checking, nested destructuring, guards, and or-patterns, so a match takes a value apart in one place and the compiler says which case is missing.
 
 ## Errors
 
@@ -42,10 +42,10 @@ A topic appears once it has an entry.
 
 ## Modules and packaging
 
-- Like, Go: a directory is a module, with no header line to keep in sync with the file's location.
+- Like, Go: a directory is a package, with no header line to keep in sync with the file's location.
 - Like, Go and ML: explicit dependencies, with import cycles rejected, so the dependency graph stays a graph a reader can follow.
 - Like, OCaml: applicative functors and the ML module system, worth studying for how modules can be parameterised.
-- Like, Deno: dependencies declare the capabilities they need, such as network or filesystem access, so what a dependency can do is visible before it runs.
+- Like, Deno: a program gets only the network, filesystem, and other access it is granted, so what code can do is visible before it runs.
 
 ## Tooling
 
@@ -54,10 +54,10 @@ A topic appears once it has an entry.
 - Like, Go: its simplicity philosophy, where a feature has to earn its place.
 - Like, Go: fast compilation, kept as a goal rather than left to chance.
 - Like, Go and Rust: running one file with no visible build step (`go run`, `cargo script`), so the user never sees a build or its output.
-- Like, Go and Rust: the compiler's syntax tree as a public, importable library (`go/ast`, `syn`), so tools read the language the way the compiler does.
+- Like, Go and Rust: the language's syntax tree as a public, importable library (`go/ast`, `syn`), so a tool needs no parser of its own.
 - Like, C and Scheme: a written specification is the authority, and the compiler is one implementation of it.
 
 ## Compilation and metaprogramming
 
-- Like, Zig: `comptime`, run by an interpreter inside the compiler over a restricted subset, so build-time code cannot quietly diverge from run-time code.
+- Like, Zig: `comptime`, ordinary code the compiler runs while building, so build-time logic needs no second language.
 - Like, Rust and Zig: C interop through an explicit boundary, so crossing into C is visible where it happens.
