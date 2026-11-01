@@ -28,6 +28,8 @@ Write a plan as tickets, never as a plan file.
 The foundational decisions (paradigm, compilation model, memory strategy, concurrency, pattern matching) are open, each a `ready-for-human` issue holding its candidates and the author's answers so far.
 No output may presume one until its issue is closed by an ADR.
 Read the issue before asking one of its questions again.
+Read `docs/influences.md` too, and cite the entries that bear on the decision.
+An influence never rules a candidate in or out, and a trait missing from the list is not a Dislike.
 
 ## File structure
 
