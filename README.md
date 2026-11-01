@@ -24,6 +24,20 @@ Where an escape hatch must exist, mark it visibly and greppably (e.g. `unsafe`),
 A real bug is a compile error, not a warning, and documenting a footgun does not count as removing it.
 Prior art: Rust's `unsafe` blocks and `#[must_use]`.
 
+## Milestones
+
+The language grows toward small, concrete milestones, each a program that must compile and print an expected output in CI.
+They are grouped into tiers, lowest first:
+
+- **A. Hello world**: 1 Hello, 2 Arithmetic.
+- **B. Turing complete**: 3 Truth, 4 Choice, 5 Functions, 6 Recursion, 7 FizzBuzz.
+- **C. Data**: 8 Records, 9 Sums, 10 Evaluator, 11 Strings, 12 Lists, 13 Closures.
+- **D. Real programs**: 14 Generics, 15 Errors as values, 16 Two files, 17 Reading stdin, 18 Tokenizer, 19 Parser combinator library.
+- **E. Bootstrapping**: the compiler, written in the language, compiles itself.
+
+Each tier is a [GitHub milestone](https://github.com/UnstoppableMango/lang/milestones), and an open decision or idea is attached to the tier that first needs it.
+A milestone's acceptance program lands in `milestones/` with the pull request that makes it pass.
+
 ## Open decisions
 
 The foundational decisions are open, and nothing may presume one until its issue is closed by an ADR in `docs/adr/`:

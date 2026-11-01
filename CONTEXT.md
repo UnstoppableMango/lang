@@ -27,6 +27,14 @@ An influence the author wants the language to draw on.
 An influence the author wants the language to steer away from.
 _Avoid_: Anti-pattern, pitfall, wart
 
+**Milestone**:
+A program the language must compile and run with a fixed expected output; it is reached when that program passes in CI.
+_Avoid_: Goal, phase, stage
+
+**Tier**:
+A named group of consecutive milestones, such as everything needed for Turing completeness.
+_Avoid_: Stage, phase, level
+
 **Construct model**:
 The TDL description of the shapes of the language's constructs, sitting between the decisions and the compiler; it holds only what is built or accepted by an ADR, and says nothing about what a construct means.
 _Avoid_: Language model, schema, AST spec
