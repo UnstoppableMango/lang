@@ -20,5 +20,8 @@ jobs:
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: nix flake check
-      - run: nix build .#
+      # --fallback is temporary: thecluster's binary cache (ncps) sometimes serves
+      # truncated NARs, and without it Nix fails instead of building the path
+      # from source. Drop it once the runners' cache is fixed.
+      - run: nix flake check --fallback
+      - run: nix build .# --fallback
