@@ -27,6 +27,10 @@ An influence the author wants the language to draw on.
 An influence the author wants the language to steer away from.
 _Avoid_: Anti-pattern, pitfall, wart
 
+**Construct model**:
+The TDL description of the shapes of the language's constructs, sitting between the decisions and the compiler; it holds only what is built or accepted by an ADR, and says nothing about what a construct means.
+_Avoid_: Language model, schema, AST spec
+
 ## Compilation
 
 **Compiled program**:
