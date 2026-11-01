@@ -27,6 +27,14 @@ An influence the author wants the language to draw on.
 An influence the author wants the language to steer away from.
 _Avoid_: Anti-pattern, pitfall, wart
 
+**Milestone**:
+A program the language must compile and run with a fixed expected output; it is reached when that program passes in CI.
+_Avoid_: Goal, phase, stage
+
+**Tier**:
+A named group of consecutive milestones, such as everything needed for Turing completeness.
+_Avoid_: Stage, phase, level
+
 ## Compilation
 
 **Compiled program**:
