@@ -8,6 +8,7 @@ The compiler, `unmangc`, is written in Rust and compiles `hack/hello.lang` end t
 ## Principles
 
 Every design choice is held to these.
+My [influences](docs/influences.md) inform these choices too, but only the principles bind.
 
 ### Few ways to do one thing
 

@@ -16,6 +16,7 @@ Decisions are made by the language author, never by an agent; agents may draft a
 - `hack/` — `hello.lang` plus a `Makefile` that builds and runs it through the compiler, the one working end-to-end example.
 - `README.md` — what the language is for and the principles every design choice is held to.
 - `CONTEXT.md` — the glossary: one canonical word per concept, and the words to avoid.
+- `docs/influences.md` — the author's Likes and Dislikes from other languages, which inform design choices but never bind them.
 - `docs/agents/` — how the engineering skills use the issue tracker, triage labels, and domain docs.
 - `nix/feature-flags.nix` — toggles which `src/features/<name>` directories are built into the compiler, so an unfinished feature can land behind a flag.
 
