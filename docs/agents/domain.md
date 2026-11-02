@@ -26,7 +26,10 @@ Write a plan as tickets, never as a plan file.
 ## Open decisions
 
 The foundational decisions (paradigm, compilation model, memory strategy, concurrency, pattern matching) are open, each a `ready-for-human` issue holding its candidates and the author's answers so far.
-No output may presume one until its issue is closed by an ADR.
+Only an ADR closing its issue settles one.
+A milestone may take a provisional stand on one: say so in the ADR that needs it, mark it at each place in the code it shapes, and link the foundational issue, so the stand is found again when that decision lands.
+Never present a provisional stand as the decision.
+A construct decision (how one construct is spelled or behaves) is an ADR like any other; a later ADR may supersede it.
 Read the issue before asking one of its questions again.
 Read `docs/influences.md` too, and cite the entries that bear on the decision.
 An influence never rules a candidate in or out, and a trait missing from the list is not a Dislike.

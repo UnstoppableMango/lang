@@ -7,7 +7,9 @@ This file provides guidance to coding agents when working with code in this repo
 A programming language being designed from scratch, deliberately slowly.
 There is no spec yet; the design happens in GitHub issues, `CONTEXT.md`, and ADRs in `docs/adr/`.
 The compiler is implemented in Rust, using `inkwell` for LLVM IR generation and `nom` for parsing; this is a starting point, not a locked-in decision, and may change if a switch proves worthwhile.
-Every other foundational decision (paradigm, compilation model, memory strategy, concurrency model, pattern matching semantics) is still open, each a `ready-for-human` issue, so no document or code may presume one until its issue is closed by an ADR.
+Every other foundational decision (paradigm, compilation model, memory strategy, concurrency model, pattern matching semantics) is still open, each a `ready-for-human` issue, and only an ADR closing its issue settles one.
+Until then, work toward a milestone may take a provisional stand on one: an assumption marked visibly in the ADR that needs it and in the code it shapes, which the foundational decision later confirms or replaces.
+How each construct is spelled and behaves is a construct decision, recorded in an ADR that a later ADR may supersede; code may build on it once the author accepts it.
 Decisions are made by the language author, never by an agent; agents may draft an ADR, but the author accepts it.
 
 ## Layout

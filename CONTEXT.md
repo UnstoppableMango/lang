@@ -9,6 +9,14 @@ This glossary fixes the words the design uses; it records no decision, and a ter
 A foundational choice about the language, tracked as an issue until an ADR records its outcome.
 _Avoid_: Decision record, stage
 
+**Construct decision**:
+A choice about how one construct is spelled or behaves, made when a milestone needs it and recorded in an ADR that a later one may supersede; it settles no decision.
+_Avoid_: Syntax decision, minor decision
+
+**Provisional stand**:
+An assumption about an open decision that a milestone takes so its work can proceed, marked visibly in the ADR that needs it and in the code it shapes; the decision later confirms or replaces it.
+_Avoid_: Placeholder, temporary decision, default
+
 **Candidate**:
 One of the alternatives a decision weighs.
 _Avoid_: Option, proposal

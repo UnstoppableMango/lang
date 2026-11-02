@@ -40,13 +40,16 @@ A milestone's acceptance program lands in `milestones/` with the pull request th
 
 ## Open decisions
 
-The foundational decisions are open, and nothing may presume one until its issue is closed by an ADR in `docs/adr/`:
+The foundational decisions are open, and only an ADR in `docs/adr/` closing its issue settles one:
 
 - [Memory strategy](https://github.com/UnstoppableMango/lang/issues/97)
 - [Compilation model](https://github.com/UnstoppableMango/lang/issues/98)
 - [Paradigm](https://github.com/UnstoppableMango/lang/issues/99)
 - [Concurrency model](https://github.com/UnstoppableMango/lang/issues/100)
 - [Pattern matching semantics](https://github.com/UnstoppableMango/lang/issues/101)
+
+Until then, a milestone may take a provisional stand on one, marked visibly where it is assumed, so the language can grow without waiting on it.
+Smaller choices about a single construct are construct decisions, each an ADR that a later one may supersede.
 
 Feature ideas are [`needs-triage` issues](https://github.com/UnstoppableMango/lang/issues?q=is%3Aissue+is%3Aopen+label%3Aneeds-triage), and `CONTEXT.md` is the glossary.
 
