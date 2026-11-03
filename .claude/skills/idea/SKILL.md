@@ -26,7 +26,7 @@ Read `CONTEXT.md` for **Idea** and **Influence**, and `docs/agents/issue-tracker
    - **Owned idea**: comment on the owner.
    - **New idea**: open an issue labelled `needs-triage` and nothing else, with a short title you write.
      When a possible owner exists, add `May belong to #N.` to the body.
-   - An issue or comment body is the author's words verbatim as a quote, then one `Related:` line linking any decision, grilling, or influence section it touches.
+   - Every record's body (the issue, the comment, or the influence pull request's description) is the author's words verbatim as a quote, then one `Related:` line linking each decision, grilling, or influence section it touches, or `Related: none`.
 4. Reply with one link per record and the home each went to, so a wrong guess is easy to move.
 
 The step is done when every idea in the argument has exactly one record and its link.
