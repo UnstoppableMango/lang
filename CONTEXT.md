@@ -35,6 +35,10 @@ An influence the author wants the language to draw on.
 An influence the author wants the language to steer away from.
 _Avoid_: Anti-pattern, pitfall, wart
 
+**Idea**:
+A thought about the language that the author has recorded without triage; it has no standing until triage gives it one, and a trait of another language is an influence instead.
+_Avoid_: Wishlist entry, note
+
 **Milestone**:
 A program the language must compile and run with a fixed expected output; it is reached when that program passes in CI.
 _Avoid_: Goal, phase, stage

@@ -53,3 +53,7 @@ The five default triage labels, each named for its role. See `docs/agents/triage
 ### Domain docs
 
 Single-context: one root `CONTEXT.md` and `docs/adr/`, whose records start at ADR-0001. See `docs/agents/domain.md`.
+
+### Ideas
+
+`/idea` (`.claude/skills/idea/`) records an idea in the issue tracker, or an influence in `docs/influences.md`, without triaging it.
