@@ -19,4 +19,4 @@ Follow the **Influence** steps in `.claude/skills/idea/SKILL.md`, which own how 
 
 If a trait already has an entry, say so and link it instead of adding a second one; changing or removing an entry is not this skill's job.
 
-The step is done when every trait in the argument has one pull request, and the reply links each.
+The step is done when every trait in the argument has one pull request or an existing entry, and the reply links each.
