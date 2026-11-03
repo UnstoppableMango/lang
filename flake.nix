@@ -21,6 +21,15 @@
     };
 
     crane.url = "github:ipetkov/crane";
+
+    # The construct model in `model/` is checked by tdl's own flake module.
+    tdl = {
+      url = "github:UnstoppableMango/tdl";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.systems.follows = "systems";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.treefmt-nix.follows = "treefmt-nix";
+    };
   };
 
   outputs =
@@ -30,6 +39,7 @@
       imports = with inputs; [
         systems.flakeModule or { }
         treefmt-nix.flakeModule
+        tdl.flakeModules.default
       ];
 
       perSystem =
@@ -54,6 +64,13 @@
           };
         in
         {
+          # `tdl check` and `tdl fmt --check` over the construct model.
+          tdl = {
+            package = inputs'.tdl.packages.default;
+            src = ./model;
+            files = [ "ast.tdl" ];
+          };
+
           packages = {
             inherit compiler;
             default = compiler;
