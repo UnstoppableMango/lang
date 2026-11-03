@@ -47,6 +47,7 @@ The foundational decisions are open, and only an ADR in `docs/adr/` closing its 
 - [Paradigm](https://github.com/UnstoppableMango/lang/issues/99)
 - [Concurrency model](https://github.com/UnstoppableMango/lang/issues/100)
 - [Pattern matching semantics](https://github.com/UnstoppableMango/lang/issues/101)
+- [Spec as the authority](https://github.com/UnstoppableMango/lang/issues/156)
 
 Until then, a milestone may take a provisional stand on one, marked visibly where it is assumed, so the language can grow without waiting on it.
 Smaller choices about a single construct are construct decisions, each an ADR that a later one may supersede.
