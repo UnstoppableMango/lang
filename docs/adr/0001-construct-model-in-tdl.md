@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # Describe the language's constructs in TDL before writing them
