@@ -1,0 +1,25 @@
+/// The construct model of the syntax tree: the shapes of what the parser
+/// builds from a program, and nothing about what any of them means.
+/// It mirrors `src/ast.rs` and holds only what is already built; keep the
+/// two in step by hand until a Rust backend generates the tree from it.
+package lang.ast
+
+/// A program is a sequence of statements, run in order.
+type Program {
+  statements: [Stmt]
+}
+
+enum Stmt {
+  /// Binds a name to a value known at compile time.
+  Let { name: string value: Expr }
+  Print { value: Expr }
+}
+
+enum Expr {
+  Str { value: string }
+  Int { value: int64 }
+  Name { name: string }
+  Binary { op: BinOp lhs: Expr rhs: Expr }
+}
+
+enum BinOp { Add Sub Mul Div }

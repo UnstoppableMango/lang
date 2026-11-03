@@ -20,6 +20,7 @@ Decisions are made by the language author, never by an agent; agents may draft a
 - `CONTEXT.md` — the glossary: one canonical word per concept, and the words to avoid.
 - `docs/influences.md` — the author's Likes and Dislikes from other languages, which inform design choices but never bind them.
 - `docs/agents/` — how the engineering skills use the issue tracker, triage labels, and domain docs.
+- `model/` — the construct model: the TDL description of the syntax tree in `src/ast.rs` (see ADR-0001); `nix flake check` runs `tdl check` and `tdl fmt --check` over it, and drift from the Rust is caught in review until a Rust backend generates it.
 - `nix/feature-flags.nix` — toggles which `src/features/<name>` directories are built into the compiler, so an unfinished feature can land behind a flag.
 
 ## Commands
