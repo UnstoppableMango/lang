@@ -69,6 +69,9 @@
             package = inputs'.tdl.packages.default;
             src = ./model;
             files = [ "ast.tdl" ];
+            # Its shell needs `tdl-gmk` from tdl's overlay, and nothing here
+            # pulls it in.
+            devShell.enable = false;
           };
 
           packages = {
