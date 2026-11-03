@@ -20,6 +20,7 @@ A topic appears once it has an entry.
 - Like, Rust and Kotlin: optionality as a real type (`Option<T>`, `T?`), so "nothing" is a value the type admits rather than a bit pattern every type carries.
 - Like, Nix: paths as their own type, where a relative path like `./data.json` is relative to the source file it appears in, not to the directory the program runs from, so it means the same thing wherever the program runs.
 - Like, Haskell, Koka, and Unison: purity tracked in the type (`IO`, effect systems), so what a function may do is part of what it says.
+- Like, Zig: "juicy main", where `main` is handed the program's I/O (`std.process.Init`, with its allocator, arguments, and environment) as a parameter, so I/O is defined explicitly at the program's entry point and passed down from there.
 - Like, Go and TypeScript: structural interfaces satisfied with no declaration and checked statically, so a type conforms by its shape, with no association to keep in sync.
 - Like, Rust, Haskell, and Swift: everyday monadic types (`Option`, `Result`, comprehensions) as friendly tools rather than abstractions to fear.
 
