@@ -57,3 +57,4 @@ Single-context: one root `CONTEXT.md` and `docs/adr/`, whose records start at AD
 ### Ideas
 
 `/idea` (`.claude/skills/idea/`) records an idea in the issue tracker, or an influence in `docs/influences.md`, without triaging it.
+`/like` and `/dislike` (`.claude/skills/like/`, `.claude/skills/dislike/`) record an influence whose kind the command names, through `/idea`'s influence steps.
