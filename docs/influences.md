@@ -28,6 +28,7 @@ A topic appears once it has an entry.
 
 - Like, Rust: immutable by default, with `mut` required to mutate a binding, so the common case of mutation is visible where the binding is made.
 - Like, Rust and D: a method call is sugar for a function call taking the value first (Rust's `x.foo()` is `Type::foo(x)`, D's uniform function call syntax), so there is one mechanism with two spellings.
+- Like, Go: receiver syntax (`func (s Stack) Push(x int)`), where a method is a function declared on its own with the value it acts on named before its name, so functionality is associated with state without a class to hold both.
 - Like, OCaml and Rust: a function body's trailing expression is its return value, with no `return` needed for the common case.
 - Like, F#, Elixir, and OCaml: the `|>` pipeline operator, which reads a chain of calls in the order it runs.
 - Dislike: semicolons, a terminator the parser could do without.
