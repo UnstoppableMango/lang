@@ -31,6 +31,7 @@ A topic appears once it has an entry.
 - Like, Go: receiver syntax (`func (s Stack) Push(x int)`), where a method is a function declared on its own with the value it acts on named before its name, so functionality is associated with state without a class to hold both.
 - Like, OCaml and Rust: a function body's trailing expression is its return value, with no `return` needed for the common case.
 - Like, F#, Elixir, and OCaml: the `|>` pipeline operator, which reads a chain of calls in the order it runs.
+- Like, Nix: `inherit`, which brings a name from an outer scope into an attribute set or `let` without writing it twice (`inherit x;` instead of `x = x;`), so passing a value along under its own name costs nothing.
 - Dislike: semicolons, a terminator the parser could do without.
 
 ## Pattern matching
