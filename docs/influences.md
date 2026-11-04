@@ -30,6 +30,7 @@ A topic appears once it has an entry.
 - Like, Rust and D: a method call is sugar for a function call taking the value first (Rust's `x.foo()` is `Type::foo(x)`, D's uniform function call syntax), so there is one mechanism with two spellings.
 - Like, OCaml and Rust: a function body's trailing expression is its return value, with no `return` needed for the common case.
 - Like, F#, Elixir, and OCaml: the `|>` pipeline operator, which reads a chain of calls in the order it runs.
+- Like, Nix: `inherit`, which brings a name from an outer scope into an attribute set or `let` without writing it twice (`inherit x;` instead of `x = x;`), so passing a value along under its own name costs nothing.
 - Dislike: semicolons, a terminator the parser could do without.
 
 ## Pattern matching
