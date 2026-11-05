@@ -2,11 +2,11 @@
   "nodes": {
     "crane": {
       "locked": {
-        "lastModified": 1793585954,
-        "narHash": "sha256-tXvzytP+yKObBT9UpMoqA8AINfq62ZzeOcGFiCJ8ouo=",
+        "lastModified": 1793669695,
+        "narHash": "sha256-9EtV4I6Ohw0tjidL31TMOKHhW/QGVG8NuGiemzIaNCs=",
         "owner": "ipetkov",
         "repo": "crane",
-        "rev": "8782adaf7e415975d2737b41ccca93b08a8f7d9f",
+        "rev": "788369ed71ed9d84ef72cb056e4d920050d5b32c",
         "type": "github"
       },
       "original": {
@@ -23,11 +23,11 @@
         "rust-analyzer-src": "rust-analyzer-src"
       },
       "locked": {
-        "lastModified": 1793632610,
-        "narHash": "sha256-jHx7v2Szgn5m2Vgs2jnUsMaqNtFTf/cyxtiZOlUzUt8=",
+        "lastModified": 1793676344,
+        "narHash": "sha256-MgdwpjUoyHQuZNOsigBzX4bYlXmLFUP4QdSNL4cOhig=",
         "owner": "nix-community",
         "repo": "fenix",
-        "rev": "30c7efc2bec6884d4bdac755fc0e536ebb5fcea3",
+        "rev": "2cffff177650d09fa4d2ad49694f8aac426a077f",
         "type": "github"
       },
       "original": {
@@ -301,11 +301,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793666757,
-        "narHash": "sha256-sFbUReLj+u/SICssOzIMlzm9x8RTcxJCYzHvHCw3tYo=",
+        "lastModified": 1793678165,
+        "narHash": "sha256-0+qP4YayE7k2GUqFSo6h4wec/Hke0zNctLdus/7XLCs=",
         "owner": "UnstoppableMango",
         "repo": "tdl",
-        "rev": "7c176e48e2477a656273ba8c3e3b1dcf0271e9a9",
+        "rev": "3f6cdf0c68fb5cf09931232858ba814a50d9ea37",
         "type": "github"
       },
       "original": {
