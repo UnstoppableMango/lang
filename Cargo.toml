@@ -6,6 +6,6 @@ publish = false
 
 [dependencies]
 nom = "8"
-inkwell = { git = "https://github.com/TheDan64/inkwell", rev = "f3b8f267f865e9d2829c2c0329fa6d6f64c8abb5", features = [
+inkwell = { git = "https://github.com/TheDan64/inkwell", rev = "04bfd21f4cbee15776555b05b00d68f403455399", features = [
   "llvm21-1-force-dynamic",
 ] }
