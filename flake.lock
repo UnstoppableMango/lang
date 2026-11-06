@@ -188,11 +188,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793721433,
-        "narHash": "sha256-7NkwZ6k2dgJPw9UqhfaWxyWMfqeK0E0I2VXkB1eeM9w=",
+        "lastModified": 1793806608,
+        "narHash": "sha256-+p/OytvC1ZYhRlc6UQ6rSbu4Sz92cUiJBz5YUmXOe5Y=",
         "owner": "unmango",
         "repo": "pkgs",
-        "rev": "42f0a3163c2432aaf034afadf9a208b0dc1a3dbe",
+        "rev": "36c991c78598597b08efad45cbc0d04f9f0dfd8a",
         "type": "github"
       },
       "original": {
@@ -301,11 +301,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793857015,
-        "narHash": "sha256-mnon3pNV3aNtXGq0sAAbvVx9IEQvkaUEzwa1ZZUAlSQ=",
+        "lastModified": 1793943317,
+        "narHash": "sha256-e8Qst3p2bHKHy/lFkt/qQT4m/KiH0S0y9C6rweCyOVo=",
         "owner": "UnstoppableMango",
         "repo": "tdl",
-        "rev": "d2940a08b9fad7e7d9ed7ea96e81033767ab1b04",
+        "rev": "3155f063eff410a6bfc65b33e8ff92ada8c480f1",
         "type": "github"
       },
       "original": {
